@@ -22,11 +22,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -164,8 +161,6 @@ public class UserDataActivity extends AppCompatActivity {
         spinnerGender.setEnabled(enabled);
         btnSave.setEnabled(enabled);
         btnEditPhoto.setEnabled(enabled);
-
-        // Update button visibility
         btnSave.setVisibility(enabled ? View.VISIBLE : View.GONE);
     }
 
@@ -210,8 +205,7 @@ public class UserDataActivity extends AppCompatActivity {
                             Log.e("USER_DATA", "Error parsing data: " + e.getMessage());
                         }
                     } else {
-                        Log.d("USER_DATA", "📭 No existing data found - user can create new");
-                        // Reset fields untuk new user
+                        Log.d("USER_DATA", "📭 No existing data - User baru, siap untuk INSERT");
                         resetFieldsForNewUser();
                     }
                 },
@@ -266,11 +260,10 @@ public class UserDataActivity extends AppCompatActivity {
     }
 
     private void resetFieldsForNewUser() {
-        // Set default values untuk new user
         idPencaker = 0;
         inputNama.setText("");
-        inputEmail.setText(sessionManager.getUserEmail()); // Default email dari session
-        inputNoHp.setText(sessionManager.getUserPhone()); // Default phone dari session
+        inputEmail.setText(sessionManager.getUserEmail());
+        inputNoHp.setText(sessionManager.getUserPhone());
         inputTanggalLahir.setText("");
         inputAlamat.setText("");
         inputPengalaman.setText("");
@@ -289,7 +282,6 @@ public class UserDataActivity extends AppCompatActivity {
         String pengalaman = inputPengalaman.getText().toString().trim();
         String gender = spinnerGender.getSelectedItem().toString();
 
-        // Validasi
         if (nama.isEmpty() || email.isEmpty() || noHp.isEmpty() || tglLahir.isEmpty() ||
                 alamat.isEmpty() || gender.equals("Pilih Gender")) {
             Toast.makeText(this, "Harap isi semua field yang wajib", Toast.LENGTH_SHORT).show();
@@ -299,42 +291,39 @@ public class UserDataActivity extends AppCompatActivity {
         progressDialog.setMessage("Menyimpan data...");
         progressDialog.show();
 
-        Log.d("USER_DATA", "Saving data - idPencaker: " + idPencaker + ", idPengguna: " + idPengguna);
+        Log.d("USER_DATA", "🔍 Saving data - idPencaker: " + idPencaker + ", idPengguna: " + idPengguna);
 
-        // PERBAIKAN: Tentukan apakah INSERT atau UPDATE berdasarkan idPencaker
+        // STRATEGI: Cek dulu apakah data sudah ada (seperti PHP)
         if (idPencaker == 0) {
-            // INSERT - User baru, belum punya data di tabel pencaker
-            Log.d("USER_DATA", "Performing INSERT for new user");
+            // User baru - INSERT
             if (photoBitmap != null) {
-                uploadPhotoThenInsertData(nama, email, noHp, tglLahir, gender, alamat, pengalaman);
+                uploadPhotoThenInsert(nama, email, noHp, tglLahir, gender, alamat, pengalaman);
             } else {
                 insertData(nama, email, noHp, tglLahir, gender, alamat, pengalaman, null, null);
             }
         } else {
-            // UPDATE - User sudah punya data di tabel pencaker
-            Log.d("USER_DATA", "Performing UPDATE for existing user, idPencaker: " + idPencaker);
+            // User existing - UPDATE
             if (photoBitmap != null) {
-                uploadPhotoThenUpdateData(nama, email, noHp, tglLahir, gender, alamat, pengalaman);
+                uploadPhotoThenUpdate(nama, email, noHp, tglLahir, gender, alamat, pengalaman);
             } else {
                 updateData(nama, email, noHp, tglLahir, gender, alamat, pengalaman, null, null);
             }
         }
     }
 
-    private void uploadPhotoThenInsertData(String nama, String email, String noHp, String tglLahir,
-                                           String gender, String alamat, String pengalaman) {
+    private void uploadPhotoThenInsert(String nama, String email, String noHp, String tglLahir,
+                                       String gender, String alamat, String pengalaman) {
         long timestamp = System.currentTimeMillis();
         String fileName = "profile_" + idPengguna + "_" + timestamp + ".jpg";
         String storagePath = idPengguna + "/" + fileName;
         String uploadUrl = SUPABASE_URL + "/storage/v1/object/profile-pictures/" + storagePath;
 
-        Log.d("USER_DATA", "Uploading photo for INSERT: " + uploadUrl);
+        Log.d("USER_DATA", "📤 Uploading photo for INSERT: " + uploadUrl);
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         photoBitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
         byte[] imageBytes = byteArrayOutputStream.toByteArray();
 
-        // Gunakan StringRequest untuk upload karena VolleyMultipartRequest tidak ada
         StringRequest uploadRequest = new StringRequest(Request.Method.POST, uploadUrl,
                 response -> {
                     String fotoUrl = SUPABASE_URL + "/storage/v1/object/public/profile-pictures/" + storagePath;
@@ -345,7 +334,6 @@ public class UserDataActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                     Log.e("USER_DATA", "❌ Upload failed: " + error.toString());
                     Toast.makeText(this, "Gagal upload foto, menyimpan data tanpa foto", Toast.LENGTH_SHORT).show();
-                    // Tetap simpan data tanpa foto
                     insertData(nama, email, noHp, tglLahir, gender, alamat, pengalaman, null, null);
                 }
         ) {
@@ -367,14 +355,14 @@ public class UserDataActivity extends AppCompatActivity {
         requestQueue.add(uploadRequest);
     }
 
-    private void uploadPhotoThenUpdateData(String nama, String email, String noHp, String tglLahir,
-                                           String gender, String alamat, String pengalaman) {
+    private void uploadPhotoThenUpdate(String nama, String email, String noHp, String tglLahir,
+                                       String gender, String alamat, String pengalaman) {
         long timestamp = System.currentTimeMillis();
         String fileName = "profile_" + idPengguna + "_" + timestamp + ".jpg";
         String storagePath = idPengguna + "/" + fileName;
         String uploadUrl = SUPABASE_URL + "/storage/v1/object/profile-pictures/" + storagePath;
 
-        Log.d("USER_DATA", "Uploading photo for UPDATE: " + uploadUrl);
+        Log.d("USER_DATA", "📤 Uploading photo for UPDATE: " + uploadUrl);
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         photoBitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
@@ -411,16 +399,16 @@ public class UserDataActivity extends AppCompatActivity {
         requestQueue.add(uploadRequest);
     }
 
+    // ============= INSERT METHOD - Untuk user baru =============
     private void insertData(String nama, String email, String noHp, String tglLahir,
                             String gender, String alamat, String pengalaman,
                             String fotoUrl, String fotoPath) {
 
-        // Ubah URL untuk UPSERT
-        String url = SUPABASE_URL + "/rest/v1/pencaker?on_conflict=id_pengguna";
+        // PENTING: POST tanpa on_conflict, tapi pastikan id_pencaker auto-increment
+        String url = SUPABASE_URL + "/rest/v1/pencaker";
 
         JSONObject body = new JSONObject();
         try {
-            // Data untuk INSERT atau UPDATE
             body.put("id_pengguna", idPengguna);
             body.put("nama_lengkap", nama);
             body.put("email_pencaker", email);
@@ -429,7 +417,6 @@ public class UserDataActivity extends AppCompatActivity {
             body.put("tanggal_lahir", tglLahir);
             body.put("gender", gender);
             body.put("pengalaman_tahun", pengalaman);
-            // Hapus dibuat_pada karena Supabase sudah ada default
 
             if (fotoUrl != null) {
                 body.put("foto_profil_url", fotoUrl);
@@ -442,32 +429,30 @@ public class UserDataActivity extends AppCompatActivity {
             return;
         }
 
-        Log.d("USER_DATA", "UPSERT data for user - id_pengguna: " + idPengguna);
+        Log.d("USER_DATA", "➕ INSERT new data - id_pengguna: " + idPengguna);
         Log.d("USER_DATA", "Request body: " + body.toString());
 
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 response -> {
                     progressDialog.dismiss();
-                    Log.d("USER_DATA", "✅ UPSERT successful! Response: " + response);
+                    Log.d("USER_DATA", "✅ INSERT successful! Response: " + response);
 
-                    // Parse response untuk mendapatkan id_pencaker jika perlu
-                    if (response != null && !response.trim().isEmpty() && !response.equals("[]")) {
-                        try {
-                            JSONArray jsonArray = new JSONArray(response);
-                            if (jsonArray.length() > 0) {
-                                JSONObject firstItem = jsonArray.getJSONObject(0);
-                                idPencaker = firstItem.getInt("id_pencaker");
-                                Log.d("USER_DATA", "UPSERT id_pencaker: " + idPencaker);
-                            }
-                        } catch (JSONException e) {
-                            Log.e("USER_DATA", "Error parsing UPSERT response: " + e.getMessage());
+                    // Parse response untuk mendapatkan id_pencaker
+                    try {
+                        JSONArray jsonArray = new JSONArray(response);
+                        if (jsonArray.length() > 0) {
+                            JSONObject firstItem = jsonArray.getJSONObject(0);
+                            idPencaker = firstItem.getInt("id_pencaker");
+                            Log.d("USER_DATA", "✅ New id_pencaker created: " + idPencaker);
                         }
+                    } catch (JSONException e) {
+                        Log.e("USER_DATA", "Error parsing INSERT response: " + e.getMessage());
                     }
 
                     Toast.makeText(this, "✅ Data berhasil disimpan!", Toast.LENGTH_SHORT).show();
                     sessionManager.updateUserProfile(nama, noHp);
 
-                    // Setelah berhasil, load data untuk refresh
+                    // Refresh data
                     new android.os.Handler().postDelayed(() -> {
                         loadUserData();
                         setEditMode(false);
@@ -477,7 +462,7 @@ public class UserDataActivity extends AppCompatActivity {
                 },
                 error -> {
                     progressDialog.dismiss();
-                    Log.e("USER_DATA", "❌ UPSERT failed: " + error.toString());
+                    Log.e("USER_DATA", "❌ INSERT failed: " + error.toString());
 
                     if (error.networkResponse != null) {
                         String errorResponse = new String(error.networkResponse.data);
@@ -494,7 +479,6 @@ public class UserDataActivity extends AppCompatActivity {
                 headers.put("apikey", SUPABASE_API_KEY);
                 headers.put("Authorization", "Bearer " + SUPABASE_API_KEY);
                 headers.put("Content-Type", "application/json");
-                // Ubah ke representation untuk mendapatkan response
                 headers.put("Prefer", "return=representation");
                 return headers;
             }
@@ -512,15 +496,16 @@ public class UserDataActivity extends AppCompatActivity {
         requestQueue.add(request);
     }
 
+    // ============= UPDATE METHOD - Untuk user existing =============
     private void updateData(String nama, String email, String noHp, String tglLahir,
                             String gender, String alamat, String pengalaman,
                             String fotoUrl, String fotoPath) {
 
+        // PATCH dengan filter id_pengguna
         String url = SUPABASE_URL + "/rest/v1/pencaker?id_pengguna=eq." + idPengguna;
 
         JSONObject body = new JSONObject();
         try {
-            // Data untuk UPDATE
             body.put("nama_lengkap", nama);
             body.put("email_pencaker", email);
             body.put("no_hp", noHp);
@@ -539,18 +524,18 @@ public class UserDataActivity extends AppCompatActivity {
             return;
         }
 
-        Log.d("USER_DATA", "UPDATE data for existing user - id_pengguna: " + idPengguna);
+        Log.d("USER_DATA", "✏️ UPDATE existing data - id_pengguna: " + idPengguna);
         Log.d("USER_DATA", "Request body: " + body.toString());
 
         StringRequest updateRequest = new StringRequest(Request.Method.PATCH, url,
                 response -> {
                     progressDialog.dismiss();
-                    Log.d("USER_DATA", "UPDATE successful! Response: " + response);
+                    Log.d("USER_DATA", "✅ UPDATE successful! Response: " + response);
 
-                    Toast.makeText(this, "Data berhasil diperbarui!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "✅ Data berhasil diperbarui!", Toast.LENGTH_SHORT).show();
                     sessionManager.updateUserProfile(nama, noHp);
 
-                    // Setelah UPDATE berhasil, refresh data
+                    // Refresh data
                     new android.os.Handler().postDelayed(() -> {
                         loadUserData();
                         setEditMode(false);
@@ -562,11 +547,10 @@ public class UserDataActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                     Log.e("USER_DATA", "❌ UPDATE failed: " + error.toString());
 
-                    // Jika UPDATE gagal karena data tidak ditemukan (seharusnya tidak terjadi), coba INSERT
-                    if (error.networkResponse != null && error.networkResponse.statusCode == 404) {
-                        Log.d("USER_DATA", "Data not found for UPDATE, trying INSERT instead...");
-                        insertData(nama, email, noHp, tglLahir, gender, alamat, pengalaman, fotoUrl, fotoPath);
-                        return;
+                    if (error.networkResponse != null) {
+                        String errorResponse = new String(error.networkResponse.data);
+                        Log.e("USER_DATA", "Error status: " + error.networkResponse.statusCode);
+                        Log.e("USER_DATA", "Error response: " + errorResponse);
                     }
 
                     Toast.makeText(this, "Gagal memperbarui data", Toast.LENGTH_SHORT).show();
