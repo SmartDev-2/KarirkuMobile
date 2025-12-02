@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        tools:context=".scancvFragment">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="15dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Upload CV"
+                android:textSize="20sp"
+                android:textColor="@color/blue"
+                android:fontFamily="@font/interdisplaybold"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <!-- Upload Section Container -->
+        <LinearLayout
+            android:id="@+id/layoutUploadSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginTop="40dp"
+            android:padding="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp">
+
+            <!-- Upload PDF Section -->
+            <LinearLayout
+                android:id="@+id/layoutUploadPDF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingVertical="20dp"
+                android:paddingHorizontal="15dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:id="@+id/btnUploadPDF"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:src="@drawable/ic_pdf_upload"
+                    android:layout_marginEnd="10dp"
+                    android:contentDescription="Upload File" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Upload file PDF dari HP"
+                        android:textSize="16sp"
+                        android:textColor="#0D99FF"
+                        android:fontFamily="@font/interdisplaybold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="(PDF, maks. 5 MB)"
+                        android:textSize="12sp"
+                        android:textColor="@color/gray"
+                        android:layout_marginTop="2dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="atau"
+                android:textSize="14sp"
+                android:textColor="@color/gray"
+                android:fontFamily="@font/interdisplaybold"
+                android:gravity="center"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp" />
+
+            <Button
+                android:id="@+id/btnCamera"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Scan CV dengan Kamera"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:backgroundTint="#0D99FF"
+                android:fontFamily="@font/interdisplaybold"
+                android:paddingVertical="15dp"
+                android:textAllCaps="false"
+                android:clickable="true"
+                android:focusable="true"
+                android:minHeight="56dp" />
+
+        </LinearLayout>
+
+        <!-- Info Text -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CV-mu akan otomatis dikirimkan untuk lamaran kerjamu selanjutnya. Untuk mengupdate, upload CV terbarumu di Profil."
+            android:textSize="11sp"
+            android:textColor="@color/gray"
+            android:fontFamily="@font/interdisplaybold"
+            android:gravity="start"
+            android:layout_marginTop="22dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:lineSpacingExtra="3dp" />
+
+        <!-- Tips Text -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="💡 Tips: Untuk hasil terbaik saat scan dengan kamera:\n• Pastikan pencahayaan cukup\n• Foto CV secara jelas dan tidak blur\n• Hindari bayangan pada dokumen"
+            android:textSize="11sp"
+            android:textColor="#FF9800"
+            android:fontFamily="@font/interdisplaybold"
+            android:gravity="start"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:lineSpacingExtra="3dp" />
+
+    </LinearLayout>
+
+</ScrollView>

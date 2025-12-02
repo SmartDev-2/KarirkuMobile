@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.tem2.karirku">
+    <!--
+         ========================================
+         PERMISSIONS
+         ========================================
+    -->
+    <!-- Internet & Network -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Storage (untuk upload PDF) -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" /> <!-- Android 13+ specific permissions -->
+    <uses-permission android:name="android.permission.READ_MEDIA_DOCUMENTS" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" /> <!-- Camera (untuk scan CV) -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.KARIRKU"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".Emailubahpasword"
+            android:exported="false" />
+        <activity
+            android:name=".lupasandi"
+            android:exported="false" />
+        <!--
+         ========================================
+             MAIN ACTIVITY (Login & Launcher)
+             ========================================
+        -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+
+            <!-- Launcher -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- Deep Link untuk OAuth (Google Login) -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="auth-callback"
+                    android:scheme="karirku" />
+            </intent-filter>
+        </activity>
+        <!--
+ ========================================
+             OTHER ACTIVITIES (registered)
+             ========================================
+        -->
+        <!-- Register -->
+        <activity
+            android:name=".register"
+            android:exported="false" /> <!-- Beranda (Main App) -->
+        <activity
+            android:name=".beranda"
+            android:exported="false" /> <!-- Job Detail -->
+        <activity
+            android:name=".JobDetailActivity"
+            android:exported="false" /> <!-- Chat Detail -->
+        <activity
+            android:name=".ChatDetailActivity"
+            android:exported="false" /> <!-- Dilamar Activity -->
+        <activity
+            android:name=".DilamarActivity"
+            android:exported="false"
+            android:theme="@style/Theme.KARIRKU" /> <!-- Disimpan Activity -->
+        <activity
+            android:name=".DisimpanActivity"
+            android:exported="false"
+            android:theme="@style/Theme.KARIRKU" /> <!-- CV Activity -->
+        <activity
+            android:name=".CvActivity"
+            android:exported="false"
+            android:theme="@style/Theme.KARIRKU" /> <!-- Lengkapi Profil (main card list) -->
+        <activity
+            android:name=".LengkapiProfilActivity"
+            android:exported="false" /> <!-- Edit / Detail Activities -->
+        <activity
+            android:name=".EditBiodataActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditPendidikanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditSkillActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditTentangSayaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditPenghargaanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditSertifikatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditPortofolioActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfilKarirkuActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UpdateAkunActivity"
+            android:exported="false"
+            android:theme="@style/Theme.KARIRKU" />
+        <activity
+            android:name=".UserDataActivity"
+            android:exported="false"
+            android:theme="@style/Theme.KARIRKU" /> <!-- PDF Viewer (untuk preview CV) -->
+        <activity
+            android:name=".PdfViewerActivity"
+            android:exported="false" />
+        <!--
+ ========================================
+             ML KIT METADATA (untuk OCR)
+             ========================================
+        -->
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="ocr" />
+    </application>
+
+</manifest>

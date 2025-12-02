@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="blue">#002E92</color>
+    <color name="gray">#FF9E9E9E</color>
+    <color name="gray_light">#FFE0E0E0</color>
+
+    <!-- Tambahkan color green -->
+    <color name="green">#4CAF50</color>
+    <color name="light_green">#E8F5E8</color>
+    <color name="red">#F44336</color>
+    <color name="orange">#FF9800</color>
+    <color name="yellow">#FFEB3B</color>
+
+        <color name="nav_color_selected">#002E92</color>    <!-- Biru saat aktif -->
+        <color name="nav_color_unselected">#757575</color>
+    <color name="light_gray">#D3D3D3</color>
+
+
+</resources>

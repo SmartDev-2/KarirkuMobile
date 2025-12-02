@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:id="@+id/imgNotificationIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_notifikasi"
+        android:layout_marginEnd="12dp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvNotificationTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Judul Notifikasi"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:fontFamily="@font/interdisplaybold"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvNotificationMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pesan notifikasi..."
+            android:textColor="@color/gray"
+            android:textSize="14sp"
+            android:fontFamily="@font/interdisplaybold"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/tvNotificationTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2 jam lalu"
+            android:textColor="@color/gray"
+            android:textSize="12sp"
+            android:fontFamily="@font/interdisplaybold"
+            android:layout_marginTop="4dp" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/indicatorUnread"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:background="@color/blue"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp" />
+
+</LinearLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- isi transparan 30% -->
+    <solid android:color="#4D2196F3" />
+    <!-- #4D2196F3 = warna biru (#2196F3) dengan opacity 30% -->
+
+    <!-- garis pinggir -->
+    <stroke
+        android:width="2dp"
+        android:color="@color/blue" />
+
+    <!-- sudut sedikit rounded -->
+    <corners android:radius="6dp" />
+</shape>

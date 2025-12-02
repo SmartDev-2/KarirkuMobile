@@ -1,0 +1,1408 @@
+Index: app/src/main/res/layout/activity_preferensi_kerja.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<ScrollView xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    android:padding=\"16dp\"\r\n    android:background=\"#F9FAFC\">\r\n\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"vertical\">\r\n\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"48dp\"\r\n            android:gravity=\"center_vertical\">\r\n\r\n            <ImageView\r\n                android:id=\"@+id/btnBack\"\r\n                android:layout_width=\"28dp\"\r\n                android:layout_height=\"28dp\"\r\n                android:src=\"@drawable/ic_back\" />\r\n\r\n            <TextView\r\n                android:layout_width=\"0dp\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_weight=\"1\"\r\n                android:text=\"Pendataan Pengguna\"\r\n                android:textSize=\"18sp\"\r\n                android:textStyle=\"bold\"\r\n                android:gravity=\"center\"\r\n                android:textColor=\"@color/black\"/>\r\n\r\n            <TextView\r\n                android:id=\"@+id/btnEdit\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:text=\"Edit\"\r\n                android:textColor=\"#0CADF1\"\r\n                android:textStyle=\"bold\"/>\r\n        </LinearLayout>\r\n\r\n        <LinearLayout\r\n            android:id=\"@+id/cardUserData\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:background=\"@drawable/shape_card\"\r\n            android:padding=\"16dp\"\r\n            android:orientation=\"vertical\"\r\n            android:layout_marginTop=\"16dp\">\r\n\r\n            <LinearLayout\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:gravity=\"center\">\r\n\r\n                <RelativeLayout\r\n                    android:layout_width=\"110dp\"\r\n                    android:layout_height=\"110dp\">\r\n\r\n                    <ImageView\r\n                        android:id=\"@+id/imgProfile\"\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"match_parent\"\r\n                        android:src=\"@drawable/ic_profile_placeholder\"\r\n                        android:background=\"@drawable/circle_white\"\r\n                        android:scaleType=\"centerCrop\"/>\r\n\r\n                    <ImageView\r\n                        android:id=\"@+id/btnEditPhoto\"\r\n                        android:layout_width=\"34dp\"\r\n                        android:layout_height=\"34dp\"\r\n                        android:src=\"@drawable/ic_edit\"\r\n                        android:layout_alignParentBottom=\"true\"\r\n                        android:layout_alignParentEnd=\"true\"\r\n                        android:background=\"@drawable/circle_white\"\r\n                        android:padding=\"6dp\"\r\n                        android:elevation=\"2dp\"/>\r\n                </RelativeLayout>\r\n            </LinearLayout>\r\n\r\n            <TextView\r\n                android:text=\"Nama Lengkap\"\r\n                android:textStyle=\"bold\"\r\n                android:layout_marginTop=\"20dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:textColor=\"@color/black\"/>\r\n\r\n            <EditText\r\n                android:id=\"@+id/inputNama\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"12dp\"\r\n                android:layout_marginTop=\"6dp\"\r\n                android:background=\"@drawable/shape_input\"\r\n                android:hint=\"Masukkan nama lengkap\"/>\r\n\r\n            <TextView\r\n                android:text=\"Email Pencaker\"\r\n                android:textStyle=\"bold\"\r\n                android:layout_marginTop=\"16dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:textColor=\"@color/black\"/>\r\n\r\n            <EditText\r\n                android:id=\"@+id/inputEmail\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"12dp\"\r\n                android:background=\"@drawable/shape_input\"\r\n                android:layout_marginTop=\"6dp\"\r\n                android:inputType=\"textEmailAddress\"\r\n                android:hint=\"Masukkan email pencaker\"/>\r\n\r\n            <TextView\r\n                android:text=\"Nomor HP\"\r\n                android:textStyle=\"bold\"\r\n                android:layout_marginTop=\"16dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:textColor=\"@color/black\"/>\r\n\r\n            <EditText\r\n                android:id=\"@+id/inputNoHp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"12dp\"\r\n                android:background=\"@drawable/shape_input\"\r\n                android:layout_marginTop=\"6dp\"\r\n                android:inputType=\"phone\"\r\n                android:hint=\"Masukkan nomor HP\"/>\r\n\r\n            <TextView\r\n                android:text=\"Tanggal Lahir\"\r\n                android:textStyle=\"bold\"\r\n                android:layout_marginTop=\"16dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:textColor=\"@color/black\"/>\r\n\r\n            <TextView\r\n                android:id=\"@+id/inputTanggalLahir\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:padding=\"12dp\"\r\n                android:background=\"@drawable/shape_input\"\r\n                android:layout_marginTop=\"6dp\"\r\n                android:focusable=\"false\"\r\n                android:hint=\"Pilih tanggal lahir\"/>\r\n\r\n            <TextView\r\n                android:text=\"Gender\"\r\n                android:textStyle=\"bold\"\r\n                android:layout_marginTop=\"16dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:textColor=\"@color/black\"/>\r\n\r\n            <Spinner\r\n                android:id=\"@+id/spinnerGender\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_marginTop=\"6dp\" />\r\n\r\n            <TextView\r\n                android:text=\"Alamat\"\r\n                android:textStyle=\"bold\"\r\n                android:layout_marginTop=\"16dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:textColor=\"@color/black\"/>\r\n\r\n            <EditText\r\n                android:id=\"@+id/inputAlamat\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:minLines=\"3\"\r\n                android:gravity=\"top\"\r\n                android:padding=\"12dp\"\r\n                android:background=\"@drawable/shape_input\"\r\n                android:layout_marginTop=\"6dp\"\r\n                android:hint=\"Tulis alamat lengkap\"/>\r\n\r\n            <TextView\r\n                android:text=\"Pengalaman Kerja\"\r\n                android:textStyle=\"bold\"\r\n                android:layout_marginTop=\"16dp\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:textColor=\"@color/black\"/>\r\n\r\n            <EditText\r\n                android:id=\"@+id/inputPengalaman\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:minLines=\"3\"\r\n                android:gravity=\"top\"\r\n                android:padding=\"12dp\"\r\n                android:background=\"@drawable/shape_input\"\r\n                android:layout_marginTop=\"6dp\"\r\n                android:hint=\"Contoh: Barista 1 tahun\"/>\r\n\r\n        </LinearLayout>\r\n\r\n        <Button\r\n            android:id=\"@+id/btnSave\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"48dp\"\r\n            android:text=\"SIMPAN\"\r\n            android:textColor=\"#FFFFFF\"\r\n            android:backgroundTint=\"#0CADF1\"\r\n            android:layout_marginTop=\"20dp\"/>\r\n    </LinearLayout>\r\n</ScrollView>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_preferensi_kerja.xml b/app/src/main/res/layout/activity_preferensi_kerja.xml
+--- a/app/src/main/res/layout/activity_preferensi_kerja.xml	(revision ee8d0d03925f271a41abd5fae86d5b4b904888f2)
++++ b/app/src/main/res/layout/activity_preferensi_kerja.xml	(date 1764204904964)
+@@ -64,6 +64,7 @@
+                         android:layout_width="match_parent"
+                         android:layout_height="match_parent"
+                         android:src="@drawable/ic_profile_placeholder"
++
+                         android:background="@drawable/circle_white"
+                         android:scaleType="centerCrop"/>
+ 
+Index: app/src/main/java/com/tem2/karirku/UserDataActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.tem2.karirku;\r\n\r\nimport android.app.DatePickerDialog;\r\nimport android.content.Intent;\r\nimport android.net.Uri;\r\nimport android.os.Bundle;\r\nimport android.provider.MediaStore;\r\nimport android.widget.Button;\r\nimport android.widget.DatePicker;\r\nimport android.widget.EditText;\r\nimport android.widget.ImageView;\r\nimport android.widget.Spinner;\r\nimport android.widget.ArrayAdapter;\r\nimport android.widget.TextView;\r\n\r\nimport androidx.activity.result.ActivityResultLauncher;\r\nimport androidx.activity.result.contract.ActivityResultContracts;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport java.util.Calendar;\r\n\r\npublic class UserDataActivity extends AppCompatActivity {\r\n\r\n    private ImageView imgProfile, btnEditPhoto;\r\n    private EditText inputNama, inputEmail, inputNoHp, inputAlamat, inputPengalaman;\r\n    private TextView inputTanggalLahir;\r\n    private Spinner spinnerGender;\r\n    private Button btnSave;\r\n\r\n    private Uri photoUri;\r\n\r\n    private ActivityResultLauncher<Intent> pickImageLauncher;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_preferensi_kerja); // layout yang kamu pakai\r\n\r\n        initViews();\r\n        initSpinner();\r\n        initGalleryPicker();\r\n        initListeners();\r\n    }\r\n\r\n    private void initViews() {\r\n        imgProfile = findViewById(R.id.imgProfile);\r\n        btnEditPhoto = findViewById(R.id.btnEditPhoto);\r\n        inputNama = findViewById(R.id.inputNama);\r\n        inputEmail = findViewById(R.id.inputEmail);\r\n        inputNoHp = findViewById(R.id.inputNoHp);\r\n        inputAlamat = findViewById(R.id.inputAlamat);\r\n        inputPengalaman = findViewById(R.id.inputPengalaman);\r\n        inputTanggalLahir = findViewById(R.id.inputTanggalLahir);\r\n        spinnerGender = findViewById(R.id.spinnerGender);\r\n        btnSave = findViewById(R.id.btnSave);\r\n    }\r\n\r\n    private void initSpinner() {\r\n        String[] genderItems = {\"Pilih Gender\", \"Laki-laki\", \"Perempuan\"};\r\n\r\n        ArrayAdapter<String> adapter = new ArrayAdapter<>(\r\n                this,\r\n                android.R.layout.simple_spinner_dropdown_item,\r\n                genderItems\r\n        );\r\n\r\n        spinnerGender.setAdapter(adapter);\r\n    }\r\n\r\n    private void initGalleryPicker() {\r\n        pickImageLauncher = registerForActivityResult(\r\n                new ActivityResultContracts.StartActivityForResult(),\r\n                result -> {\r\n                    if (result.getData() != null) {\r\n                        photoUri = result.getData().getData();\r\n                        imgProfile.setImageURI(photoUri);\r\n                    }\r\n                }\r\n        );\r\n    }\r\n\r\n    private void initListeners() {\r\n\r\n        // Edit foto profil\r\n        btnEditPhoto.setOnClickListener(v -> openGallery());\r\n\r\n        // DatePicker\r\n        inputTanggalLahir.setOnClickListener(v -> showDatePicker());\r\n\r\n        // Tombol Simpan\r\n        btnSave.setOnClickListener(v -> saveUserData());\r\n\r\n        // Tombol Back\r\n        ImageView back = findViewById(R.id.btnBack);\r\n        back.setOnClickListener(v -> finish());\r\n    }\r\n\r\n    private void openGallery() {\r\n        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);\r\n        pickImageLauncher.launch(intent);\r\n    }\r\n\r\n    private void showDatePicker() {\r\n        final Calendar calendar = Calendar.getInstance();\r\n\r\n        DatePickerDialog dialog = new DatePickerDialog(\r\n                this,\r\n                (DatePicker view, int year, int month, int dayOfMonth) -> {\r\n                    String date = dayOfMonth + \"-\" + (month + 1) + \"-\" + year;\r\n                    inputTanggalLahir.setText(date);\r\n                },\r\n                calendar.get(Calendar.YEAR),\r\n                calendar.get(Calendar.MONTH),\r\n                calendar.get(Calendar.DAY_OF_MONTH)\r\n        );\r\n\r\n        dialog.show();\r\n    }\r\n\r\n    private void saveUserData() {\r\n\r\n        String nama = inputNama.getText().toString();\r\n        String email = inputEmail.getText().toString();\r\n        String nohp = inputNoHp.getText().toString();\r\n        String tglLahir = inputTanggalLahir.getText().toString();\r\n        String alamat = inputAlamat.getText().toString();\r\n        String pengalaman = inputPengalaman.getText().toString();\r\n        String gender = spinnerGender.getSelectedItem().toString();\r\n\r\n        // TODO:\r\n        // - Simpan ke Firebase\r\n        // - Simpan ke SQLite\r\n        // - Simpan ke API server\r\n        // Kamu bebas pilih.\r\n\r\n        // Tes output di Logcat\r\n        System.out.println(\"Nama: \" + nama);\r\n        System.out.println(\"Email: \" + email);\r\n        System.out.println(\"No HP: \" + nohp);\r\n        System.out.println(\"Tanggal Lahir: \" + tglLahir);\r\n        System.out.println(\"Gender: \" + gender);\r\n        System.out.println(\"Alamat: \" + alamat);\r\n        System.out.println(\"Pengalaman: \" + pengalaman);\r\n        System.out.println(\"Foto URI: \" + photoUri);\r\n\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/tem2/karirku/UserDataActivity.java b/app/src/main/java/com/tem2/karirku/UserDataActivity.java
+--- a/app/src/main/java/com/tem2/karirku/UserDataActivity.java	(revision ee8d0d03925f271a41abd5fae86d5b4b904888f2)
++++ b/app/src/main/java/com/tem2/karirku/UserDataActivity.java	(date 1764239310470)
+@@ -1,45 +1,88 @@
+ package com.tem2.karirku;
+ 
+ import android.app.DatePickerDialog;
++import android.app.ProgressDialog;
+ import android.content.Intent;
++import android.graphics.Bitmap;
+ import android.net.Uri;
+ import android.os.Bundle;
+ import android.provider.MediaStore;
++import android.util.Log;
++import android.widget.ArrayAdapter;
+ import android.widget.Button;
+ import android.widget.DatePicker;
+ import android.widget.EditText;
+ import android.widget.ImageView;
+ import android.widget.Spinner;
+-import android.widget.ArrayAdapter;
+ import android.widget.TextView;
++import android.widget.Toast;
+ 
+ import androidx.activity.result.ActivityResultLauncher;
+ import androidx.activity.result.contract.ActivityResultContracts;
+ import androidx.appcompat.app.AppCompatActivity;
+ 
++import com.android.volley.AuthFailureError;
++import com.android.volley.NetworkResponse;
++import com.android.volley.Request;
++import com.android.volley.RequestQueue;
++import com.android.volley.Response;
++import com.android.volley.VolleyError;
++import com.android.volley.toolbox.JsonArrayRequest;
++import com.android.volley.toolbox.StringRequest;
++import com.android.volley.toolbox.Volley;
++import com.bumptech.glide.Glide;
++
++import org.json.JSONArray;
++import org.json.JSONException;
++import org.json.JSONObject;
++
++import java.io.ByteArrayOutputStream;
++import java.io.IOException;
+ import java.util.Calendar;
++import java.util.HashMap;
++import java.util.Map;
+ 
+ public class UserDataActivity extends AppCompatActivity {
+ 
+-    private ImageView imgProfile, btnEditPhoto;
++    private ImageView imgProfile, btnEditPhoto, btnBack;
+     private EditText inputNama, inputEmail, inputNoHp, inputAlamat, inputPengalaman;
+-    private TextView inputTanggalLahir;
++    private TextView inputTanggalLahir, btnEdit;
+     private Spinner spinnerGender;
+     private Button btnSave;
+ 
+     private Uri photoUri;
+-
++    private Bitmap photoBitmap;
+     private ActivityResultLauncher<Intent> pickImageLauncher;
+ 
++    private SessionManager sessionManager;
++    private RequestQueue requestQueue;
++    private ProgressDialog progressDialog;
++
++    private int idPencaker = 0;
++    private int idPengguna = 0;
++    private boolean isEditMode = false;
++
++    private static final String SUPABASE_URL = "https://tkjnbelcgfwpbhppsnrl.supabase.co";
++    private static final String SUPABASE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRram5iZWxjZ2Z3cGJocHBzbnJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE3NDA3NjIsImV4cCI6MjA3NzMxNjc2Mn0.wOjK4X2qJV6LzOG4yXxnfeTezDX5_3Sb3wezhCuQAko";
++
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+-        setContentView(R.layout.activity_preferensi_kerja); // layout yang kamu pakai
++        setContentView(R.layout.activity_preferensi_kerja);
++
++        sessionManager = new SessionManager(this);
++        requestQueue = Volley.newRequestQueue(this);
++        idPengguna = sessionManager.getUserId();
++
++        progressDialog = new ProgressDialog(this);
++        progressDialog.setMessage("Loading...");
++        progressDialog.setCancelable(false);
+ 
+         initViews();
+         initSpinner();
+         initGalleryPicker();
+         initListeners();
++        loadUserData();
+     }
+ 
+     private void initViews() {
+@@ -53,17 +96,20 @@
+         inputTanggalLahir = findViewById(R.id.inputTanggalLahir);
+         spinnerGender = findViewById(R.id.spinnerGender);
+         btnSave = findViewById(R.id.btnSave);
++        btnBack = findViewById(R.id.btnBack);
++        btnEdit = findViewById(R.id.btnEdit);
++
++        // Set semua input disabled dulu
++        setEditMode(false);
+     }
+ 
+     private void initSpinner() {
+-        String[] genderItems = {"Pilih Gender", "Laki-laki", "Perempuan"};
+-
++        String[] genderItems = {"Pilih Gender", "male", "female"};
+         ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                 this,
+                 android.R.layout.simple_spinner_dropdown_item,
+                 genderItems
+         );
+-
+         spinnerGender.setAdapter(adapter);
+     }
+ 
+@@ -73,26 +119,52 @@
+                 result -> {
+                     if (result.getData() != null) {
+                         photoUri = result.getData().getData();
+-                        imgProfile.setImageURI(photoUri);
++                        try {
++                            photoBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoUri);
++                            imgProfile.setImageBitmap(photoBitmap);
++                        } catch (IOException e) {
++                            Log.e("USER_DATA", "Error loading image: " + e.getMessage());
++                        }
+                     }
+                 }
+         );
+     }
+ 
+     private void initListeners() {
++        btnEditPhoto.setOnClickListener(v -> {
++            if (isEditMode) {
++                openGallery();
++            } else {
++                Toast.makeText(this, "Klik Edit untuk mengubah foto", Toast.LENGTH_SHORT).show();
++            }
++        });
+ 
+-        // Edit foto profil
+-        btnEditPhoto.setOnClickListener(v -> openGallery());
++        inputTanggalLahir.setOnClickListener(v -> {
++            if (isEditMode) {
++                showDatePicker();
++            }
++        });
+ 
+-        // DatePicker
+-        inputTanggalLahir.setOnClickListener(v -> showDatePicker());
+-
+-        // Tombol Simpan
+         btnSave.setOnClickListener(v -> saveUserData());
++        btnBack.setOnClickListener(v -> finish());
+ 
+-        // Tombol Back
+-        ImageView back = findViewById(R.id.btnBack);
+-        back.setOnClickListener(v -> finish());
++        btnEdit.setOnClickListener(v -> {
++            isEditMode = !isEditMode;
++            setEditMode(isEditMode);
++            btnEdit.setText(isEditMode ? "Batal" : "Edit");
++        });
++    }
++
++    private void setEditMode(boolean enabled) {
++        inputNama.setEnabled(enabled);
++        inputEmail.setEnabled(enabled);
++        inputNoHp.setEnabled(enabled);
++        inputAlamat.setEnabled(enabled);
++        inputPengalaman.setEnabled(enabled);
++        inputTanggalLahir.setEnabled(enabled);
++        spinnerGender.setEnabled(enabled);
++        btnSave.setEnabled(enabled);
++        btnEditPhoto.setEnabled(enabled);
+     }
+ 
+     private void openGallery() {
+@@ -102,46 +174,734 @@
+ 
+     private void showDatePicker() {
+         final Calendar calendar = Calendar.getInstance();
+-
+         DatePickerDialog dialog = new DatePickerDialog(
+                 this,
+                 (DatePicker view, int year, int month, int dayOfMonth) -> {
+-                    String date = dayOfMonth + "-" + (month + 1) + "-" + year;
++                    String date = year + "-" + String.format("%02d", (month + 1)) + "-" + String.format("%02d", dayOfMonth);
+                     inputTanggalLahir.setText(date);
+                 },
+                 calendar.get(Calendar.YEAR),
+                 calendar.get(Calendar.MONTH),
+                 calendar.get(Calendar.DAY_OF_MONTH)
+         );
+-
+         dialog.show();
+     }
+ 
++    private void loadUserData() {
++        progressDialog.show();
++
++        String url = SUPABASE_URL + "/rest/v1/pencaker?id_pengguna=eq." + idPengguna + "&select=*";
++
++        Log.d("USER_DATA", "Loading data for user ID: " + idPengguna);
++
++        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
++                response -> {
++                    progressDialog.dismiss();
++                    Log.d("USER_DATA", "Load response length: " + response.length());
++                    Log.d("USER_DATA", "Load response: " + response.toString());
++
++                    if (response.length() > 0) {
++                        try {
++                            JSONObject data = response.getJSONObject(0);
++                            populateFields(data);
++                            Log.d("USER_DATA", "✅ Data loaded - id_pencaker: " + idPencaker);
++                        } catch (JSONException e) {
++                            Log.e("USER_DATA", "Error parsing data: " + e.getMessage());
++                        }
++                    } else {
++                        Log.d("USER_DATA", "❌ No data found after save!");
++                        // Reset idPencaker jika tidak ada data
++                        idPencaker = 0;
++                    }
++                },
++                error -> {
++                    progressDialog.dismiss();
++                    Log.e("USER_DATA", "Error loading data: " + error.toString());
++                    if (error.networkResponse != null) {
++                        Log.e("USER_DATA", "Load error response: " + new String(error.networkResponse.data));
++                    }
++                    Toast.makeText(this, "Gagal memuat data", Toast.LENGTH_SHORT).show();
++                }
++        ) {
++            @Override
++            public Map<String, String> getHeaders() {
++                Map<String, String> headers = new HashMap<>();
++                headers.put("apikey", SUPABASE_API_KEY);
++                headers.put("Authorization", "Bearer " + SUPABASE_API_KEY);
++                return headers;
++            }
++        };
++
++        requestQueue.add(request);
++    }
++
++    private void populateFields(JSONObject data) {
++        try {
++            idPencaker = data.optInt("id_pencaker", 0);
++
++            inputNama.setText(data.optString("nama_lengkap", ""));
++            inputEmail.setText(data.optString("email_pencaker", ""));
++            inputNoHp.setText(data.optString("no_hp", ""));
++            inputTanggalLahir.setText(data.optString("tanggal_lahir", ""));
++            inputAlamat.setText(data.optString("alamat", ""));
++            inputPengalaman.setText(data.optString("pengalaman_tahun", ""));
++
++            String gender = data.optString("gender", "");
++            if (gender.equals("male")) {
++                spinnerGender.setSelection(1);
++            } else if (gender.equals("female")) {
++                spinnerGender.setSelection(2);
++            }
++
++            String fotoUrl = data.optString("foto_profil_url", "");
++            if (!fotoUrl.isEmpty()) {
++                Glide.with(this)
++                        .load(fotoUrl)
++                        .circleCrop()
++                        .into(imgProfile);
++            }
++
++            Log.d("USER_DATA", "Data loaded successfully. ID Pencaker: " + idPencaker);
++        } catch (Exception e) {
++            Log.e("USER_DATA", "Error populating fields: " + e.getMessage());
++        }
++    }
++
+     private void saveUserData() {
+-
+-        String nama = inputNama.getText().toString();
+-        String email = inputEmail.getText().toString();
+-        String nohp = inputNoHp.getText().toString();
+-        String tglLahir = inputTanggalLahir.getText().toString();
+-        String alamat = inputAlamat.getText().toString();
+-        String pengalaman = inputPengalaman.getText().toString();
++        String nama = inputNama.getText().toString().trim();
++        String email = inputEmail.getText().toString().trim();
++        String noHp = inputNoHp.getText().toString().trim();
++        String tglLahir = inputTanggalLahir.getText().toString().trim();
++        String alamat = inputAlamat.getText().toString().trim();
++        String pengalaman = inputPengalaman.getText().toString().trim();
+         String gender = spinnerGender.getSelectedItem().toString();
+ 
+-        // TODO:
+-        // - Simpan ke Firebase
+-        // - Simpan ke SQLite
+-        // - Simpan ke API server
+-        // Kamu bebas pilih.
++        if (nama.isEmpty() || email.isEmpty() || noHp.isEmpty() || tglLahir.isEmpty() ||
++                alamat.isEmpty() || gender.equals("Pilih Gender")) {
++            Toast.makeText(this, "Harap isi semua field", Toast.LENGTH_SHORT).show();
++            return;
++        }
++
++        progressDialog.setMessage("Menyimpan data...");
++        progressDialog.show();
++
++        if (photoBitmap != null) {
++            uploadPhotoThenSaveData(nama, email, noHp, tglLahir, gender, alamat, pengalaman);
++        } else {
++            saveToDatabase(nama, email, noHp, tglLahir, gender, alamat, pengalaman, null, null);
++        }
++    }
++
++    private void uploadPhotoThenSaveData(String nama, String email, String noHp, String tglLahir,
++                                         String gender, String alamat, String pengalaman) {
++
++        long timestamp = System.currentTimeMillis();
++        String fileName = "profile_" + idPengguna + "_" + timestamp + ".jpg";
++        String storagePath = idPengguna + "/" + fileName;
++        String uploadUrl = SUPABASE_URL + "/storage/v1/object/profile-pictures/" + storagePath;
++
++        Log.d("USER_DATA", "Uploading photo to: " + uploadUrl);
++
++        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
++        photoBitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
++        byte[] imageBytes = byteArrayOutputStream.toByteArray();
++
++        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(
++                Request.Method.POST,
++                uploadUrl,
++                response -> {
++                    String fotoUrl = SUPABASE_URL + "/storage/v1/object/public/profile-pictures/" + storagePath;
++                    Log.d("USER_DATA", "✅ Photo uploaded: " + fotoUrl);
++                    saveToDatabase(nama, email, noHp, tglLahir, gender, alamat, pengalaman, fotoUrl, storagePath);
++                },
++                error -> {
++                    progressDialog.dismiss();
++                    Log.e("USER_DATA", "❌ Upload failed: " + error.toString());
++                    if (error.networkResponse != null) {
++                        Log.e("USER_DATA", "Status: " + error.networkResponse.statusCode);
++                        Log.e("USER_DATA", "Response: " + new String(error.networkResponse.data));
++                    }
++                    Toast.makeText(this, "Gagal upload foto", Toast.LENGTH_SHORT).show();
++                }
++        ) {
++            @Override
++            public Map<String, String> getHeaders() {
++                Map<String, String> headers = new HashMap<>();
++                headers.put("apikey", SUPABASE_API_KEY);
++                headers.put("Authorization", "Bearer " + SUPABASE_API_KEY);
++                headers.put("Content-Type", "image/jpeg");
++                return headers;
++            }
++
++            @Override
++            public byte[] getBody() {
++                return imageBytes;
++            }
++        };
++
++        requestQueue.add(multipartRequest);
++    }
++
++    private void saveToDatabase(String nama, String email, String noHp, String tglLahir,
++                                String gender, String alamat, String pengalaman,
++                                String fotoUrl, String fotoPath) {
++
++        // Selalu gunakan INSERT seperti web, biarkan database yang generate id_pencaker
++        String url = SUPABASE_URL + "/rest/v1/pencaker";
++
++        JSONObject body = new JSONObject();
++        try {
++            // SAMA PERSIS dengan data yang dikirim web PHP
++            body.put("id_pengguna", idPengguna);
++            body.put("nama_lengkap", nama);
++            body.put("email_pencaker", email);
++            body.put("no_hp", noHp);
++            body.put("alamat", alamat);
++            body.put("tanggal_lahir", tglLahir);
++            body.put("gender", gender);
++            body.put("pengalaman_tahun", pengalaman);
++            body.put("dibuat_pada", new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date()));
++
++            if (fotoUrl != null) {
++                body.put("foto_profil_url", fotoUrl);
++                body.put("foto_profil_path", fotoPath);
++            }
++
++        } catch (JSONException e) {
++            Log.e("USER_DATA", "Error creating JSON: " + e.getMessage());
++            progressDialog.dismiss();
++            return;
++        }
++
++        Log.d("USER_DATA", "INSERT data for id_pengguna: " + idPengguna);
++        Log.d("USER_DATA", "Request body: " + body.toString());
++
++        StringRequest request = new StringRequest(Request.Method.POST, url,
++                response -> {
++                    progressDialog.dismiss();
++                    Log.d("USER_DATA", "✅ INSERT successful! Response: " + response);
++
++                    Toast.makeText(this, "✅ Data berhasil disimpan!", Toast.LENGTH_SHORT).show();
++                    setEditMode(false);
++                    isEditMode = false;
++                    btnEdit.setText("Edit");
++                    sessionManager.updateUserProfile(nama, noHp);
++
++                    // Load data ulang untuk mendapatkan id_pencaker yang baru
++                    new android.os.Handler().postDelayed(() -> {
++                        loadUserData();
++                    }, 1500);
++                },
++                error -> {
++                    Log.e("USER_DATA", "❌ INSERT failed: " + error.toString());
++
++                    if (error.networkResponse != null) {
++                        String errorResponse = new String(error.networkResponse.data);
++                        Log.e("USER_DATA", "Error status: " + error.networkResponse.statusCode);
++                        Log.e("USER_DATA", "Error response: " + errorResponse);
++
++                        // Jika INSERT gagal karena data sudah ada, coba UPDATE
++                        if (error.networkResponse.statusCode == 409 || errorResponse.contains("duplicate") || errorResponse.contains("already exists")) {
++                            Log.d("USER_DATA", "Data already exists, trying UPDATE...");
++                            updateExistingData(nama, email, noHp, tglLahir, gender, alamat, pengalaman, fotoUrl, fotoPath);
++                            return;
++                        }
++                    }
++
++                    progressDialog.dismiss();
++                    Toast.makeText(this, "Gagal menyimpan data", Toast.LENGTH_SHORT).show();
++                }
++        ) {
++            @Override
++            public Map<String, String> getHeaders() {
++                Map<String, String> headers = new HashMap<>();
++                headers.put("apikey", SUPABASE_API_KEY);
++                headers.put("Authorization", "Bearer " + SUPABASE_API_KEY);
++                headers.put("Content-Type", "application/json");
++                // Sama seperti web - minimal preference
++                headers.put("Prefer", "return=minimal");
++                return headers;
++            }
++
++            @Override
++            public byte[] getBody() {
++                try {
++                    return body.toString().getBytes("utf-8");
++                } catch (Exception e) {
++                    return null;
++                }
++            }
++        };
++
++        requestQueue.add(request);
++    }
++
++    private void updateExistingData(String nama, String email, String noHp, String tglLahir,
++                                    String gender, String alamat, String pengalaman,
++                                    String fotoUrl, String fotoPath) {
++
++        // Jika INSERT gagal karena data sudah ada, update berdasarkan id_pengguna
++        String url = SUPABASE_URL + "/rest/v1/pencaker?id_pengguna=eq." + idPengguna;
++
++        JSONObject body = new JSONObject();
++        try {
++            body.put("nama_lengkap", nama);
++            body.put("email_pencaker", email);
++            body.put("no_hp", noHp);
++            body.put("alamat", alamat);
++            body.put("tanggal_lahir", tglLahir);
++            body.put("gender", gender);
++            body.put("pengalaman_tahun", pengalaman);
++
++            if (fotoUrl != null) {
++                body.put("foto_profil_url", fotoUrl);
++                body.put("foto_profil_path", fotoPath);
++            }
++        } catch (JSONException e) {
++            Log.e("USER_DATA", "Error creating update JSON: " + e.getMessage());
++            progressDialog.dismiss();
++            return;
++        }
++
++        StringRequest updateRequest = new StringRequest(Request.Method.PATCH, url,
++                response -> {
++                    progressDialog.dismiss();
++                    Log.d("USER_DATA", "✅ UPDATE successful! Response: " + response);
++                    Toast.makeText(this, "✅ Data berhasil diperbarui!", Toast.LENGTH_SHORT).show();
++                    setEditMode(false);
++                    isEditMode = false;
++                    btnEdit.setText("Edit");
++                    sessionManager.updateUserProfile(nama, noHp);
++
++                    // Load data ulang
++                    new android.os.Handler().postDelayed(() -> {
++                        loadUserData();
++                    }, 1000);
++                },
++                error -> {
++                    progressDialog.dismiss();
++                    Log.e("USER_DATA", "❌ UPDATE failed: " + error.toString());
++                    Toast.makeText(this, "Gagal memperbarui data", Toast.LENGTH_SHORT).show();
++                }
++        ) {
++            @Override
++            public Map<String, String> getHeaders() {
++                Map<String, String> headers = new HashMap<>();
++                headers.put("apikey", SUPABASE_API_KEY);
++                headers.put("Authorization", "Bearer " + SUPABASE_API_KEY);
++                headers.put("Content-Type", "application/json");
++                headers.put("Prefer", "return=minimal");
++                return headers;
++            }
++
++            @Override
++            public byte[] getBody() {
++                try {
++                    return body.toString().getBytes("utf-8");
++                } catch (Exception e) {
++                    return null;
++                }
++            }
++        };
++
++        requestQueue.add(updateRequest);
++    }
++
++    private void tryInsertAsNew(String nama, String email, String noHp, String tglLahir,
++                                String gender, String alamat, String pengalaman,
++                                String fotoUrl, String fotoPath) {
++        Log.d("USER_DATA", "Trying INSERT as new data...");
++
++        String url = SUPABASE_URL + "/rest/v1/pencaker";
++
++        JSONObject body = new JSONObject();
++        try {
++            body.put("id_pengguna", idPengguna);
++            body.put("nama_lengkap", nama);
++            body.put("email_pencaker", email);
++            body.put("no_hp", noHp);
++            body.put("alamat", alamat);
++            body.put("tanggal_lahir", tglLahir);
++            body.put("gender", gender);
++            body.put("pengalaman_tahun", pengalaman);
++
++            if (fotoUrl != null) {
++                body.put("foto_profil_url", fotoUrl);
++                body.put("foto_profil_path", fotoPath);
++            }
++        } catch (JSONException e) {
++            Log.e("USER_DATA", "Error creating JSON: " + e.getMessage());
++            return;
++        }
++
++        StringRequest insertRequest = new StringRequest(Request.Method.POST, url,
++                response -> {
++                    progressDialog.dismiss();
++                    Log.d("USER_DATA", "✅ INSERT as new successful!");
++                    Toast.makeText(this, "✅ Data berhasil disimpan!", Toast.LENGTH_SHORT).show();
++                    setEditMode(false);
++                    isEditMode = false;
++                    btnEdit.setText("Edit");
++                    sessionManager.updateUserProfile(nama, noHp);
++
++                    // Load data untuk mendapatkan id_pencaker
++                    new android.os.Handler().postDelayed(() -> {
++                        loadUserData();
++                    }, 1000);
++                },
++                error -> {
++                    progressDialog.dismiss();
++                    Log.e("USER_DATA", "❌ INSERT as new failed: " + error.toString());
++                    Toast.makeText(this, "Gagal menyimpan data", Toast.LENGTH_SHORT).show();
++                }
++        ) {
++            @Override
++            public Map<String, String> getHeaders() {
++                Map<String, String> headers = new HashMap<>();
++                headers.put("apikey", SUPABASE_API_KEY);
++                headers.put("Authorization", "Bearer " + SUPABASE_API_KEY);
++                headers.put("Content-Type", "application/json");
++                headers.put("Prefer", "return=minimal");
++                return headers;
++            }
++
++            @Override
++            public byte[] getBody() {
++                try {
++                    return body.toString().getBytes("utf-8");
++                } catch (Exception e) {
++                    return null;
++                }
++            }
++        };
++
++        requestQueue.add(insertRequest);
++    }
++
++    private void tryUpdateExisting(String nama, String email, String noHp, String tglLahir,
++                                   String gender, String alamat, String pengalaman,
++                                   String fotoUrl, String fotoPath) {
++        Log.d("USER_DATA", "Trying UPDATE existing data...");
++
++        String url = SUPABASE_URL + "/rest/v1/pencaker?id_pengguna=eq." + idPengguna;
++
++        JSONObject body = new JSONObject();
++        try {
++            body.put("nama_lengkap", nama);
++            body.put("email_pencaker", email);
++            body.put("no_hp", noHp);
++            body.put("alamat", alamat);
++            body.put("tanggal_lahir", tglLahir);
++            body.put("gender", gender);
++            body.put("pengalaman_tahun", pengalaman);
++
++            if (fotoUrl != null) {
++                body.put("foto_profil_url", fotoUrl);
++                body.put("foto_profil_path", fotoPath);
++            }
++        } catch (JSONException e) {
++            Log.e("USER_DATA", "Error creating JSON: " + e.getMessage());
++            return;
++        }
++
++        StringRequest updateRequest = new StringRequest(Request.Method.PATCH, url,
++                response -> {
++                    Log.d("USER_DATA", "✅ Data updated successfully!");
++                    Log.d("USER_DATA", "Update response: " + response);
++
++                    // Tunggu sebentar lalu load data untuk konfirmasi
++                    new android.os.Handler().postDelayed(() -> {
++                        progressDialog.dismiss();
++                        Toast.makeText(this, "✅ Data berhasil diperbarui!", Toast.LENGTH_SHORT).show();
++                        setEditMode(false);
++                        isEditMode = false;
++                        btnEdit.setText("Edit");
++                        sessionManager.updateUserProfile(nama, noHp);
++
++                        // Load data dengan delay untuk pastikan update sudah propagate
++                        new android.os.Handler().postDelayed(() -> {
++                            loadUserData();
++                        }, 1000);
++                    }, 500);
++                },
++                error -> {
++                    progressDialog.dismiss();
++                    Log.e("USER_DATA", "❌ Update failed: " + error.toString());
++                    if (error.networkResponse != null) {
++                        Log.e("USER_DATA", "Update error: " + new String(error.networkResponse.data));
++                    }
++
++                    tryLastResort(nama, email, noHp, tglLahir, gender, alamat, pengalaman, fotoUrl, fotoPath);
++                }
++        ) {
++            @Override
++            public Map<String, String> getHeaders() {
++                Map<String, String> headers = new HashMap<>();
++                headers.put("apikey", SUPABASE_API_KEY);
++                headers.put("Authorization", "Bearer " + SUPABASE_API_KEY);
++                headers.put("Content-Type", "application/json");
++                headers.put("Prefer", "return=representation"); // Ubah ke representation untuk dapat response
++                return headers;
++            }
++
++            @Override
++            public byte[] getBody() {
++                try {
++                    return body.toString().getBytes("utf-8");
++                } catch (Exception e) {
++                    return null;
++                }
++            }
++        };
++
++        requestQueue.add(updateRequest);
++    }
++    private void tryLastResort(String nama, String email, String noHp, String tglLahir,
++                               String gender, String alamat, String pengalaman,
++                               String fotoUrl, String fotoPath) {
++        Log.d("USER_DATA", "Trying last resort approach...");
++
++        // Cek dulu apakah data sudah ada
++        String checkUrl = SUPABASE_URL + "/rest/v1/pencaker?id_pengguna=eq." + idPengguna + "&select=id_pencaker";
++
++        JsonArrayRequest checkRequest = new JsonArrayRequest(Request.Method.GET, checkUrl, null,
++                response -> {
++                    if (response.length() > 0) {
++                        // Data sudah ada, gunakan PUT untuk replace
++                        tryPutReplace(nama, email, noHp, tglLahir, gender, alamat, pengalaman, fotoUrl, fotoPath);
++                    } else {
++                        // Data belum ada, coba INSERT dengan approach berbeda
++                        trySimpleInsert(nama, email, noHp, tglLahir, gender, alamat, pengalaman, fotoUrl, fotoPath);
++                    }
++                },
++                error -> {
++                    progressDialog.dismiss();
++                    Log.e("USER_DATA", "❌ Check existing failed: " + error.toString());
++                    Toast.makeText(this, "Gagal memeriksa data existing", Toast.LENGTH_SHORT).show();
++                }
++        ) {
++            @Override
++            public Map<String, String> getHeaders() {
++                Map<String, String> headers = new HashMap<>();
++                headers.put("apikey", SUPABASE_API_KEY);
++                headers.put("Authorization", "Bearer " + SUPABASE_API_KEY);
++                return headers;
++            }
++        };
++
++        requestQueue.add(checkRequest);
++    }
++
++    private void tryPutReplace(String nama, String email, String noHp, String tglLahir,
++                               String gender, String alamat, String pengalaman,
++                               String fotoUrl, String fotoPath) {
++        Log.d("USER_DATA", "Trying PUT to replace existing data...");
++
++        String url = SUPABASE_URL + "/rest/v1/pencaker?id_pengguna=eq." + idPengguna;
++
++        JSONObject body = new JSONObject();
++        try {
++            body.put("id_pengguna", idPengguna);
++            body.put("nama_lengkap", nama);
++            body.put("email_pencaker", email);
++            body.put("no_hp", noHp);
++            body.put("alamat", alamat);
++            body.put("tanggal_lahir", tglLahir);
++            body.put("gender", gender);
++            body.put("pengalaman_tahun", pengalaman);
++            body.put("dibuat_pada", new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date()));
++
++            if (fotoUrl != null) {
++                body.put("foto_profil_url", fotoUrl);
++                body.put("foto_profil_path", fotoPath);
++            }
++        } catch (JSONException e) {
++            Log.e("USER_DATA", "Error creating JSON: " + e.getMessage());
++            return;
++        }
++
++        StringRequest putRequest = new StringRequest(Request.Method.PUT, url,
++                response -> {
++                    progressDialog.dismiss();
++                    Log.d("USER_DATA", "✅ Data replaced via PUT!");
++                    Toast.makeText(this, "✅ Data berhasil disimpan!", Toast.LENGTH_SHORT).show();
++                    setEditMode(false);
++                    isEditMode = false;
++                    btnEdit.setText("Edit");
++                    sessionManager.updateUserProfile(nama, noHp);
++                    loadUserData();
++                },
++                error -> {
++                    progressDialog.dismiss();
++                    Log.e("USER_DATA", "❌ PUT failed: " + error.toString());
++                    Toast.makeText(this, "Gagal menyimpan data setelah beberapa percobaan", Toast.LENGTH_SHORT).show();
++                }
++        ) {
++            @Override
++            public Map<String, String> getHeaders() {
++                Map<String, String> headers = new HashMap<>();
++                headers.put("apikey", SUPABASE_API_KEY);
++                headers.put("Authorization", "Bearer " + SUPABASE_API_KEY);
++                headers.put("Content-Type", "application/json");
++                headers.put("Prefer", "return=minimal");
++                return headers;
++            }
++
++            @Override
++            public byte[] getBody() {
++                try {
++                    return body.toString().getBytes("utf-8");
++                } catch (Exception e) {
++                    return null;
++                }
++            }
++        };
++
++        requestQueue.add(putRequest);
++    }
++
++    private void trySimpleInsert(String nama, String email, String noHp, String tglLahir,
++                                 String gender, String alamat, String pengalaman,
++                                 String fotoUrl, String fotoPath) {
++        Log.d("USER_DATA", "Trying simple INSERT without optional fields...");
++
++        String url = SUPABASE_URL + "/rest/v1/pencaker";
++
++        JSONObject simpleBody = new JSONObject();
++        try {
++            // Hanya field yang paling essential
++            simpleBody.put("id_pengguna", idPengguna);
++            simpleBody.put("nama_lengkap", nama);
++            simpleBody.put("email_pencaker", email);
++            simpleBody.put("no_hp", noHp);
++            // Skip field optional dulu
++        } catch (JSONException e) {
++            Log.e("USER_DATA", "Error creating simple JSON: " + e.getMessage());
++            return;
++        }
++
++        StringRequest simpleRequest = new StringRequest(Request.Method.POST, url,
++                response -> {
++                    progressDialog.dismiss();
++                    Log.d("USER_DATA", "✅ Simple data saved!");
++                    Toast.makeText(this, "Data dasar tersimpan, silakan lengkapi kemudian", Toast.LENGTH_SHORT).show();
++                    setEditMode(false);
++                    isEditMode = false;
++                    btnEdit.setText("Edit");
++                    sessionManager.updateUserProfile(nama, noHp);
++                    loadUserData();
++                },
++                error -> {
++                    progressDialog.dismiss();
++                    Log.e("USER_DATA", "❌ Simple insert failed: " + error.toString());
++                    Toast.makeText(this, "Gagal menyimpan data ke server", Toast.LENGTH_SHORT).show();
++                }
++        ) {
++            @Override
++            public Map<String, String> getHeaders() {
++                Map<String, String> headers = new HashMap<>();
++                headers.put("apikey", SUPABASE_API_KEY);
++                headers.put("Authorization", "Bearer " + SUPABASE_API_KEY);
++                headers.put("Content-Type", "application/json");
++                headers.put("Prefer", "return=minimal");
++                return headers;
++            }
++
++            @Override
++            public byte[] getBody() {
++                try {
++                    return simpleBody.toString().getBytes("utf-8");
++                } catch (Exception e) {
++                    return null;
++                }
++            }
++        };
++
++        requestQueue.add(simpleRequest);
++    }
+ 
+-        // Tes output di Logcat
+-        System.out.println("Nama: " + nama);
+-        System.out.println("Email: " + email);
+-        System.out.println("No HP: " + nohp);
+-        System.out.println("Tanggal Lahir: " + tglLahir);
+-        System.out.println("Gender: " + gender);
+-        System.out.println("Alamat: " + alamat);
+-        System.out.println("Pengalaman: " + pengalaman);
+-        System.out.println("Foto URI: " + photoUri);
++    private void tryAlternativeSave(String nama, String email, String noHp, String tglLahir,
++                                    String gender, String alamat, String pengalaman,
++                                    String fotoUrl, String fotoPath) {
++        Log.d("USER_DATA", "Trying alternative save approach...");
+ 
+-    }
+-}
++        // Coba dengan UPSERT menggunakan on_conflict
++        String url = SUPABASE_URL + "/rest/v1/pencaker?on_conflict=id_pengguna";
++
++        JSONObject body = new JSONObject();
++        try {
++            // Untuk UPSERT, kita hanya perlu id_pengguna sebagai conflict target
++            body.put("id_pengguna", idPengguna);
++            body.put("nama_lengkap", nama);
++            body.put("email_pencaker", email);
++            body.put("no_hp", noHp);
++            body.put("tanggal_lahir", tglLahir);
++            body.put("gender", gender);
++            body.put("alamat", alamat);
++            body.put("pengalaman_tahun", pengalaman);
++
++            if (fotoUrl != null) {
++                body.put("foto_profil_url", fotoUrl);
++                body.put("foto_profil_path", fotoPath);
++            }
++        } catch (JSONException e) {
++            Log.e("USER_DATA", "Error creating JSON: " + e.getMessage());
++            return;
++        }
++
++        StringRequest upsertRequest = new StringRequest(Request.Method.POST, url,
++                response -> {
++                    progressDialog.dismiss();
++                    Log.d("USER_DATA", "✅ Data saved via UPSERT!");
++                    Log.d("USER_DATA", "Response: " + response);
++
++                    // Parse response untuk mendapatkan id_pencaker
++                    if (response != null && !response.trim().isEmpty() && !response.equals("[]")) {
++                        try {
++                            JSONArray jsonArray = new JSONArray(response);
++                            if (jsonArray.length() > 0) {
++                                JSONObject firstItem = jsonArray.getJSONObject(0);
++                                idPencaker = firstItem.getInt("id_pencaker");
++                                Log.d("USER_DATA", "UPSERT id_pencaker: " + idPencaker);
++                            }
++                        } catch (JSONException e) {
++                            Log.e("USER_DATA", "Error parsing UPSERT response: " + e.getMessage());
++                        }
++                    }
++
++                    Toast.makeText(this, "✅ Data berhasil disimpan!", Toast.LENGTH_SHORT).show();
++                    setEditMode(false);
++                    isEditMode = false;
++                    btnEdit.setText("Edit");
++                    sessionManager.updateUserProfile(nama, noHp);
++                    loadUserData();
++                },
++                error -> {
++                    progressDialog.dismiss();
++                    Log.e("USER_DATA", "❌ UPSERT failed: " + error.toString());
++                    Toast.makeText(this, "Gagal menyimpan data setelah beberapa percobaan", Toast.LENGTH_SHORT).show();
++                }
++        ) {
++            @Override
++            public Map<String, String> getHeaders() {
++                Map<String, String> headers = new HashMap<>();
++                headers.put("apikey", SUPABASE_API_KEY);
++                headers.put("Authorization", "Bearer " + SUPABASE_API_KEY);
++                headers.put("Content-Type", "application/json");
++                headers.put("Prefer", "return=representation");
++                return headers;
++            }
++
++            @Override
++            public byte[] getBody() {
++                try {
++                    return body.toString().getBytes("utf-8");
++                } catch (Exception e) {
++                    return null;
++                }
++            }
++        };
++
++        requestQueue.add(upsertRequest);
++    }
++}
+\ No newline at end of file
+Index: app/src/main/java/com/tem2/karirku/profilFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.tem2.karirku;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.ImageView;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.annotation.Nullable;\r\nimport androidx.fragment.app.Fragment;\r\n\r\nimport com.android.volley.Request;\r\nimport com.android.volley.RequestQueue;\r\nimport com.android.volley.toolbox.JsonArrayRequest;\r\nimport com.android.volley.toolbox.Volley;\r\nimport com.bumptech.glide.Glide;\r\n\r\nimport org.json.JSONArray;\r\nimport org.json.JSONObject;\r\nimport de.hdodenhof.circleimageview.CircleImageView;\r\n\r\nimport java.util.HashMap;\r\nimport java.util.Map;\r\n\r\npublic class profilFragment extends Fragment {\r\n\r\n    private static final String SUPABASE_URL = \"https://tkjnbelcgfwpbhppsnrl.supabase.co\";\r\n    private static final String SUPABASE_API_KEY = \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRram5iZWxjZ2Z3cGJocHBzbnJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE3NDA3NjIsImV4cCI6MjA3NzMxNjc2Mn0.wOjK4X2qJV6LzOG4yXxnfeTezDX5_3Sb3wezhCuQAko\";\r\n\r\n    private TextView tvName, tvEmail;\r\n    private CircleImageView imgProfile;\r\n    private SessionManager sessionManager;\r\n\r\n    @Nullable\r\n    @Override\r\n    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {\r\n        View view = inflater.inflate(R.layout.fragment_profil, container, false);\r\n\r\n        sessionManager = new SessionManager(requireContext());\r\n\r\n        tvName = view.findViewById(R.id.tvNama);\r\n        tvEmail = view.findViewById(R.id.tvSelengkapnya);\r\n        imgProfile = view.findViewById(R.id.imgProfile);\r\n\r\n        loadUserData();\r\n\r\n        setupClickListeners(view);\r\n\r\n        return view;\r\n    }\r\n\r\n    private void loadUserData() {\r\n        int userId = sessionManager.getUserId();\r\n        Log.d(\"PROFILE\", \"Load profile for user ID: \" + userId);\r\n\r\n        String url = SUPABASE_URL + \"/rest/v1/pengguna?id_pengguna=eq.\" + userId + \"&select=nama_lengkap,email,foto_url\";\r\n\r\n        RequestQueue queue = Volley.newRequestQueue(requireContext());\r\n\r\n        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,\r\n                response -> {\r\n                    try {\r\n                        if (response.length() > 0) {\r\n                            JSONObject user = response.getJSONObject(0);\r\n\r\n                            String name = user.optString(\"nama_lengkap\", \"-\");\r\n                            String email = user.optString(\"email\", \"-\");\r\n                            String fotoUrl = user.optString(\"foto_url\", \"\");\r\n\r\n                            tvName.setText(name);\r\n                            tvEmail.setText(email);\r\n\r\n                            // Jika ada foto di Supabase, load\r\n                            if (!fotoUrl.isEmpty()) {\r\n                                String fullImageUrl =\r\n                                        SUPABASE_URL + \"/storage/v1/object/public/\" + fotoUrl;\r\n\r\n                                Log.d(\"PROFILE\", \"Load image from: \" + fullImageUrl);\r\n\r\n                                Glide.with(requireContext())\r\n                                        .load(fullImageUrl)\r\n                                        .into(imgProfile);\r\n                            }\r\n                        }\r\n\r\n                    } catch (Exception e) {\r\n                        Log.e(\"PROFILE\", \"Parsing error: \" + e.getMessage());\r\n                    }\r\n                },\r\n                error -> Log.e(\"PROFILE\", \"Volley error: \" + error.toString())\r\n        ) {\r\n            @Override\r\n            public Map<String, String> getHeaders() {\r\n                Map<String, String> headers = new HashMap<>();\r\n                headers.put(\"apikey\", SUPABASE_API_KEY);\r\n                headers.put(\"Authorization\", \"Bearer \" + SUPABASE_API_KEY);\r\n                return headers;\r\n            }\r\n        };\r\n\r\n        queue.add(request);\r\n    }\r\n\r\n\r\n    private void setupClickListeners(View view) {\r\n\r\n        // Dilamar\r\n        view.findViewById(R.id.dilamarContainer).setOnClickListener(v ->\r\n                startActivity(new Intent(getActivity(), DilamarActivity.class)));\r\n\r\n        // Disimpan\r\n        view.findViewById(R.id.disimpanContainer).setOnClickListener(v ->\r\n                startActivity(new Intent(getActivity(), DisimpanActivity.class)));\r\n\r\n        // CV\r\n        view.findViewById(R.id.itemCV).setOnClickListener(v ->\r\n                startActivity(new Intent(getActivity(), CvActivity.class)));\r\n\r\n        //pendataan user\r\n        view.findViewById(R.id.itemPreferensiKerja).setOnClickListener(v ->\r\n                startActivity(new Intent(getActivity(), UserDataActivity.class)));\r\n\r\n        // Setting\r\n        view.findViewById(R.id.btnSetting).setOnClickListener(v ->\r\n                Toast.makeText(getActivity(), \"Fitur settings\", Toast.LENGTH_SHORT).show());\r\n\r\n        // Lengkapi Profil\r\n        view.findViewById(R.id.btnLengkapiProfil).setOnClickListener(v ->\r\n                startActivity(new Intent(getActivity(), LengkapiProfilActivity.class)));\r\n\r\n        // LOGOUT\r\n        view.findViewById(R.id.btnKeluar).setOnClickListener(v -> {\r\n            sessionManager.clearSession();\r\n            startActivity(new Intent(getActivity(), MainActivity.class));\r\n            requireActivity().finish();\r\n        });\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/tem2/karirku/profilFragment.java b/app/src/main/java/com/tem2/karirku/profilFragment.java
+--- a/app/src/main/java/com/tem2/karirku/profilFragment.java	(revision ee8d0d03925f271a41abd5fae86d5b4b904888f2)
++++ b/app/src/main/java/com/tem2/karirku/profilFragment.java	(date 1764239480181)
+@@ -58,7 +58,96 @@
+         int userId = sessionManager.getUserId();
+         Log.d("PROFILE", "Load profile for user ID: " + userId);
+ 
+-        String url = SUPABASE_URL + "/rest/v1/pengguna?id_pengguna=eq." + userId + "&select=nama_lengkap,email,foto_url";
++        // Ubah URL untuk mengambil data dari tabel pencaker bukan pengguna
++        String url = SUPABASE_URL + "/rest/v1/pencaker?id_pengguna=eq." + userId + "&select=id_pencaker,nama_lengkap,email_pencaker,no_hp,tanggal_lahir,gender,alamat,pengalaman_tahun,foto_profil_url,foto_profil_path";
++
++        RequestQueue queue = Volley.newRequestQueue(requireContext());
++
++        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
++                response -> {
++                    try {
++                        if (response.length() > 0) {
++                            JSONObject pencaker = response.getJSONObject(0);
++
++                            // Ambil data dari tabel pencaker
++                            String name = pencaker.optString("nama_lengkap", "-");
++                            String email = pencaker.optString("email_pencaker", "-");
++                            String noHp = pencaker.optString("no_hp", "-");
++                            String tanggalLahir = pencaker.optString("tanggal_lahir", "");
++                            String gender = pencaker.optString("gender", "");
++                            String alamat = pencaker.optString("alamat", "");
++                            String pengalaman = pencaker.optString("pengalaman_tahun", "");
++                            String fotoUrl = pencaker.optString("foto_profil_url", "");
++
++                            // Simpan id_pencaker untuk keperluan update
++                            int idPencaker = pencaker.optInt("id_pencaker", 0);
++
++                            // Set data ke view
++                            tvName.setText(name);
++                            tvEmail.setText(email);
++
++                            // Jika ada field lain, set di sini
++                            // Contoh: tvNoHp.setText(noHp);
++                            // tvAlamat.setText(alamat);
++                            // dll...
++
++                            // Load foto profil
++                            if (!fotoUrl.isEmpty()) {
++                                Log.d("PROFILE", "Load image from: " + fotoUrl);
++
++                                Glide.with(requireContext())
++                                        .load(fotoUrl)
++                                        .circleCrop() // Optional: untuk membuat gambar bulat
++                                        .into(imgProfile);
++                            } else {
++                                // Set default image jika tidak ada foto
++                                imgProfile.setImageResource(R.drawable.ic_profile_placeholder);
++                            }
++
++                            Log.d("PROFILE", "✅ Data loaded from pencaker table - id_pencaker: " + idPencaker);
++
++                        } else {
++                            // Tidak ada data di tabel pencaker
++                            Log.d("PROFILE", "❌ No data found in pencaker table for user ID: " + userId);
++
++                            // Set default values atau kosongkan field
++                            tvName.setText("-");
++                            tvEmail.setText("-");
++                            imgProfile.setImageResource(R.drawable.ic_profile_placeholder);
++
++                            // Optionally, Anda bisa fallback ke data dari tabel pengguna
++                            loadUserDataFromPengguna();
++                        }
++
++                    } catch (Exception e) {
++                        Log.e("PROFILE", "Parsing error: " + e.getMessage());
++                        // Fallback ke data pengguna jika error
++                        loadUserDataFromPengguna();
++                    }
++                },
++                error -> {
++                    Log.e("PROFILE", "Volley error: " + error.toString());
++                    // Fallback ke data pengguna jika error
++                    loadUserDataFromPengguna();
++                }
++        ) {
++            @Override
++            public Map<String, String> getHeaders() {
++                Map<String, String> headers = new HashMap<>();
++                headers.put("apikey", SUPABASE_API_KEY);
++                headers.put("Authorization", "Bearer " + SUPABASE_API_KEY);
++                return headers;
++            }
++        };
++
++        queue.add(request);
++    }
++
++    private void loadUserDataFromPengguna() {
++        int userId = sessionManager.getUserId();
++        Log.d("PROFILE", "Fallback: Load profile from pengguna table for user ID: " + userId);
++
++        String url = SUPABASE_URL + "/rest/v1/pengguna?id=eq." + userId + "&select=nama_lengkap,email,foto_url";
+ 
+         RequestQueue queue = Volley.newRequestQueue(requireContext());
+ 
+@@ -75,24 +164,26 @@
+                             tvName.setText(name);
+                             tvEmail.setText(email);
+ 
+-                            // Jika ada foto di Supabase, load
++                            // Load foto dari tabel pengguna
+                             if (!fotoUrl.isEmpty()) {
+-                                String fullImageUrl =
+-                                        SUPABASE_URL + "/storage/v1/object/public/" + fotoUrl;
++                                String fullImageUrl = SUPABASE_URL + "/storage/v1/object/public/" + fotoUrl;
+ 
+-                                Log.d("PROFILE", "Load image from: " + fullImageUrl);
++                                Log.d("PROFILE", "Load image from pengguna table: " + fullImageUrl);
+ 
+                                 Glide.with(requireContext())
+                                         .load(fullImageUrl)
++                                        .circleCrop()
+                                         .into(imgProfile);
+                             }
++
++                            Log.d("PROFILE", "✅ Fallback data loaded from pengguna table");
+                         }
+ 
+                     } catch (Exception e) {
+-                        Log.e("PROFILE", "Parsing error: " + e.getMessage());
++                        Log.e("PROFILE", "Fallback parsing error: " + e.getMessage());
+                     }
+                 },
+-                error -> Log.e("PROFILE", "Volley error: " + error.toString())
++                error -> Log.e("PROFILE", "Fallback Volley error: " + error.toString())
+         ) {
+             @Override
+             public Map<String, String> getHeaders() {
+@@ -121,6 +212,10 @@
+         view.findViewById(R.id.itemCV).setOnClickListener(v ->
+                 startActivity(new Intent(getActivity(), CvActivity.class)));
+ 
++        //pendataan user
++        view.findViewById(R.id.itemPreferensiKerja).setOnClickListener(v ->
++                startActivity(new Intent(getActivity(), UserDataActivity.class)));
++
+         //pendataan user
+         view.findViewById(R.id.itemPreferensiKerja).setOnClickListener(v ->
+                 startActivity(new Intent(getActivity(), UserDataActivity.class)));
+Index: app/src/main/java/com/tem2/karirku/HomeFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.tem2.karirku;\r\n\r\nimport android.os.Bundle;\r\nimport android.text.Editable;\r\nimport android.text.TextWatcher;\r\nimport android.util.Log;\r\nimport android.view.KeyEvent;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.view.inputmethod.EditorInfo;\r\nimport android.widget.EditText;\r\nimport android.widget.ImageView;\r\nimport android.widget.LinearLayout;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.fragment.app.Fragment;\r\nimport androidx.recyclerview.widget.LinearLayoutManager;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport com.android.volley.Request;\r\nimport com.android.volley.RequestQueue;\r\nimport com.android.volley.toolbox.JsonArrayRequest;\r\nimport com.android.volley.toolbox.JsonObjectRequest;\r\nimport com.android.volley.toolbox.Volley;\r\nimport com.bumptech.glide.Glide;\r\n\r\nimport org.json.JSONArray;\r\nimport org.json.JSONException;\r\nimport org.json.JSONObject;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.Collections;\r\nimport java.util.Comparator;\r\nimport java.util.HashMap;\r\nimport java.util.List;\r\nimport java.util.Locale;\r\nimport java.util.Map;\r\n\r\npublic class HomeFragment extends Fragment {\r\n\r\n    private RecyclerView recyclerJobs;\r\n    private JobAdapter jobAdapter;\r\n    private List<Job> jobList = new ArrayList<>();\r\n    private List<Job> filteredJobList = new ArrayList<>();\r\n    private EditText searchEditText;\r\n    private ImageView imgProfile;\r\n\r\n    private TextView tabSemua, tabTerbaru, tabTerlama;\r\n    private String currentSearchQuery = \"\";\r\n\r\n    // TAMBAHAN UNTUK RIWAYAT PENCARIAN\r\n    private LinearLayout searchHistoryContainer;\r\n    private RecyclerView recyclerSearchHistory;\r\n    private SearchHistoryAdapter searchHistoryAdapter;\r\n    private List<String> searchHistoryList = new ArrayList<>();\r\n    private SessionManager sessionManager;\r\n    private RequestQueue requestQueue;\r\n\r\n    private static final String SUPABASE_URL = \"https://tkjnbelcgfwpbhppsnrl.supabase.co/rest/v1/lowongan?select=*\";\r\n    private static final String SUPABASE_API_KEY = \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRram5iZWxjZ2Z3cGJocHBzbnJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE3NDA3NjIsImV4cCI6MjA3NzMxNjc2Mn0.wOjK4X2qJV6LzOG4yXxnfeTezDX5_3Sb3wezhCuQAko\";\r\n\r\n    @Override\r\n    public View onCreateView(LayoutInflater inflater, ViewGroup container,\r\n                             Bundle savedInstanceState) {\r\n        View view = inflater.inflate(R.layout.fragment_home, container, false);\r\n\r\n        // INISIALISASI SESSION MANAGER DAN REQUEST QUEUE\r\n        sessionManager = new SessionManager(requireContext());\r\n        requestQueue = Volley.newRequestQueue(requireContext());\r\n\r\n        // DEBUG: CEK USER ID\r\n        int userId = sessionManager.getUserId();\r\n        Log.d(\"HOME_FRAGMENT\", \"========================================\");\r\n        Log.d(\"HOME_FRAGMENT\", \"\uD83D\uDC64 User ID: \" + userId);\r\n        Log.d(\"HOME_FRAGMENT\", \"\uD83D\uDC64 User Name: \" + sessionManager.getUserName());\r\n        Log.d(\"HOME_FRAGMENT\", \"\uD83D\uDC64 User Email: \" + sessionManager.getUserEmail());\r\n        Log.d(\"HOME_FRAGMENT\", \"========================================\");\r\n\r\n        recyclerJobs = view.findViewById(R.id.recyclerJobs);\r\n        recyclerJobs.setLayoutManager(new LinearLayoutManager(getContext()));\r\n\r\n        searchEditText = view.findViewById(R.id.searchEditText);\r\n        tabSemua = view.findViewById(R.id.tab_semua);\r\n        tabTerbaru = view.findViewById(R.id.tab_terbaru);\r\n        tabTerlama = view.findViewById(R.id.tab_terlama);\r\n        imgProfile = view.findViewById(R.id.imgprofile);\r\n\r\n        // INISIALISASI RIWAYAT PENCARIAN\r\n        searchHistoryContainer = view.findViewById(R.id.searchHistoryContainer);\r\n        recyclerSearchHistory = view.findViewById(R.id.recyclerSearchHistory);\r\n        setupSearchHistoryRecycler();\r\n\r\n        jobAdapter = new JobAdapter(getContext(), filteredJobList);\r\n        recyclerJobs.setAdapter(jobAdapter);\r\n\r\n        ImageView imgNotif = view.findViewById(R.id.imgnotif);\r\n        imgNotif.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                openNotificationFragment();\r\n            }\r\n        });\r\n\r\n        loadLowonganFromAPI();\r\n        setupSearchListener();\r\n        loadProfileImage();\r\n        loadSearchHistory(); // LOAD RIWAYAT PENCARIAN\r\n\r\n        // Setup tab clicks\r\n        View.OnClickListener tabClickListener = v -> {\r\n            resetTabs();\r\n            ((TextView) v).setBackgroundResource(R.drawable.selected);\r\n            ((TextView) v).setTextColor(getResources().getColor(android.R.color.white));\r\n\r\n            if (v.getId() == R.id.tab_semua) {\r\n                applyFilterAndSort(false, false);\r\n            } else if (v.getId() == R.id.tab_terbaru) {\r\n                applyFilterAndSort(true, false);\r\n            } else if (v.getId() == R.id.tab_terlama) {\r\n                applyFilterAndSort(true, true);\r\n            }\r\n        };\r\n\r\n        tabSemua.setOnClickListener(tabClickListener);\r\n        tabTerbaru.setOnClickListener(tabClickListener);\r\n        tabTerlama.setOnClickListener(tabClickListener);\r\n\r\n        return view;\r\n    }\r\n\r\n    // SETUP RECYCLERVIEW UNTUK RIWAYAT PENCARIAN\r\n    private void setupSearchHistoryRecycler() {\r\n        recyclerSearchHistory.setLayoutManager(new LinearLayoutManager(requireContext()));\r\n        searchHistoryAdapter = new SearchHistoryAdapter(searchHistoryList, new SearchHistoryAdapter.OnHistoryClickListener() {\r\n            @Override\r\n            public void onHistoryClick(String keyword) {\r\n                searchEditText.setText(keyword);\r\n                searchEditText.setSelection(keyword.length());\r\n                hideSearchHistory();\r\n                // Tidak perlu save lagi karena keyword sudah ada di history\r\n                performSearch(keyword);\r\n            }\r\n\r\n            @Override\r\n            public void onHistoryDelete(String keyword, int position) {\r\n                deleteSearchHistory(keyword, position);\r\n            }\r\n        });\r\n        recyclerSearchHistory.setAdapter(searchHistoryAdapter);\r\n    }\r\n\r\n    // SHOW/HIDE RIWAYAT PENCARIAN\r\n    private void showSearchHistory() {\r\n        if (!searchHistoryList.isEmpty()) {\r\n            searchHistoryContainer.setVisibility(View.VISIBLE);\r\n        }\r\n    }\r\n\r\n    private void hideSearchHistory() {\r\n        searchHistoryContainer.setVisibility(View.GONE);\r\n    }\r\n\r\n    // LOAD 3 RIWAYAT PENCARIAN TERBARU\r\n    private void loadSearchHistory() {\r\n        int userId = sessionManager.getUserId();\r\n\r\n        if (userId == 0) {\r\n            Log.e(\"SEARCH_HISTORY\", \"❌ User ID is 0! Cannot load history.\");\r\n            return;\r\n        }\r\n\r\n        String url = \"https://tkjnbelcgfwpbhppsnrl.supabase.co/rest/v1/riwayat_pencarian?id_pengguna=eq.\" + userId\r\n                + \"&select=keyword&order=dibuat_pada.desc&limit=3\";\r\n\r\n        Log.d(\"SEARCH_HISTORY\", \"========================================\");\r\n        Log.d(\"SEARCH_HISTORY\", \"\uD83D\uDCE5 Loading history for user ID: \" + userId);\r\n        Log.d(\"SEARCH_HISTORY\", \"URL: \" + url);\r\n\r\n        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,\r\n                response -> {\r\n                    Log.d(\"SEARCH_HISTORY\", \"✅ Response received: \" + response.toString());\r\n                    searchHistoryList.clear();\r\n                    try {\r\n                        for (int i = 0; i < response.length(); i++) {\r\n                            JSONObject item = response.getJSONObject(i);\r\n                            String keyword = item.getString(\"keyword\");\r\n                            searchHistoryList.add(keyword);\r\n                            Log.d(\"SEARCH_HISTORY\", \"   → Loaded: \" + keyword);\r\n                        }\r\n                        searchHistoryAdapter.updateData(searchHistoryList);\r\n                        Log.d(\"SEARCH_HISTORY\", \"✅ Total loaded: \" + searchHistoryList.size() + \" history items\");\r\n                    } catch (JSONException e) {\r\n                        Log.e(\"SEARCH_HISTORY\", \"❌ Error parsing JSON: \" + e.getMessage());\r\n                        e.printStackTrace();\r\n                    }\r\n                },\r\n                error -> {\r\n                    Log.e(\"SEARCH_HISTORY\", \"========================================\");\r\n                    Log.e(\"SEARCH_HISTORY\", \"❌ Error loading history:\");\r\n                    Log.e(\"SEARCH_HISTORY\", \"Error: \" + error.toString());\r\n                    if (error.networkResponse != null) {\r\n                        Log.e(\"SEARCH_HISTORY\", \"Status Code: \" + error.networkResponse.statusCode);\r\n                        Log.e(\"SEARCH_HISTORY\", \"Response: \" + new String(error.networkResponse.data));\r\n                    }\r\n                    Log.e(\"SEARCH_HISTORY\", \"========================================\");\r\n                }\r\n        ) {\r\n            @Override\r\n            public Map<String, String> getHeaders() {\r\n                Map<String, String> headers = new HashMap<>();\r\n                headers.put(\"apikey\", SUPABASE_API_KEY);\r\n                headers.put(\"Authorization\", \"Bearer \" + SUPABASE_API_KEY);\r\n                headers.put(\"Accept\", \"application/json\");\r\n                return headers;\r\n            }\r\n        };\r\n\r\n        requestQueue.add(request);\r\n    }\r\n\r\n    // SIMPAN RIWAYAT PENCARIAN KE DATABASE\r\n    private void saveSearchHistory(String keyword) {\r\n        if (keyword.trim().isEmpty()) {\r\n            Log.w(\"SEARCH_HISTORY\", \"⚠\uFE0F Keyword is empty, skipping save\");\r\n            return;\r\n        }\r\n\r\n        int userId = sessionManager.getUserId();\r\n\r\n        if (userId == 0) {\r\n            Log.e(\"SEARCH_HISTORY\", \"❌ User ID is 0! Cannot save history.\");\r\n            Toast.makeText(requireContext(), \"Error: User not logged in\", Toast.LENGTH_SHORT).show();\r\n            return;\r\n        }\r\n\r\n        Log.d(\"SEARCH_HISTORY\", \"========================================\");\r\n        Log.d(\"SEARCH_HISTORY\", \"\uD83D\uDCBE Saving keyword: '\" + keyword + \"'\");\r\n        Log.d(\"SEARCH_HISTORY\", \"User ID: \" + userId);\r\n\r\n        String url = \"https://tkjnbelcgfwpbhppsnrl.supabase.co/rest/v1/riwayat_pencarian\";\r\n\r\n        JSONObject bodyObject = new JSONObject();\r\n        try {\r\n            bodyObject.put(\"id_pengguna\", userId);\r\n            bodyObject.put(\"keyword\", keyword);\r\n            Log.d(\"SEARCH_HISTORY\", \"\uD83D\uDCE6 Request body: \" + bodyObject.toString());\r\n        } catch (JSONException e) {\r\n            Log.e(\"SEARCH_HISTORY\", \"❌ Error creating JSON: \" + e.getMessage());\r\n            return;\r\n        }\r\n\r\n        final String requestBody = bodyObject.toString();\r\n\r\n        // GUNAKAN JsonArrayRequest TAPI OVERRIDE getBody()\r\n        JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, null,\r\n                response -> {\r\n                    Log.d(\"SEARCH_HISTORY\", \"========================================\");\r\n                    Log.d(\"SEARCH_HISTORY\", \"✅ Keyword saved successfully!\");\r\n                    Log.d(\"SEARCH_HISTORY\", \"Response: \" + response.toString());\r\n                    Log.d(\"SEARCH_HISTORY\", \"========================================\");\r\n                    loadSearchHistory(); // Reload untuk update list\r\n                },\r\n                error -> {\r\n                    Log.e(\"SEARCH_HISTORY\", \"========================================\");\r\n                    Log.e(\"SEARCH_HISTORY\", \"❌ Error saving keyword:\");\r\n                    Log.e(\"SEARCH_HISTORY\", \"Error: \" + error.toString());\r\n                    if (error.networkResponse != null) {\r\n                        Log.e(\"SEARCH_HISTORY\", \"Status Code: \" + error.networkResponse.statusCode);\r\n                        String responseBody = new String(error.networkResponse.data);\r\n                        Log.e(\"SEARCH_HISTORY\", \"Response: \" + responseBody);\r\n                    } else {\r\n                        Log.e(\"SEARCH_HISTORY\", \"Network error, no response\");\r\n                    }\r\n                    Log.e(\"SEARCH_HISTORY\", \"========================================\");\r\n                }\r\n        ) {\r\n            @Override\r\n            public Map<String, String> getHeaders() {\r\n                Map<String, String> headers = new HashMap<>();\r\n                headers.put(\"apikey\", SUPABASE_API_KEY);\r\n                headers.put(\"Authorization\", \"Bearer \" + SUPABASE_API_KEY);\r\n                headers.put(\"Content-Type\", \"application/json\");\r\n                headers.put(\"Prefer\", \"return=representation\");\r\n                Log.d(\"SEARCH_HISTORY\", \"\uD83D\uDCE4 Headers: \" + headers.toString());\r\n                return headers;\r\n            }\r\n\r\n            @Override\r\n            public byte[] getBody() {\r\n                try {\r\n                    return requestBody.getBytes(\"utf-8\");\r\n                } catch (Exception e) {\r\n                    return null;\r\n                }\r\n            }\r\n        };\r\n\r\n        requestQueue.add(request);\r\n    }\r\n\r\n    // HAPUS RIWAYAT PENCARIAN\r\n    private void deleteSearchHistory(String keyword, int position) {\r\n        int userId = sessionManager.getUserId();\r\n\r\n        String url = \"https://tkjnbelcgfwpbhppsnrl.supabase.co/rest/v1/riwayat_pencarian?id_pengguna=eq.\" + userId\r\n                + \"&keyword=eq.\" + keyword;\r\n\r\n        Log.d(\"SEARCH_HISTORY\", \"Deleting keyword: \" + keyword);\r\n\r\n        JsonArrayRequest request = new JsonArrayRequest(Request.Method.DELETE, url, null,\r\n                response -> {\r\n                    Log.d(\"SEARCH_HISTORY\", \"✓ Keyword deleted\");\r\n                    searchHistoryAdapter.removeItem(position);\r\n                    if (searchHistoryList.isEmpty()) {\r\n                        hideSearchHistory();\r\n                    }\r\n                    Toast.makeText(requireContext(), \"Riwayat dihapus\", Toast.LENGTH_SHORT).show();\r\n                },\r\n                error -> {\r\n                    Log.e(\"SEARCH_HISTORY\", \"✗ Error deleting: \" + error.toString());\r\n                    Toast.makeText(requireContext(), \"Gagal menghapus riwayat\", Toast.LENGTH_SHORT).show();\r\n                }\r\n        ) {\r\n            @Override\r\n            public Map<String, String> getHeaders() {\r\n                Map<String, String> headers = new HashMap<>();\r\n                headers.put(\"apikey\", SUPABASE_API_KEY);\r\n                headers.put(\"Authorization\", \"Bearer \" + SUPABASE_API_KEY);\r\n                headers.put(\"Accept\", \"application/json\");\r\n                return headers;\r\n            }\r\n        };\r\n\r\n        requestQueue.add(request);\r\n    }\r\n\r\n    private void applyFilterAndSort(boolean sortByDate, boolean oldestFirst) {\r\n        List<Job> listToSort = new ArrayList<>(filteredJobList);\r\n\r\n        if (sortByDate) {\r\n            Collections.sort(listToSort, new Comparator<Job>() {\r\n                @Override\r\n                public int compare(Job j1, Job j2) {\r\n                    if (oldestFirst) {\r\n                        return j1.getPostedTime().compareTo(j2.getPostedTime());\r\n                    } else {\r\n                        return j2.getPostedTime().compareTo(j1.getPostedTime());\r\n                    }\r\n                }\r\n            });\r\n        }\r\n\r\n        jobAdapter.setData(listToSort);\r\n    }\r\n\r\n    private void resetTabs() {\r\n        tabSemua.setBackgroundResource(R.drawable.shape_stroke);\r\n        tabSemua.setTextColor(getResources().getColor(R.color.gray));\r\n        tabTerbaru.setBackgroundResource(R.drawable.shape_stroke);\r\n        tabTerbaru.setTextColor(getResources().getColor(R.color.gray));\r\n        tabTerlama.setBackgroundResource(R.drawable.shape_stroke);\r\n        tabTerlama.setTextColor(getResources().getColor(R.color.gray));\r\n    }\r\n\r\n    private void loadProfileImage() {\r\n        String fullUrl = \"https://tkjnbelcgfwpbhppsnrl.supabase.co/storage/v1/object/public/profile/IMG_1462.JPG\";\r\n\r\n        Glide.with(this)\r\n                .load(fullUrl)\r\n                .circleCrop()\r\n                .into(imgProfile);\r\n    }\r\n\r\n    private void openNotificationFragment() {\r\n        NotificationFragment notificationFragment = new NotificationFragment();\r\n        getParentFragmentManager().beginTransaction()\r\n                .replace(R.id.frameLayout, notificationFragment)\r\n                .addToBackStack(null)\r\n                .commit();\r\n    }\r\n\r\n    private void setupSearchListener() {\r\n        // SHOW RIWAYAT SAAT FIELD DIKLIK\r\n        searchEditText.setOnClickListener(v -> {\r\n            Log.d(\"SEARCH_LISTENER\", \"\uD83D\uDDB1\uFE0F Search field clicked\");\r\n            if (!searchHistoryList.isEmpty() && searchEditText.getText().toString().trim().isEmpty()) {\r\n                showSearchHistory();\r\n                Log.d(\"SEARCH_LISTENER\", \"\uD83D\uDCCB Showing \" + searchHistoryList.size() + \" history items\");\r\n            }\r\n        });\r\n\r\n        // HANDLE ENTER/SEARCH BUTTON\r\n        searchEditText.setOnEditorActionListener((v, actionId, event) -> {\r\n            if (actionId == EditorInfo.IME_ACTION_SEARCH ||\r\n                    (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN)) {\r\n\r\n                String keyword = searchEditText.getText().toString().trim();\r\n                Log.d(\"SEARCH_LISTENER\", \"========================================\");\r\n                Log.d(\"SEARCH_LISTENER\", \"⌨\uFE0F Enter/Search pressed!\");\r\n                Log.d(\"SEARCH_LISTENER\", \"Keyword: '\" + keyword + \"'\");\r\n\r\n                if (!keyword.isEmpty()) {\r\n                    Log.d(\"SEARCH_LISTENER\", \"\uD83D\uDCBE Calling saveSearchHistory()...\");\r\n                    saveSearchHistory(keyword); // SIMPAN KE DATABASE\r\n                    hideSearchHistory();\r\n                    searchEditText.clearFocus();\r\n                } else {\r\n                    Log.d(\"SEARCH_LISTENER\", \"⚠\uFE0F Keyword is empty, not saving\");\r\n                }\r\n                Log.d(\"SEARCH_LISTENER\", \"========================================\");\r\n                return true;\r\n            }\r\n            return false;\r\n        });\r\n\r\n        searchEditText.addTextChangedListener(new TextWatcher() {\r\n            @Override\r\n            public void beforeTextChanged(CharSequence s, int start, int count, int after) {\r\n            }\r\n\r\n            @Override\r\n            public void onTextChanged(CharSequence s, int start, int before, int count) {\r\n                currentSearchQuery = s.toString().trim();\r\n\r\n                // SHOW/HIDE RIWAYAT BERDASARKAN TEXT\r\n                if (currentSearchQuery.isEmpty() && searchEditText.hasFocus() && !searchHistoryList.isEmpty()) {\r\n                    showSearchHistory();\r\n                } else {\r\n                    hideSearchHistory();\r\n                }\r\n\r\n                performSearch(currentSearchQuery);\r\n            }\r\n\r\n            @Override\r\n            public void afterTextChanged(Editable s) {\r\n            }\r\n        });\r\n    }\r\n\r\n    private void performSearch(String query) {\r\n        filteredJobList.clear();\r\n\r\n        if (query.isEmpty()) {\r\n            filterJobsByKeywords();\r\n            return;\r\n        }\r\n\r\n        Log.d(\"SEARCH_DEBUG\", \"\uD83D\uDD0D Searching for: \" + query);\r\n\r\n        String queryLower = query.toLowerCase(Locale.ROOT);\r\n\r\n        for (Job job : jobList) {\r\n            boolean matchJudul = job.getJobTitle().toLowerCase(Locale.ROOT).contains(queryLower);\r\n            boolean matchKategori = job.getTag1().toLowerCase(Locale.ROOT).contains(queryLower);\r\n            boolean matchPerusahaan = job.getCompanyName().toLowerCase(Locale.ROOT).contains(queryLower);\r\n            boolean matchLokasi = job.getLocation().toLowerCase(Locale.ROOT).contains(queryLower);\r\n\r\n            boolean smartMatchKategori = KeywordMapper.isRelated(query, job.getTag1());\r\n            boolean smartMatchJudul = KeywordMapper.isRelated(query, job.getJobTitle());\r\n\r\n            if (matchJudul || matchKategori || matchPerusahaan || matchLokasi ||\r\n                    smartMatchKategori || smartMatchJudul) {\r\n                filteredJobList.add(job);\r\n            }\r\n        }\r\n\r\n        Log.d(\"SEARCH_DEBUG\", \"\uD83D\uDCCA Found \" + filteredJobList.size() + \" results for '\" + query + \"'\");\r\n\r\n        if (filteredJobList.isEmpty()) {\r\n            if (getContext() != null) {\r\n                Toast.makeText(getContext(), \"Tidak ada hasil untuk \\\"\" + query + \"\\\"\", Toast.LENGTH_SHORT).show();\r\n            }\r\n        }\r\n\r\n        resetTabs();\r\n        tabSemua.setBackgroundResource(R.drawable.selected);\r\n        tabSemua.setTextColor(getResources().getColor(android.R.color.white));\r\n        applyFilterAndSort(false, false);\r\n    }\r\n\r\n    private void loadLowonganFromAPI() {\r\n        RequestQueue queue = Volley.newRequestQueue(getContext());\r\n\r\n        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, SUPABASE_URL, null,\r\n                response -> {\r\n                    jobList.clear();\r\n                    parseResponse(response);\r\n\r\n                    if (currentSearchQuery.isEmpty()) {\r\n                        filterJobsByKeywords();\r\n                    } else {\r\n                        performSearch(currentSearchQuery);\r\n                    }\r\n                },\r\n                error -> {\r\n                    Log.e(\"API_ERROR\", \"Volley error: \" + error.toString());\r\n                    if (getContext() != null) {\r\n                        Toast.makeText(getContext(), \"Gagal memuat data: \" + error.toString(), Toast.LENGTH_LONG).show();\r\n                    }\r\n                }\r\n        ) {\r\n            @Override\r\n            public Map<String, String> getHeaders() {\r\n                Map<String, String> headers = new HashMap<>();\r\n                headers.put(\"apikey\", SUPABASE_API_KEY);\r\n                headers.put(\"Authorization\", \"Bearer \" + SUPABASE_API_KEY);\r\n                headers.put(\"Accept\", \"application/json\");\r\n                return headers;\r\n            }\r\n        };\r\n\r\n        queue.add(request);\r\n    }\r\n\r\n    private void parseResponse(JSONArray response) {\r\n        Log.d(\"SUPABASE_DATA\", \"\uD83D\uDCE6 Total data dari Supabase: \" + response.length());\r\n\r\n        for (int i = 0; i < response.length(); i++) {\r\n            try {\r\n                JSONObject obj = response.getJSONObject(i);\r\n\r\n                int idLowongan = obj.optInt(\"id_lowongan\", 0);\r\n\r\n                if (idLowongan == 0) {\r\n                    idLowongan = obj.optInt(\"id\", 0);\r\n                }\r\n\r\n                String judul = obj.optString(\"judul\", \"-\");\r\n                String lokasi = obj.optString(\"lokasi\", \"-\");\r\n                String kategori = obj.optString(\"kategori\", \"-\");\r\n                String tipe = obj.optString(\"tipe_pekerjaan\", \"-\");\r\n                String gaji = obj.optString(\"gaji_range\", \"-\");\r\n                String namaPerusahaan = obj.optString(\"nama_perusahaan\", \"Perusahaan\");\r\n                String deskripsi = obj.optString(\"deskripsi\", \"\");\r\n                String kualifikasi = obj.optString(\"kualifikasi\", \"\");\r\n                String noTelp = obj.optString(\"no_telp\", \"\");\r\n                String modeKerja = obj.optString(\"mode_kerja\", \"On-site\");\r\n                String benefit = obj.optString(\"benefit\", \"\");\r\n                String dibuatPada = formatPostedTime(obj.optString(\"dibuat_pada\", \"\"));\r\n\r\n                Job job = new Job(\r\n                        idLowongan,\r\n                        namaPerusahaan,\r\n                        lokasi,\r\n                        judul,\r\n                        dibuatPada,\r\n                        gaji + \" Pendaftar\",\r\n                        kategori,\r\n                        tipe,\r\n                        gaji,\r\n                        modeKerja,\r\n                        deskripsi,\r\n                        kualifikasi,\r\n                        benefit,\r\n                        noTelp\r\n                );\r\n\r\n                jobList.add(job);\r\n\r\n                Log.d(\"SUPABASE_DATA\", \"✅ Loaded Job - ID: \" + idLowongan +\r\n                        \", Title: \" + judul + \", Company: \" + namaPerusahaan);\r\n\r\n            } catch (JSONException e) {\r\n                Log.e(\"JSON_ERROR\", \"Parsing gagal: \" + e.getMessage());\r\n            }\r\n        }\r\n\r\n        Log.d(\"SUPABASE_DATA\", \"✅ Berhasil parsing \" + jobList.size() + \" lowongan\");\r\n    }\r\n\r\n    private String formatPostedTime(String rawTime) {\r\n        if (rawTime == null || rawTime.isEmpty()) {\r\n            return \"Baru saja\";\r\n        }\r\n\r\n        try {\r\n            if (rawTime.contains(\"T\")) {\r\n                String datePart = rawTime.split(\"T\")[0];\r\n                String[] parts = datePart.split(\"-\");\r\n                if (parts.length == 3) {\r\n                    return parts[2] + \"/\" + parts[1] + \"/\" + parts[0];\r\n                }\r\n                return datePart;\r\n            }\r\n            return rawTime;\r\n        } catch (Exception e) {\r\n            Log.e(\"TIME_FORMAT\", \"Error formatting time: \" + rawTime);\r\n            return \"Baru saja\";\r\n        }\r\n    }\r\n\r\n    private void filterJobsByKeywords() {\r\n        CVKeywordManager keywordManager = CVKeywordManager.getInstance();\r\n\r\n        if (keywordManager.hasScannedCV() && !keywordManager.getKeywords().isEmpty()) {\r\n            List<String> keywords = keywordManager.getKeywords();\r\n            filteredJobList.clear();\r\n\r\n            Log.d(\"FILTER_DEBUG\", \"Keywords dari CV: \" + keywords.toString());\r\n\r\n            for (Job job : jobList) {\r\n                boolean isMatch = false;\r\n\r\n                for (String keyword : keywords) {\r\n                    if (matchesKeyword(job, keyword)) {\r\n                        isMatch = true;\r\n                        break;\r\n                    }\r\n                }\r\n\r\n                if (isMatch) {\r\n                    filteredJobList.add(job);\r\n                }\r\n            }\r\n\r\n            if (filteredJobList.isEmpty()) {\r\n                if (getContext() != null) {\r\n                    Toast.makeText(getContext(), \"❌ Tidak ada lowongan yang cocok dengan keyword CV.\\nMenampilkan semua lowongan.\", Toast.LENGTH_LONG).show();\r\n                }\r\n                filteredJobList.addAll(jobList);\r\n            } else {\r\n                String matchInfo = \"✅ Ditemukan \" + filteredJobList.size() + \" lowongan cocok dari \" + jobList.size() + \" total\";\r\n                if (getContext() != null) {\r\n                    Toast.makeText(getContext(), matchInfo, Toast.LENGTH_SHORT).show();\r\n                }\r\n            }\r\n        } else {\r\n            filteredJobList.addAll(jobList);\r\n        }\r\n\r\n        resetTabs();\r\n        tabSemua.setBackgroundResource(R.drawable.selected);\r\n        tabSemua.setTextColor(getResources().getColor(android.R.color.white));\r\n        applyFilterAndSort(false, false);\r\n    }\r\n\r\n    private boolean matchesKeyword(Job job, String keyword) {\r\n        String keywordLower = keyword.toLowerCase(Locale.ROOT).trim();\r\n        String kategoriLower = job.getTag1().toLowerCase(Locale.ROOT).trim();\r\n        String judulLower = job.getJobTitle().toLowerCase(Locale.ROOT).trim();\r\n\r\n        boolean exactMatchJudul = judulLower.contains(keywordLower);\r\n        boolean exactMatchKategori = kategoriLower.contains(keywordLower);\r\n        boolean smartMatchKategori = KeywordMapper.isRelated(keyword, job.getTag1());\r\n        boolean smartMatchJudul = KeywordMapper.isRelated(keyword, job.getJobTitle());\r\n\r\n        return exactMatchJudul || exactMatchKategori || smartMatchKategori || smartMatchJudul;\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/tem2/karirku/HomeFragment.java b/app/src/main/java/com/tem2/karirku/HomeFragment.java
+--- a/app/src/main/java/com/tem2/karirku/HomeFragment.java	(revision ee8d0d03925f271a41abd5fae86d5b4b904888f2)
++++ b/app/src/main/java/com/tem2/karirku/HomeFragment.java	(date 1764241559321)
+@@ -1,5 +1,6 @@
+ package com.tem2.karirku;
+ 
++import android.content.Intent;
+ import android.os.Bundle;
+ import android.text.Editable;
+ import android.text.TextWatcher;
+@@ -103,9 +104,17 @@
+             }
+         });
+ 
++        // TAMBAHKAN ONCLICKLISTENER UNTUK PROFILE IMAGE
++        imgProfile.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View v) {
++                openUserDataActivity();
++            }
++        });
++
+         loadLowonganFromAPI();
+         setupSearchListener();
+-        loadProfileImage();
++        loadProfileImage(); // PERBAIKAN: Panggil method yang sudah diperbaiki
+         loadSearchHistory(); // LOAD RIWAYAT PENCARIAN
+ 
+         // Setup tab clicks
+@@ -130,6 +139,76 @@
+         return view;
+     }
+ 
++    // PERBAIKAN: METHOD loadProfileImage YANG SUDAH DIPERBAIKI
++    private void loadProfileImage() {
++        int userId = sessionManager.getUserId();
++        Log.d("PROFILE_IMAGE", "Load profile image for user ID: " + userId);
++
++        String url = "https://tkjnbelcgfwpbhppsnrl.supabase.co/rest/v1/pencaker?id_pengguna=eq." + userId + "&select=foto_profil_url";
++
++        // PERBAIKAN: Gunakan requireContext() karena di Fragment
++        RequestQueue queue = Volley.newRequestQueue(requireContext());
++
++        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
++                response -> {
++                    try {
++                        if (response.length() > 0) {
++                            JSONObject pencaker = response.getJSONObject(0);
++                            String fotoUrl = pencaker.optString("foto_profil_url", "");
++
++                            if (!fotoUrl.isEmpty()) {
++                                Log.d("PROFILE_IMAGE", "✅ Load image from pencaker: " + fotoUrl);
++
++                                // PERBAIKAN: Gunakan requireContext() untuk Glide di Fragment
++                                Glide.with(requireContext())
++                                        .load(fotoUrl)
++                                        .circleCrop()
++                                        .error(R.drawable.ic_profile_placeholder) // Fallback jika error loading
++                                        .into(imgProfile);
++                            } else {
++                                Log.d("PROFILE_IMAGE", "ℹ️ No profile image in pencaker table");
++                                setDefaultProfileImage();
++                            }
++                        } else {
++                            Log.d("PROFILE_IMAGE", "ℹ️ No data found in pencaker table");
++                            setDefaultProfileImage();
++                        }
++                    } catch (Exception e) {
++                        Log.e("PROFILE_IMAGE", "❌ Error parsing pencaker data: " + e.getMessage());
++                        setDefaultProfileImage();
++                    }
++                },
++                error -> {
++                    Log.e("PROFILE_IMAGE", "❌ Volley error: " + error.toString());
++                    if (error.networkResponse != null) {
++                        Log.e("PROFILE_IMAGE", "Error status: " + error.networkResponse.statusCode);
++                        Log.e("PROFILE_IMAGE", "Error response: " + new String(error.networkResponse.data));
++                    }
++                    setDefaultProfileImage();
++                }
++        ) {
++            @Override
++            public Map<String, String> getHeaders() {
++                Map<String, String> headers = new HashMap<>();
++                headers.put("apikey", SUPABASE_API_KEY);
++                headers.put("Authorization", "Bearer " + SUPABASE_API_KEY);
++                return headers;
++            }
++        };
++
++        queue.add(request);
++    }
++
++    private void setDefaultProfileImage() {
++        imgProfile.setImageResource(R.drawable.ic_profile_placeholder);
++    }
++
++    // METHOD BARU UNTUK MEMBUKA UserDataActivity
++    private void openUserDataActivity() {
++        Intent intent = new Intent(getActivity(), UserDataActivity.class);
++        startActivity(intent);
++    }
++
+     // SETUP RECYCLERVIEW UNTUK RIWAYAT PENCARIAN
+     private void setupSearchHistoryRecycler() {
+         recyclerSearchHistory.setLayoutManager(new LinearLayoutManager(requireContext()));
+@@ -364,15 +443,6 @@
+         tabTerlama.setTextColor(getResources().getColor(R.color.gray));
+     }
+ 
+-    private void loadProfileImage() {
+-        String fullUrl = "https://tkjnbelcgfwpbhppsnrl.supabase.co/storage/v1/object/public/profile/IMG_1462.JPG";
+-
+-        Glide.with(this)
+-                .load(fullUrl)
+-                .circleCrop()
+-                .into(imgProfile);
+-    }
+-
+     private void openNotificationFragment() {
+         NotificationFragment notificationFragment = new NotificationFragment();
+         getParentFragmentManager().beginTransaction()
+Index: app/build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\r\n    alias(libs.plugins.android.application)\r\n}\r\n\r\nandroid {\r\n    namespace = \"com.tem2.karirku\"\r\n    compileSdk = 35\r\n\r\n    defaultConfig {\r\n        applicationId = \"com.tem2.karirku\"\r\n        minSdk = 21\r\n        targetSdk = 35\r\n        versionCode = 1\r\n        versionName = \"1.0\"\r\n\r\n        testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            isMinifyEnabled = false\r\n            proguardFiles(\r\n                getDefaultProguardFile(\"proguard-android-optimize.txt\"),\r\n                \"proguard-rules.pro\"\r\n            )\r\n        }\r\n    }\r\n\r\n    buildFeatures {\r\n        viewBinding = true\r\n    }\r\n\r\n    compileOptions {\r\n        sourceCompatibility = JavaVersion.VERSION_11\r\n        targetCompatibility = JavaVersion.VERSION_11\r\n    }\r\n}\r\n\r\ndependencies {\r\n    implementation(libs.appcompat)\r\n    implementation(libs.material)\r\n    implementation(libs.activity)\r\n    implementation(libs.constraintlayout)\r\n\r\n    implementation(\"androidx.swiperefreshlayout:swiperefreshlayout:1.1.0\")\r\n    implementation(\"com.android.volley:volley:1.2.1\")\r\n    implementation(\"com.tom-roush:pdfbox-android:2.0.27.0\")\r\n    implementation(\"com.google.code.gson:gson:2.11.0\")\r\n    implementation(\"com.jakewharton.timber:timber:5.0.1\")\r\n    implementation(\"com.google.android.gms:play-services-mlkit-text-recognition:19.0.0\")\r\n\r\n    // ✅ Google AI - Gemini 1.5 Flash (VERSI BENAR)\r\n    implementation(\"com.google.ai.client.generativeai:generativeai:0.7.0\")\r\n//    implementation(\"com.google.ai.client:generativeai\")\r\n\r\n    implementation(\"com.nex3z:flow-layout:1.3.3\")\r\n    implementation(\"com.squareup.okhttp3:logging-interceptor:4.11.0\")\r\n    implementation(\"com.google.guava:guava:31.0.1-android\")\r\n    implementation(\"com.github.bumptech.glide:glide:4.15.1\")\r\n    annotationProcessor(\"com.github.bumptech.glide:compiler:4.15.1\")\r\n    implementation(\"com.google.android.flexbox:flexbox:3.0.0\")\r\n\r\n    // Supabase Storage\r\n    implementation(\"io.github.jan-tennert.supabase:storage-kt:2.3.1\")\r\n    implementation(\"io.github.jan-tennert.supabase:postgrest-kt:2.3.1\")\r\n\r\n    // Ktor Client\r\n    implementation(\"io.ktor:ktor-client-android:2.3.11\")\r\n    implementation(\"io.ktor:ktor-client-okhttp:2.3.11\")\r\n\r\n    // Circle Image View\r\n    implementation(\"de.hdodenhof:circleimageview:3.1.0\")\r\n\r\n    // Coroutines\r\n    implementation(\"org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3\")\r\n\r\n    implementation(\"com.google.android.flexbox:flexbox:3.0.0\")\r\n\r\n\r\n\r\n    testImplementation(libs.junit)\r\n    androidTestImplementation(libs.ext.junit)\r\n    androidTestImplementation(libs.espresso.core)\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+--- a/app/build.gradle.kts	(revision ee8d0d03925f271a41abd5fae86d5b4b904888f2)
++++ b/app/build.gradle.kts	(date 1764205988507)
+@@ -53,6 +53,7 @@
+     implementation("com.google.ai.client.generativeai:generativeai:0.7.0")
+ //    implementation("com.google.ai.client:generativeai")
+ 
++
+     implementation("com.nex3z:flow-layout:1.3.3")
+     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+     implementation("com.google.guava:guava:31.0.1-android")
+@@ -75,8 +76,24 @@
+     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+ 
+     implementation("com.google.android.flexbox:flexbox:3.0.0")
++    // Supabase untuk versi terbaru
++    implementation("io.github.jan-tennert.supabase:storage-kt:2.3.1")
++    implementation("io.github.jan-tennert.supabase:postgrest-kt:2.3.1")
++    implementation("io.github.jan-tennert.supabase:supabase-kt:2.3.1")
++
++    // Ktor Client (sudah ada)
++    implementation("io.ktor:ktor-client-android:2.3.11")
++    implementation("io.ktor:ktor-client-okhttp:2.3.11")
+ 
++    // Serialization
++    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+ 
++    // Coroutines
++    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
++
++    // Glide (sudah ada)
++    implementation("com.github.bumptech.glide:glide:4.15.1")
++    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
+ 
+     testImplementation(libs.junit)
+     androidTestImplementation(libs.ext.junit)
+Index: app/src/main/java/com/tem2/karirku/VolleyMultipartRequest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/tem2/karirku/VolleyMultipartRequest.java b/app/src/main/java/com/tem2/karirku/VolleyMultipartRequest.java
+new file mode 100644
+--- /dev/null	(date 1764232977593)
++++ b/app/src/main/java/com/tem2/karirku/VolleyMultipartRequest.java	(date 1764232977593)
+@@ -0,0 +1,55 @@
++package com.tem2.karirku;
++
++import com.android.volley.AuthFailureError;
++import com.android.volley.NetworkResponse;
++import com.android.volley.Request;
++import com.android.volley.Response;
++import com.android.volley.VolleyError;
++import com.android.volley.toolbox.HttpHeaderParser;
++
++import java.io.UnsupportedEncodingException;
++import java.util.Map;
++
++/**
++ * Custom Volley Request untuk upload file (multipart)
++ */
++public class VolleyMultipartRequest extends Request<NetworkResponse> {
++
++    private final Response.Listener<NetworkResponse> mListener;
++    private final Response.ErrorListener mErrorListener;
++    private Map<String, String> mHeaders;
++
++    public VolleyMultipartRequest(int method, String url,
++                                  Response.Listener<NetworkResponse> listener,
++                                  Response.ErrorListener errorListener) {
++        super(method, url, errorListener);
++        this.mListener = listener;
++        this.mErrorListener = errorListener;
++    }
++
++    @Override
++    public Map<String, String> getHeaders() throws AuthFailureError {
++        return (mHeaders != null) ? mHeaders : super.getHeaders();
++    }
++
++    @Override
++    protected Response<NetworkResponse> parseNetworkResponse(NetworkResponse response) {
++        try {
++            return Response.success(
++                    response,
++                    HttpHeaderParser.parseCacheHeaders(response));
++        } catch (Exception e) {
++            return Response.error(new VolleyError(e));
++        }
++    }
++
++    @Override
++    protected void deliverResponse(NetworkResponse response) {
++        mListener.onResponse(response);
++    }
++
++    @Override
++    public void deliverError(VolleyError error) {
++        mErrorListener.onErrorResponse(error);
++    }
++}
+\ No newline at end of file
+Index: app/src/main/java/com/tem2/karirku/CustomJsonObjectRequest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/tem2/karirku/CustomJsonObjectRequest.java b/app/src/main/java/com/tem2/karirku/CustomJsonObjectRequest.java
+new file mode 100644
+--- /dev/null	(date 1764233625082)
++++ b/app/src/main/java/com/tem2/karirku/CustomJsonObjectRequest.java	(date 1764233625082)
+@@ -0,0 +1,36 @@
++package com.tem2.karirku;
++
++import com.android.volley.NetworkResponse;
++import com.android.volley.Request;
++import com.android.volley.Response;
++import com.android.volley.toolbox.HttpHeaderParser;
++import com.android.volley.toolbox.JsonObjectRequest;
++
++import org.json.JSONObject;
++
++import java.nio.charset.StandardCharsets;
++
++public class CustomJsonObjectRequest extends JsonObjectRequest {
++
++    public CustomJsonObjectRequest(int method, String url, JSONObject jsonRequest,
++                                   Response.Listener<JSONObject> listener,
++                                   Response.ErrorListener errorListener) {
++        super(method, url, jsonRequest, listener, errorListener);
++    }
++
++    @Override
++    protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
++        try {
++            // Handle empty response (common in Supabase with return=minimal)
++            if (response.data.length == 0) {
++                return Response.success(new JSONObject(), HttpHeaderParser.parseCacheHeaders(response));
++            }
++
++            String jsonString = new String(response.data, StandardCharsets.UTF_8);
++            return Response.success(new JSONObject(jsonString), HttpHeaderParser.parseCacheHeaders(response));
++        } catch (Exception e) {
++            // Jika parsing gagal, tetap return success dengan empty object
++            return Response.success(new JSONObject(), HttpHeaderParser.parseCacheHeaders(response));
++        }
++    }
++}
+\ No newline at end of file

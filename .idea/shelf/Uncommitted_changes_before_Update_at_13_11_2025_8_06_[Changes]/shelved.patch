@@ -1,0 +1,1014 @@
+Index: app/src/main/java/com/tem2/karirku/scancvFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.tem2.karirku;\r\n\r\nimport android.Manifest;\r\nimport android.app.Activity;\r\nimport android.content.Intent;\r\nimport android.content.pm.PackageManager;\r\nimport android.graphics.Bitmap;\r\nimport android.net.Uri;\r\nimport android.os.Bundle;\r\nimport android.provider.MediaStore;\r\nimport android.provider.OpenableColumns;\r\nimport android.util.Log;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.Button;\r\nimport android.widget.ImageView;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.annotation.Nullable;\r\nimport androidx.core.app.ActivityCompat;\r\nimport androidx.core.content.ContextCompat;\r\nimport androidx.fragment.app.Fragment;\r\n\r\nimport com.google.mlkit.vision.common.InputImage;\r\nimport com.google.mlkit.vision.text.TextRecognition;\r\nimport com.google.mlkit.vision.text.TextRecognizer;\r\nimport com.google.mlkit.vision.text.latin.TextRecognizerOptions;\r\nimport com.tom_roush.pdfbox.android.PDFBoxResourceLoader;\r\nimport com.tom_roush.pdfbox.pdmodel.PDDocument;\r\nimport com.tom_roush.pdfbox.text.PDFTextStripper;\r\n\r\nimport java.io.InputStream;\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\nimport java.util.Locale;\r\n\r\npublic class scancvFragment extends Fragment {\r\n\r\n    private static final int PICK_PDF_REQUEST = 1001;\r\n    private static final int CAMERA_REQUEST = 1002;\r\n    private static final int CAMERA_PERMISSION_CODE = 100;\r\n\r\n    private ImageView btnUploadPDF;\r\n    private Button btnCamera;\r\n    private TextRecognizer textRecognizer;\r\n\r\n    @Override\r\n    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {\r\n        View view = inflater.inflate(R.layout.fragment_scancv, container, false);\r\n\r\n        PDFBoxResourceLoader.init(requireContext());\r\n\r\n        // Initialize ML Kit Text Recognition\r\n        textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);\r\n        Log.d(\"CAMERA_OCR\", \"✅ TextRecognizer initialized\");\r\n\r\n        btnUploadPDF = view.findViewById(R.id.btnUploadPDF);\r\n        btnCamera = view.findViewById(R.id.btnCamera);\r\n\r\n        btnUploadPDF.setOnClickListener(v -> openFileChooser());\r\n        btnCamera.setOnClickListener(v -> openCamera());\r\n\r\n        return view;\r\n    }\r\n\r\n    // \uD83D\uDCF7 Buka kamera untuk scan CV\r\n    private void openCamera() {\r\n        Log.d(\"CAMERA_OCR\", \"\uD83C\uDFAC openCamera() called\");\r\n\r\n        // Check camera permission\r\n        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)\r\n                != PackageManager.PERMISSION_GRANTED) {\r\n            Log.d(\"CAMERA_OCR\", \"⚠\uFE0F Camera permission not granted, requesting...\");\r\n            // Request permission\r\n            ActivityCompat.requestPermissions(requireActivity(),\r\n                    new String[]{Manifest.permission.CAMERA},\r\n                    CAMERA_PERMISSION_CODE);\r\n        } else {\r\n            Log.d(\"CAMERA_OCR\", \"✅ Camera permission granted\");\r\n            // Permission granted, open camera\r\n            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);\r\n            if (cameraIntent.resolveActivity(requireActivity().getPackageManager()) != null) {\r\n                Log.d(\"CAMERA_OCR\", \"\uD83D\uDCF8 Launching camera...\");\r\n                startActivityForResult(cameraIntent, CAMERA_REQUEST);\r\n            } else {\r\n                Log.e(\"CAMERA_OCR\", \"❌ Camera app not available\");\r\n                Toast.makeText(getContext(), \"Kamera tidak tersedia\", Toast.LENGTH_SHORT).show();\r\n            }\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {\r\n        super.onRequestPermissionsResult(requestCode, permissions, grantResults);\r\n\r\n        Log.d(\"CAMERA_OCR\", \"\uD83D\uDCCB onRequestPermissionsResult: requestCode=\" + requestCode);\r\n\r\n        if (requestCode == CAMERA_PERMISSION_CODE) {\r\n            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {\r\n                Log.d(\"CAMERA_OCR\", \"✅ Permission granted by user\");\r\n                openCamera();\r\n            } else {\r\n                Log.w(\"CAMERA_OCR\", \"❌ Permission denied by user\");\r\n                Toast.makeText(getContext(), \"Izin kamera diperlukan untuk scan CV\", Toast.LENGTH_SHORT).show();\r\n            }\r\n        }\r\n    }\r\n\r\n    // \uD83D\uDCC4 Buka file picker untuk PDF\r\n    private void openFileChooser() {\r\n        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);\r\n        intent.setType(\"application/pdf\");\r\n        intent.addCategory(Intent.CATEGORY_OPENABLE);\r\n        startActivityForResult(Intent.createChooser(intent, \"Pilih CV (PDF)\"), PICK_PDF_REQUEST);\r\n    }\r\n\r\n    @Override\r\n    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {\r\n        super.onActivityResult(requestCode, resultCode, data);\r\n\r\n        Log.d(\"CAMERA_OCR\", \"\uD83D\uDCEC onActivityResult: requestCode=\" + requestCode + \", resultCode=\" + resultCode);\r\n\r\n        if (resultCode == Activity.RESULT_OK && data != null) {\r\n            if (requestCode == PICK_PDF_REQUEST && data.getData() != null) {\r\n                // Handle PDF\r\n                Log.d(\"CAMERA_OCR\", \"\uD83D\uDCC4 PDF selected\");\r\n                Uri pdfUri = data.getData();\r\n                handlePdfFile(pdfUri);\r\n            } else if (requestCode == CAMERA_REQUEST) {\r\n                // Handle Camera Image\r\n                Log.d(\"CAMERA_OCR\", \"\uD83D\uDCF8 Camera image received\");\r\n                Bundle extras = data.getExtras();\r\n\r\n                if (extras != null) {\r\n                    Log.d(\"CAMERA_OCR\", \"\uD83D\uDCE6 Extras found, keys: \" + extras.keySet());\r\n\r\n                    if (extras.get(\"data\") != null) {\r\n                        Bitmap imageBitmap = (Bitmap) extras.get(\"data\");\r\n                        Log.d(\"CAMERA_OCR\", \"\uD83D\uDDBC\uFE0F Bitmap received: \" + imageBitmap.getWidth() + \"x\" + imageBitmap.getHeight());\r\n                        processCameraImage(imageBitmap);\r\n                    } else {\r\n                        Log.e(\"CAMERA_OCR\", \"❌ No 'data' key in extras\");\r\n                        Toast.makeText(getContext(), \"❌ Gagal mengambil gambar\", Toast.LENGTH_SHORT).show();\r\n                    }\r\n                } else {\r\n                    Log.e(\"CAMERA_OCR\", \"❌ Extras is null\");\r\n                    Toast.makeText(getContext(), \"❌ Gagal mengambil gambar\", Toast.LENGTH_SHORT).show();\r\n                }\r\n            }\r\n        } else {\r\n            Log.w(\"CAMERA_OCR\", \"⚠\uFE0F Result not OK or data is null\");\r\n        }\r\n    }\r\n\r\n    // \uD83D\uDCF7 Process gambar dari kamera dengan OCR\r\n    private void processCameraImage(Bitmap bitmap) {\r\n        Log.d(\"CAMERA_OCR\", \"\uD83D\uDD04 Starting OCR processing...\");\r\n        Toast.makeText(getContext(), \"\uD83D\uDD0D Memproses gambar CV...\", Toast.LENGTH_SHORT).show();\r\n\r\n        try {\r\n            InputImage image = InputImage.fromBitmap(bitmap, 0);\r\n            Log.d(\"CAMERA_OCR\", \"✅ InputImage created successfully\");\r\n\r\n            textRecognizer.process(image)\r\n                    .addOnSuccessListener(visionText -> {\r\n                        String recognizedText = visionText.getText();\r\n\r\n                        Log.d(\"CAMERA_OCR\", \"✅ OCR SUCCESS!\");\r\n                        Log.d(\"CAMERA_OCR\", \"\uD83D\uDCDD Text length: \" + recognizedText.length());\r\n                        Log.d(\"CAMERA_OCR\", \"\uD83D\uDCDD Text preview (first 200 chars): \" +\r\n                                (recognizedText.length() > 200 ? recognizedText.substring(0, 200) : recognizedText));\r\n                        Log.d(\"CAMERA_OCR\", \"\uD83D\uDCDD Full text: \" + recognizedText);\r\n\r\n                        if (recognizedText.isEmpty()) {\r\n                            Log.w(\"CAMERA_OCR\", \"⚠\uFE0F OCR returned empty text\");\r\n                            Toast.makeText(getContext(),\r\n                                    \"❌ Tidak ada text yang terdeteksi.\\n\\n\uD83D\uDCA1 Tips:\\n• Pastikan foto jelas\\n• Coba foto lebih dekat\\n• Gunakan pencahayaan baik\\n\\nAtau gunakan Upload PDF\",\r\n                                    Toast.LENGTH_LONG).show();\r\n                            return;\r\n                        }\r\n\r\n                        // Extract keywords dari text OCR\r\n                        Toast.makeText(getContext(), \"✅ Text terdeteksi! Mencari keyword...\", Toast.LENGTH_SHORT).show();\r\n                        extractKeywordsFromText(recognizedText, \"gambar\");\r\n                    })\r\n                    .addOnFailureListener(e -> {\r\n                        Log.e(\"CAMERA_OCR\", \"❌ OCR FAILED: \" + e.getClass().getSimpleName());\r\n                        Log.e(\"CAMERA_OCR\", \"❌ Error message: \" + e.getMessage());\r\n                        e.printStackTrace();\r\n\r\n                        Toast.makeText(getContext(),\r\n                                \"❌ Gagal memproses gambar\\n\\nError: \" + e.getMessage() +\r\n                                        \"\\n\\nCoba gunakan Upload PDF\",\r\n                                Toast.LENGTH_LONG).show();\r\n                    })\r\n                    .addOnCompleteListener(task -> {\r\n                        Log.d(\"CAMERA_OCR\", \"\uD83C\uDFC1 OCR task completed. Success: \" + task.isSuccessful());\r\n                    });\r\n\r\n        } catch (Exception e) {\r\n            Log.e(\"CAMERA_OCR\", \"❌ Exception during image processing: \" + e.getMessage());\r\n            e.printStackTrace();\r\n            Toast.makeText(getContext(), \"❌ Error: \" + e.getMessage(), Toast.LENGTH_LONG).show();\r\n        }\r\n    }\r\n\r\n    // \uD83D\uDCC4 Process PDF file\r\n    private void handlePdfFile(Uri pdfUri) {\r\n        try {\r\n            String fileName = getFileName(pdfUri);\r\n            Toast.makeText(getContext(), \"\uD83D\uDCC4 Memproses: \" + fileName, Toast.LENGTH_SHORT).show();\r\n\r\n            InputStream inputStream = requireContext().getContentResolver().openInputStream(pdfUri);\r\n            PDDocument document = PDDocument.load(inputStream);\r\n            PDFTextStripper pdfStripper = new PDFTextStripper();\r\n            String text = pdfStripper.getText(document);\r\n            document.close();\r\n\r\n            Log.d(\"PDF_PARSE\", \"\uD83D\uDCDD Text dari PDF (length): \" + text.length());\r\n            Log.d(\"PDF_PARSE\", \"\uD83D\uDCDD Text preview: \" + (text.length() > 200 ? text.substring(0, 200) : text));\r\n\r\n            // Extract keywords dari PDF text\r\n            extractKeywordsFromText(text, \"PDF\");\r\n\r\n        } catch (Exception e) {\r\n            Log.e(\"PDF_PARSE\", \"❌ Error: \" + e.getMessage());\r\n            e.printStackTrace();\r\n            Toast.makeText(getContext(), \"❌ Gagal membaca PDF: \" + e.getMessage(), Toast.LENGTH_LONG).show();\r\n        }\r\n    }\r\n\r\n    // \uD83D\uDD0D Extract keywords dari text (PDF atau OCR)\r\n    private void extractKeywordsFromText(String text, String source) {\r\n        Log.d(\"KEYWORD_EXTRACT\", \"\uD83D\uDD0D Starting keyword extraction from \" + source);\r\n        Log.d(\"KEYWORD_EXTRACT\", \"\uD83D\uDCDD Text length: \" + text.length());\r\n\r\n        // Kata kunci yang relevan (disesuaikan dengan kategori Supabase)\r\n        String[] keywords = {\r\n                // Teknologi\r\n                \"teknologi\", \"technology\", \"software\", \"developer\", \"programmer\", \"IT\", \"coding\",\r\n                \"engineer\", \"java\", \"python\", \"web\", \"mobile\", \"android\", \"ios\", \"react\", \"angular\",\r\n                // Desain\r\n                \"desain\", \"design\", \"UI\", \"UX\", \"graphic\", \"photoshop\", \"figma\", \"illustrator\", \"corel\",\r\n                // Keuangan\r\n                \"keuangan\", \"finance\", \"accounting\", \"akuntan\", \"akuntansi\", \"financial\", \"auditor\",\r\n                // Perbankan\r\n                \"perbankan\", \"bank\", \"banking\", \"teller\", \"credit\", \"kredit\",\r\n                // Produksi\r\n                \"produksi\", \"production\", \"hardware\", \"manufaktur\", \"operator\", \"pabrik\", \"quality control\",\r\n                // Administrasi\r\n                \"administrasi\", \"admin\", \"sekretaris\", \"office\", \"data entry\", \"staff\",\r\n                // Teknik\r\n                \"teknik\", \"engineering\", \"mekanik\", \"elektro\", \"sipil\", \"mechanical\", \"electrical\",\r\n                // Pertanian\r\n                \"pertanian\", \"agriculture\", \"agronomi\", \"farming\", \"perkebunan\",\r\n                // Pendidikan\r\n                \"pendidikan\", \"education\", \"guru\", \"teacher\", \"dosen\", \"pengajar\", \"training\"\r\n        };\r\n\r\n        List<String> matchedKeywords = new ArrayList<>();\r\n        String textLower = text.toLowerCase(Locale.ROOT);\r\n\r\n        for (String keyword : keywords) {\r\n            if (textLower.contains(keyword.toLowerCase(Locale.ROOT))) {\r\n                // Hindari duplikat\r\n                if (!matchedKeywords.contains(keyword)) {\r\n                    matchedKeywords.add(keyword);\r\n                    Log.d(\"KEYWORD_EXTRACT\", \"✅ Match found: \" + keyword);\r\n                }\r\n            }\r\n        }\r\n\r\n        Log.d(\"KEYWORD_EXTRACT\", \"\uD83D\uDCCA Total keywords matched: \" + matchedKeywords.size());\r\n\r\n        // Hasil matching\r\n        if (matchedKeywords.isEmpty()) {\r\n            Log.w(\"KEYWORD_EXTRACT\", \"⚠\uFE0F No keywords matched\");\r\n            Toast.makeText(getContext(),\r\n                    \"❌ Tidak ada kata kunci cocok dari \" + source + \".\\n\\n\" +\r\n                            \"\uD83D\uDCA1 Kata kunci yang dicari:\\n\" +\r\n                            \"• Teknologi (IT, software, developer)\\n\" +\r\n                            \"• Desain (UI/UX, graphic)\\n\" +\r\n                            \"• Keuangan, Perbankan\\n\" +\r\n                            \"• Produksi, Administrasi\\n\" +\r\n                            \"• Teknik, Pertanian, Pendidikan\\n\\n\" +\r\n                            \"Cek halaman Home untuk semua lowongan.\",\r\n                    Toast.LENGTH_LONG).show();\r\n            CVKeywordManager.getInstance().clearKeywords();\r\n        } else {\r\n            // ✅ Simpan keyword ke Singleton\r\n            CVKeywordManager.getInstance().setKeywords(matchedKeywords);\r\n\r\n            String keywordText = String.join(\", \", matchedKeywords);\r\n            Log.d(\"KEYWORD_EXTRACT\", \"✅ Keywords saved: \" + keywordText);\r\n\r\n            Toast.makeText(getContext(),\r\n                    \"✅ CV berhasil dipindai dari \" + source + \"!\\n\\n\" +\r\n                            \"\uD83C\uDFAF Kata kunci: \" + keywordText + \"\\n\\n\" +\r\n                            \"\uD83D\uDC49 Klik tab 'Home' untuk melihat lowongan yang cocok\",\r\n                    Toast.LENGTH_LONG).show();\r\n        }\r\n    }\r\n\r\n    // \uD83D\uDCDD Get file name dari URI\r\n    private String getFileName(Uri uri) {\r\n        String result = null;\r\n        try (android.database.Cursor cursor = requireContext().getContentResolver().query(uri, null, null, null, null)) {\r\n            if (cursor != null && cursor.moveToFirst()) {\r\n                int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);\r\n                result = cursor.getString(nameIndex);\r\n            }\r\n        }\r\n        if (result == null) {\r\n            result = uri.getLastPathSegment();\r\n        }\r\n        return result;\r\n    }\r\n\r\n    @Override\r\n    public void onDestroy() {\r\n        super.onDestroy();\r\n        if (textRecognizer != null) {\r\n            textRecognizer.close();\r\n            Log.d(\"CAMERA_OCR\", \"\uD83D\uDD1A TextRecognizer closed\");\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/tem2/karirku/scancvFragment.java b/app/src/main/java/com/tem2/karirku/scancvFragment.java
+--- a/app/src/main/java/com/tem2/karirku/scancvFragment.java	(revision 960fdca1d6025d0dee0e7ee4a2ab454bf0c01b16)
++++ b/app/src/main/java/com/tem2/karirku/scancvFragment.java	(date 1762871462931)
+@@ -31,6 +31,7 @@
+ import com.tom_roush.pdfbox.pdmodel.PDDocument;
+ import com.tom_roush.pdfbox.text.PDFTextStripper;
+ 
++import java.io.IOException;
+ import java.io.InputStream;
+ import java.util.ArrayList;
+ import java.util.List;
+@@ -54,7 +55,6 @@
+ 
+         // Initialize ML Kit Text Recognition
+         textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
+-        Log.d("CAMERA_OCR", "✅ TextRecognizer initialized");
+ 
+         btnUploadPDF = view.findViewById(R.id.btnUploadPDF);
+         btnCamera = view.findViewById(R.id.btnCamera);
+@@ -67,25 +67,19 @@
+ 
+     // 📷 Buka kamera untuk scan CV
+     private void openCamera() {
+-        Log.d("CAMERA_OCR", "🎬 openCamera() called");
+-
+         // Check camera permission
+         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+                 != PackageManager.PERMISSION_GRANTED) {
+-            Log.d("CAMERA_OCR", "⚠️ Camera permission not granted, requesting...");
+             // Request permission
+             ActivityCompat.requestPermissions(requireActivity(),
+                     new String[]{Manifest.permission.CAMERA},
+                     CAMERA_PERMISSION_CODE);
+         } else {
+-            Log.d("CAMERA_OCR", "✅ Camera permission granted");
+             // Permission granted, open camera
+             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+             if (cameraIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
+-                Log.d("CAMERA_OCR", "📸 Launching camera...");
+                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
+             } else {
+-                Log.e("CAMERA_OCR", "❌ Camera app not available");
+                 Toast.makeText(getContext(), "Kamera tidak tersedia", Toast.LENGTH_SHORT).show();
+             }
+         }
+@@ -95,14 +89,10 @@
+     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+ 
+-        Log.d("CAMERA_OCR", "📋 onRequestPermissionsResult: requestCode=" + requestCode);
+-
+         if (requestCode == CAMERA_PERMISSION_CODE) {
+             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+-                Log.d("CAMERA_OCR", "✅ Permission granted by user");
+                 openCamera();
+             } else {
+-                Log.w("CAMERA_OCR", "❌ Permission denied by user");
+                 Toast.makeText(getContext(), "Izin kamera diperlukan untuk scan CV", Toast.LENGTH_SHORT).show();
+             }
+         }
+@@ -120,90 +110,46 @@
+     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+         super.onActivityResult(requestCode, resultCode, data);
+ 
+-        Log.d("CAMERA_OCR", "📬 onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+-
+         if (resultCode == Activity.RESULT_OK && data != null) {
+             if (requestCode == PICK_PDF_REQUEST && data.getData() != null) {
+                 // Handle PDF
+-                Log.d("CAMERA_OCR", "📄 PDF selected");
+                 Uri pdfUri = data.getData();
+                 handlePdfFile(pdfUri);
+             } else if (requestCode == CAMERA_REQUEST) {
+                 // Handle Camera Image
+-                Log.d("CAMERA_OCR", "📸 Camera image received");
+                 Bundle extras = data.getExtras();
+-
+-                if (extras != null) {
+-                    Log.d("CAMERA_OCR", "📦 Extras found, keys: " + extras.keySet());
+-
+-                    if (extras.get("data") != null) {
+-                        Bitmap imageBitmap = (Bitmap) extras.get("data");
+-                        Log.d("CAMERA_OCR", "🖼️ Bitmap received: " + imageBitmap.getWidth() + "x" + imageBitmap.getHeight());
+-                        processCameraImage(imageBitmap);
+-                    } else {
+-                        Log.e("CAMERA_OCR", "❌ No 'data' key in extras");
+-                        Toast.makeText(getContext(), "❌ Gagal mengambil gambar", Toast.LENGTH_SHORT).show();
+-                    }
+-                } else {
+-                    Log.e("CAMERA_OCR", "❌ Extras is null");
+-                    Toast.makeText(getContext(), "❌ Gagal mengambil gambar", Toast.LENGTH_SHORT).show();
++                if (extras != null && extras.get("data") != null) {
++                    Bitmap imageBitmap = (Bitmap) extras.get("data");
++                    processCameraImage(imageBitmap);
+                 }
+             }
+-        } else {
+-            Log.w("CAMERA_OCR", "⚠️ Result not OK or data is null");
+         }
+     }
+ 
+     // 📷 Process gambar dari kamera dengan OCR
+     private void processCameraImage(Bitmap bitmap) {
+-        Log.d("CAMERA_OCR", "🔄 Starting OCR processing...");
+         Toast.makeText(getContext(), "🔍 Memproses gambar CV...", Toast.LENGTH_SHORT).show();
+ 
+-        try {
+-            InputImage image = InputImage.fromBitmap(bitmap, 0);
+-            Log.d("CAMERA_OCR", "✅ InputImage created successfully");
++        InputImage image = InputImage.fromBitmap(bitmap, 0);
+ 
+-            textRecognizer.process(image)
+-                    .addOnSuccessListener(visionText -> {
+-                        String recognizedText = visionText.getText();
++        textRecognizer.process(image)
++                .addOnSuccessListener(visionText -> {
++                    String recognizedText = visionText.getText();
+ 
+-                        Log.d("CAMERA_OCR", "✅ OCR SUCCESS!");
+-                        Log.d("CAMERA_OCR", "📝 Text length: " + recognizedText.length());
+-                        Log.d("CAMERA_OCR", "📝 Text preview (first 200 chars): " +
+-                                (recognizedText.length() > 200 ? recognizedText.substring(0, 200) : recognizedText));
+-                        Log.d("CAMERA_OCR", "📝 Full text: " + recognizedText);
++                    Log.d("OCR_RESULT", "Text yang terdeteksi: " + recognizedText);
+ 
+-                        if (recognizedText.isEmpty()) {
+-                            Log.w("CAMERA_OCR", "⚠️ OCR returned empty text");
+-                            Toast.makeText(getContext(),
+-                                    "❌ Tidak ada text yang terdeteksi.\n\n💡 Tips:\n• Pastikan foto jelas\n• Coba foto lebih dekat\n• Gunakan pencahayaan baik\n\nAtau gunakan Upload PDF",
+-                                    Toast.LENGTH_LONG).show();
+-                            return;
+-                        }
++                    if (recognizedText.isEmpty()) {
++                        Toast.makeText(getContext(), "❌ Tidak ada text yang terdeteksi.\nCoba foto lebih jelas atau gunakan PDF.", Toast.LENGTH_LONG).show();
++                        return;
++                    }
+ 
+-                        // Extract keywords dari text OCR
+-                        Toast.makeText(getContext(), "✅ Text terdeteksi! Mencari keyword...", Toast.LENGTH_SHORT).show();
+-                        extractKeywordsFromText(recognizedText, "gambar");
+-                    })
+-                    .addOnFailureListener(e -> {
+-                        Log.e("CAMERA_OCR", "❌ OCR FAILED: " + e.getClass().getSimpleName());
+-                        Log.e("CAMERA_OCR", "❌ Error message: " + e.getMessage());
+-                        e.printStackTrace();
+-
+-                        Toast.makeText(getContext(),
+-                                "❌ Gagal memproses gambar\n\nError: " + e.getMessage() +
+-                                        "\n\nCoba gunakan Upload PDF",
+-                                Toast.LENGTH_LONG).show();
+-                    })
+-                    .addOnCompleteListener(task -> {
+-                        Log.d("CAMERA_OCR", "🏁 OCR task completed. Success: " + task.isSuccessful());
+-                    });
+-
+-        } catch (Exception e) {
+-            Log.e("CAMERA_OCR", "❌ Exception during image processing: " + e.getMessage());
+-            e.printStackTrace();
+-            Toast.makeText(getContext(), "❌ Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+-        }
++                    // Extract keywords dari text OCR
++                    extractKeywordsFromText(recognizedText, "gambar");
++                })
++                .addOnFailureListener(e -> {
++                    Log.e("OCR_ERROR", "Error: " + e.getMessage());
++                    Toast.makeText(getContext(), "❌ Gagal memproses gambar: " + e.getMessage(), Toast.LENGTH_LONG).show();
++                });
+     }
+ 
+     // 📄 Process PDF file
+@@ -218,14 +164,12 @@
+             String text = pdfStripper.getText(document);
+             document.close();
+ 
+-            Log.d("PDF_PARSE", "📝 Text dari PDF (length): " + text.length());
+-            Log.d("PDF_PARSE", "📝 Text preview: " + (text.length() > 200 ? text.substring(0, 200) : text));
++            Log.d("PDF_TEXT", "Text dari PDF: " + text);
+ 
+             // Extract keywords dari PDF text
+             extractKeywordsFromText(text, "PDF");
+ 
+         } catch (Exception e) {
+-            Log.e("PDF_PARSE", "❌ Error: " + e.getMessage());
+             e.printStackTrace();
+             Toast.makeText(getContext(), "❌ Gagal membaca PDF: " + e.getMessage(), Toast.LENGTH_LONG).show();
+         }
+@@ -233,9 +177,6 @@
+ 
+     // 🔍 Extract keywords dari text (PDF atau OCR)
+     private void extractKeywordsFromText(String text, String source) {
+-        Log.d("KEYWORD_EXTRACT", "🔍 Starting keyword extraction from " + source);
+-        Log.d("KEYWORD_EXTRACT", "📝 Text length: " + text.length());
+-
+         // Kata kunci yang relevan (disesuaikan dengan kategori Supabase)
+         String[] keywords = {
+                 // Teknologi
+@@ -267,25 +208,14 @@
+                 // Hindari duplikat
+                 if (!matchedKeywords.contains(keyword)) {
+                     matchedKeywords.add(keyword);
+-                    Log.d("KEYWORD_EXTRACT", "✅ Match found: " + keyword);
+                 }
+             }
+         }
+-
+-        Log.d("KEYWORD_EXTRACT", "📊 Total keywords matched: " + matchedKeywords.size());
+ 
+         // Hasil matching
+         if (matchedKeywords.isEmpty()) {
+-            Log.w("KEYWORD_EXTRACT", "⚠️ No keywords matched");
+             Toast.makeText(getContext(),
+-                    "❌ Tidak ada kata kunci cocok dari " + source + ".\n\n" +
+-                            "💡 Kata kunci yang dicari:\n" +
+-                            "• Teknologi (IT, software, developer)\n" +
+-                            "• Desain (UI/UX, graphic)\n" +
+-                            "• Keuangan, Perbankan\n" +
+-                            "• Produksi, Administrasi\n" +
+-                            "• Teknik, Pertanian, Pendidikan\n\n" +
+-                            "Cek halaman Home untuk semua lowongan.",
++                    "❌ Tidak ada kata kunci cocok dari " + source + ".\nSilakan cek halaman Home untuk semua lowongan.",
+                     Toast.LENGTH_LONG).show();
+             CVKeywordManager.getInstance().clearKeywords();
+         } else {
+@@ -293,12 +223,12 @@
+             CVKeywordManager.getInstance().setKeywords(matchedKeywords);
+ 
+             String keywordText = String.join(", ", matchedKeywords);
+-            Log.d("KEYWORD_EXTRACT", "✅ Keywords saved: " + keywordText);
++            Log.d("KEYWORD_FOUND", "Keywords dari " + source + ": " + keywordText);
+ 
+             Toast.makeText(getContext(),
+                     "✅ CV berhasil dipindai dari " + source + "!\n\n" +
+-                            "🎯 Kata kunci: " + keywordText + "\n\n" +
+-                            "👉 Klik tab 'Home' untuk melihat lowongan yang cocok",
++                            "Kata kunci: " + keywordText + "\n\n" +
++                            "Klik tab 'Home' untuk melihat lowongan yang cocok",
+                     Toast.LENGTH_LONG).show();
+         }
+     }
+@@ -323,7 +253,6 @@
+         super.onDestroy();
+         if (textRecognizer != null) {
+             textRecognizer.close();
+-            Log.d("CAMERA_OCR", "🔚 TextRecognizer closed");
+         }
+     }
+ }
+\ No newline at end of file
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\">\r\n\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:dataExtractionRules=\"@xml/data_extraction_rules\"\r\n        android:fullBackupContent=\"@xml/backup_rules\"\r\n        android:icon=\"@mipmap/ic_launcher\"\r\n        android:label=\"@string/app_name\"\r\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\r\n        android:supportsRtl=\"true\"\r\n        android:theme=\"@style/Theme.KARIRKU\">\r\n        <activity android:name=\".JobDetailActivity\" />\r\n        <activity android:name=\".ChatDetailActivity\" />\r\n        <activity\r\n            android:name=\".beranda\"\r\n            android:exported=\"true\">\r\n<!--        <activity-->\r\n<!--            android:name=\".register\"-->\r\n<!--            android:exported=\"false\" />-->\r\n<!--        <activity-->\r\n<!--            android:name=\".MainActivity\"-->\r\n<!--            android:exported=\"true\">-->\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n        </activity>\r\n    </application>\r\n\r\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	(revision 960fdca1d6025d0dee0e7ee4a2ab454bf0c01b16)
++++ b/app/src/main/AndroidManifest.xml	(date 1762957896471)
+@@ -2,6 +2,23 @@
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:tools="http://schemas.android.com/tools">
+ 
++    <!-- 🔹 IZIN AKSES INTERNET & STORAGE -->
++    <uses-permission android:name="android.permission.INTERNET" />
++
++    <!-- 🔹 Akses baca file dari penyimpanan (untuk upload PDF) -->
++    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
++
++    <!-- 🔹 (Opsional) Android 13 ke atas: izin khusus untuk dokumen -->
++    <uses-permission android:name="android.permission.READ_MEDIA_DOCUMENTS" />
++    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
++    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
++
++    <!-- ✅ IZIN KAMERA untuk Scan CV -->
++    <uses-permission android:name="android.permission.CAMERA" />
++    <uses-feature
++        android:name="android.hardware.camera"
++        android:required="false" />
++
+     <application
+         android:allowBackup="true"
+         android:dataExtractionRules="@xml/data_extraction_rules"
+@@ -10,24 +27,54 @@
+         android:label="@string/app_name"
+         android:roundIcon="@mipmap/ic_launcher_round"
+         android:supportsRtl="true"
+-        android:theme="@style/Theme.KARIRKU">
+-        <activity android:name=".JobDetailActivity" />
+-        <activity android:name=".ChatDetailActivity" />
++        android:theme="@style/Theme.KARIRKU"
++        android:networkSecurityConfig="@xml/network_security_config">
++
++        <!-- 🔹 Activity untuk chat detail -->
+         <activity
+-            android:name=".beranda"
+-            android:exported="true">
+-<!--        <activity-->
+-<!--            android:name=".register"-->
+-<!--            android:exported="false" />-->
+-<!--        <activity-->
+-<!--            android:name=".MainActivity"-->
+-<!--            android:exported="true">-->
++            android:name=".ChatDetailActivity"
++            android:exported="false" />
++
++        <!-- 🔹 Activity register -->
++        <activity
++            android:name=".register"
++            android:exported="false" />
++
++        <!-- 🔹 Activity utama (login) -->
++        <activity
++            android:name=".MainActivity"
++            android:exported="true"
++            android:launchMode="singleTask">
++
++            <!-- Intent Filter agar bisa jadi launcher utama -->
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+-
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
++
++            <!-- 🔹 Callback URL untuk login via Supabase (Google OAuth) -->
++            <intent-filter>
++                <action android:name="android.intent.action.VIEW" />
++                <category android:name="android.intent.category.DEFAULT" />
++                <category android:name="android.intent.category.BROWSABLE" />
++
++                <!-- Supabase redirect callback -->
++                <data
++                    android:scheme="karirku"
++                    android:host="auth-callback" />
++            </intent-filter>
+         </activity>
++
++        <!-- 🔹 Activity beranda (tujuan setelah login sukses) -->
++        <activity
++            android:name=".beranda"
++            android:exported="false" />
++
++        <!-- ✅ ML Kit Text Recognition (auto-downloaded saat runtime) -->
++        <meta-data
++            android:name="com.google.mlkit.vision.DEPENDENCIES"
++            android:value="ocr" />
++
+     </application>
+ 
+ </manifest>
+\ No newline at end of file
+Index: app/src/main/res/layout/fragment_scancv.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    android:orientation=\"vertical\"\r\n    android:gravity=\"center_horizontal\"\r\n    android:background=\"@color/white\"\r\n    tools:context=\".scancvFragment\">\r\n\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        android:paddingStart=\"20dp\"\r\n        android:paddingEnd=\"20dp\"\r\n        android:paddingTop=\"15dp\"\r\n        android:gravity=\"center_vertical\">\r\n\r\n\r\n\r\n        <TextView\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:text=\"Upload CV\"\r\n            android:textSize=\"20sp\"\r\n            android:textColor=\"@color/blue\"\r\n            android:fontFamily=\"@font/interdisplaybold\"\r\n            android:gravity=\"center\" />\r\n    </LinearLayout>\r\n\r\n    <LinearLayout\r\n        android:id=\"@+id/layoutUploadSection\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:background=\"@drawable/shape\"\r\n        android:orientation=\"vertical\"\r\n        android:gravity=\"center\"\r\n        android:layout_marginTop=\"40dp\"\r\n        android:padding=\"10dp\"\r\n        android:layout_marginStart=\"20dp\"\r\n        android:layout_marginEnd=\"20dp\">\r\n\r\n        <LinearLayout\r\n            android:id=\"@+id/layoutUploadPDF\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:background=\"@drawable/shape\"\r\n            android:orientation=\"horizontal\"\r\n            android:gravity=\"center\"\r\n            android:layout_marginTop=\"10dp\"\r\n            android:paddingVertical=\"20dp\"\r\n            android:paddingHorizontal=\"25dp\"\r\n            android:layout_marginStart=\"20dp\"\r\n            android:layout_marginEnd=\"20dp\">\r\n\r\n            <ImageView\r\n                android:layout_width=\"26dp\"\r\n                android:layout_height=\"26dp\"\r\n                android:src=\"@drawable/ic_pdf_upload\"\r\n                android:layout_marginEnd=\"10dp\"\r\n                android:contentDescription=\"Upload File\" />\r\n\r\n            <LinearLayout\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:orientation=\"vertical\">\r\n\r\n                <TextView\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:text=\"Upload file PDF dari HP\"\r\n                    android:textSize=\"16sp\"\r\n                    android:textColor=\"#0D99FF\"\r\n                    android:fontFamily=\"@font/interdisplaybold\" />\r\n\r\n                <TextView\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:text=\"(PDF, maks. 5 MB)\"\r\n                    android:textSize=\"12sp\"\r\n                    android:textColor=\"@color/gray\"\r\n                    android:layout_gravity=\"center\"\r\n                    android:layout_marginTop=\"2dp\" />\r\n            </LinearLayout>\r\n        </LinearLayout>\r\n\r\n    </LinearLayout>\r\n\r\n    <TextView\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"CV-mu akan otomatis dikirimkan untuk lamaran kerjamu selanjutnya. Untuk mengupdate, upload CV terbarumu di Profil.\"\r\n        android:textSize=\"11sp\"\r\n        android:textColor=\"@color/gray\"\r\n        android:fontFamily=\"@font/interdisplaybold\"\r\n        android:gravity=\"start\"\r\n        android:layout_marginTop=\"22dp\"\r\n        android:layout_marginStart=\"30dp\"\r\n        android:layout_marginEnd=\"30dp\"\r\n        android:lineSpacingExtra=\"3dp\" />\r\n\r\n</LinearLayout>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_scancv.xml b/app/src/main/res/layout/fragment_scancv.xml
+--- a/app/src/main/res/layout/fragment_scancv.xml	(revision 960fdca1d6025d0dee0e7ee4a2ab454bf0c01b16)
++++ b/app/src/main/res/layout/fragment_scancv.xml	(date 1762871439039)
+@@ -17,8 +17,6 @@
+         android:paddingTop="15dp"
+         android:gravity="center_vertical">
+ 
+-
+-
+         <TextView
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+@@ -41,6 +39,7 @@
+         android:layout_marginStart="20dp"
+         android:layout_marginEnd="20dp">
+ 
++        <!-- Upload PDF -->
+         <LinearLayout
+             android:id="@+id/layoutUploadPDF"
+             android:layout_width="match_parent"
+@@ -55,11 +54,15 @@
+             android:layout_marginEnd="20dp">
+ 
+             <ImageView
++                android:id="@+id/btnUploadPDF"
+                 android:layout_width="26dp"
+                 android:layout_height="26dp"
+                 android:src="@drawable/ic_pdf_upload"
+                 android:layout_marginEnd="10dp"
+-                android:contentDescription="Upload File" />
++                android:contentDescription="Upload File"
++                android:clickable="true"
++                android:focusable="true"
++                android:foreground="?attr/selectableItemBackgroundBorderless" />
+ 
+             <LinearLayout
+                 android:layout_width="wrap_content"
+@@ -85,6 +88,33 @@
+             </LinearLayout>
+         </LinearLayout>
+ 
++        <!-- Divider -->
++        <TextView
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:text="atau"
++            android:textSize="14sp"
++            android:textColor="@color/gray"
++            android:fontFamily="@font/interdisplaybold"
++            android:gravity="center"
++            android:layout_marginVertical="15dp" />
++
++        <!-- Scan dengan Kamera -->
++        <Button
++            android:id="@+id/btnCamera"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:text="📷 Scan CV dengan Kamera"
++            android:textSize="16sp"
++            android:textColor="@color/white"
++            android:backgroundTint="#0D99FF"
++            android:fontFamily="@font/interdisplaybold"
++            android:paddingVertical="15dp"
++            android:layout_marginStart="20dp"
++            android:layout_marginEnd="20dp"
++            android:layout_marginBottom="10dp"
++            android:textAllCaps="false" />
++
+     </LinearLayout>
+ 
+     <TextView
+@@ -100,4 +130,17 @@
+         android:layout_marginEnd="30dp"
+         android:lineSpacingExtra="3dp" />
+ 
+-</LinearLayout>
++    <TextView
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:text="💡 Tips: Untuk hasil terbaik saat scan dengan kamera:\n• Pastikan pencahayaan cukup\n• Foto CV secara jelas dan tidak blur\n• Hindari bayangan pada dokumen"
++        android:textSize="11sp"
++        android:textColor="#FF9800"
++        android:fontFamily="@font/interdisplaybold"
++        android:gravity="start"
++        android:layout_marginTop="15dp"
++        android:layout_marginStart="30dp"
++        android:layout_marginEnd="30dp"
++        android:lineSpacingExtra="3dp" />
++
++</LinearLayout>
+\ No newline at end of file
+Index: app/src/main/java/com/tem2/karirku/register.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.tem2.karirku;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.text.InputType;\r\nimport android.util.Log;\r\nimport android.widget.EditText;\r\nimport android.widget.ImageView;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport com.android.volley.Request;\r\nimport com.android.volley.RequestQueue;\r\nimport com.android.volley.toolbox.JsonObjectRequest;\r\nimport com.android.volley.toolbox.Volley;\r\n\r\nimport org.json.JSONException;\r\nimport org.json.JSONObject;\r\n\r\nimport java.util.HashMap;\r\nimport java.util.Map;\r\nimport java.util.Random;\r\n\r\npublic class register extends AppCompatActivity {\r\n\r\n    private EditText edtNama, edtEmail, edtPassword, edtNotlp;\r\n    private ImageView imgTogglePassword;\r\n    private boolean isPasswordVisible = false;\r\n\r\n    private final String SUPABASE_URL = \"https://tkjnbelcgfwpbhppsnrl.supabase.co\";\r\n    private final String SUPABASE_API_KEY = \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRram5iZWxjZ2Z3cGJocHBzbnJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE3NDA3NjIsImV4cCI6MjA3NzMxNjc2Mn0.wOjK4X2qJV6LzOG4yXxnfeTezDX5_3Sb3wezhCuQAko\";\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_register);\r\n\r\n        TextView masukText = findViewById(R.id.textView5);\r\n        edtNama = findViewById(R.id.edt_nama);\r\n        edtEmail = findViewById(R.id.edt_email);\r\n        edtPassword = findViewById(R.id.edt_Password);\r\n        edtNotlp = findViewById(R.id.edt_notlp);\r\n        imgTogglePassword = findViewById(R.id.imgTogglePassword);\r\n\r\n        masukText.setOnClickListener(v -> {\r\n            startActivity(new Intent(register.this, MainActivity.class));\r\n            finish();\r\n        });\r\n\r\n        imgTogglePassword.setOnClickListener(v -> togglePasswordVisibility());\r\n        findViewById(R.id.btnRegister).setOnClickListener(v -> registerUser());\r\n    }\r\n\r\n    private void togglePasswordVisibility() {\r\n        if (isPasswordVisible) {\r\n            edtPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);\r\n            imgTogglePassword.setImageResource(R.drawable.eyeoff);\r\n        } else {\r\n            edtPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);\r\n            imgTogglePassword.setImageResource(R.drawable.eyeon);\r\n        }\r\n        edtPassword.setSelection(edtPassword.getText().length());\r\n        isPasswordVisible = !isPasswordVisible;\r\n    }\r\n\r\n    private void registerUser() {\r\n        String nama = edtNama.getText().toString().trim();\r\n        String email = edtEmail.getText().toString().trim();\r\n        String password = edtPassword.getText().toString().trim();\r\n        String noTlp = edtNotlp.getText().toString().trim();\r\n\r\n        if (nama.isEmpty() || email.isEmpty() || password.isEmpty() || noTlp.isEmpty()) {\r\n            Toast.makeText(this, \"Harap isi semua field!\", Toast.LENGTH_SHORT).show();\r\n            return;\r\n        }\r\n\r\n        if (!isValidEmail(email)) {\r\n            Toast.makeText(this, \"Format email tidak valid!\", Toast.LENGTH_SHORT).show();\r\n            return;\r\n        }\r\n\r\n        if (password.length() < 6) {\r\n            Toast.makeText(this, \"Password minimal 6 karakter!\", Toast.LENGTH_SHORT).show();\r\n            return;\r\n        }\r\n\r\n        sendSignupToSupabase(email, password, nama, noTlp);\r\n    }\r\n\r\n    private boolean isValidEmail(String email) {\r\n        return email.matches(\"[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,4}\");\r\n    }\r\n\r\n    // \uD83D\uDD39 Registrasi ke Supabase Auth (otomatis kirim email verifikasi)\r\n    private void sendSignupToSupabase(String email, String password, String nama, String noTlp) {\r\n        String url = SUPABASE_URL + \"/auth/v1/signup\";\r\n\r\n        JSONObject body = new JSONObject();\r\n        try {\r\n            body.put(\"email\", email);\r\n            body.put(\"password\", password);\r\n        } catch (JSONException e) {\r\n            Log.e(\"REGISTER_ERROR\", \"JSON error: \" + e.getMessage());\r\n            return;\r\n        }\r\n\r\n        RequestQueue queue = Volley.newRequestQueue(this);\r\n\r\n        JsonObjectRequest signupRequest = new JsonObjectRequest(Request.Method.POST, url, body,\r\n                response -> {\r\n                    Log.i(\"REGISTER_SUCCESS\", \"Signup success: \" + response);\r\n                    Toast.makeText(this, \"Registrasi berhasil! Cek email verifikasi kamu.\", Toast.LENGTH_LONG).show();\r\n\r\n                    // Simpan data tambahan ke tabel pengguna\r\n                    saveUserToDatabase(nama, email, noTlp);\r\n\r\n                    startActivity(new Intent(register.this, MainActivity.class));\r\n                    finish();\r\n                },\r\n                error -> {\r\n                    String message = \"Registrasi gagal.\";\r\n                    if (error.networkResponse != null && error.networkResponse.data != null) {\r\n                        String err = new String(error.networkResponse.data);\r\n                        Log.e(\"REGISTER_ERROR\", \"Error Response: \" + err);\r\n                        if (err.contains(\"User already registered\")) {\r\n                            message = \"Email sudah terdaftar!\";\r\n                        } else if (err.contains(\"bounce\")) {\r\n                            message = \"Email tidak valid atau Supabase menolak pengiriman (bounce).\";\r\n                        }\r\n                    } else {\r\n                        Log.e(\"REGISTER_ERROR\", \"Unknown network error: \" + error);\r\n                    }\r\n\r\n                    Toast.makeText(this, message, Toast.LENGTH_LONG).show();\r\n                }) {\r\n            @Override\r\n            public Map<String, String> getHeaders() {\r\n                Map<String, String> headers = new HashMap<>();\r\n                headers.put(\"apikey\", SUPABASE_API_KEY);\r\n                headers.put(\"Authorization\", \"Bearer \" + SUPABASE_API_KEY);\r\n                headers.put(\"Content-Type\", \"application/json\");\r\n                return headers;\r\n            }\r\n        };\r\n\r\n        queue.add(signupRequest);\r\n    }\r\n\r\n    // \uD83D\uDD39 Simpan data tambahan ke tabel pengguna\r\n    private void saveUserToDatabase(String nama, String email, String noTlp) {\r\n        String url = SUPABASE_URL + \"/rest/v1/pengguna\";\r\n\r\n        JSONObject jsonBody = new JSONObject();\r\n        try {\r\n            jsonBody.put(\"nama_lengkap\", nama);\r\n            jsonBody.put(\"email\", email);\r\n            jsonBody.put(\"no_hp\", noTlp);\r\n            jsonBody.put(\"role\", \"pencaker\");\r\n        } catch (JSONException e) {\r\n            Log.e(\"REGISTER_DB_ERROR\", \"JSON error: \" + e.getMessage());\r\n            return;\r\n        }\r\n\r\n        JsonObjectRequest dbRequest = new JsonObjectRequest(Request.Method.POST, url, jsonBody,\r\n                response -> Log.i(\"REGISTER_DB\", \"User data saved: \" + response),\r\n                error -> Log.e(\"REGISTER_DB_ERROR\", \"Error: \" + error.toString())) {\r\n            @Override\r\n            public Map<String, String> getHeaders() {\r\n                Map<String, String> headers = new HashMap<>();\r\n                headers.put(\"apikey\", SUPABASE_API_KEY);\r\n                headers.put(\"Authorization\", \"Bearer \" + SUPABASE_API_KEY);\r\n                headers.put(\"Content-Type\", \"application/json\");\r\n                headers.put(\"Prefer\", \"return=minimal\");\r\n                return headers;\r\n            }\r\n        };\r\n\r\n        Volley.newRequestQueue(this).add(dbRequest);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/tem2/karirku/register.java b/app/src/main/java/com/tem2/karirku/register.java
+--- a/app/src/main/java/com/tem2/karirku/register.java	(revision 960fdca1d6025d0dee0e7ee4a2ab454bf0c01b16)
++++ b/app/src/main/java/com/tem2/karirku/register.java	(date 1762958025484)
+@@ -93,7 +93,7 @@
+         return email.matches("[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}");
+     }
+ 
+-    // 🔹 Registrasi ke Supabase Auth (otomatis kirim email verifikasi)
++    // ðŸ”¹ Registrasi ke Supabase Auth (otomatis kirim email verifikasi)
+     private void sendSignupToSupabase(String email, String password, String nama, String noTlp) {
+         String url = SUPABASE_URL + "/auth/v1/signup";
+ 
+@@ -148,7 +148,7 @@
+         queue.add(signupRequest);
+     }
+ 
+-    // 🔹 Simpan data tambahan ke tabel pengguna
++    // ðŸ”¹ Simpan data tambahan ke tabel pengguna
+     private void saveUserToDatabase(String nama, String email, String noTlp) {
+         String url = SUPABASE_URL + "/rest/v1/pengguna";
+ 
+@@ -179,4 +179,4 @@
+ 
+         Volley.newRequestQueue(this).add(dbRequest);
+     }
+-}
++}
+\ No newline at end of file
+Index: app/src/main/java/com/tem2/karirku/JobAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.tem2.karirku;\r\n\r\nimport android.content.Context;\r\nimport android.content.Intent;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.ImageView;\r\nimport android.widget.TextView;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport java.util.List;\r\n\r\npublic class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {\r\n\r\n    private Context context;\r\n    private List<Job> jobList;\r\n\r\n    public JobAdapter(Context context, List<Job> jobList) {\r\n        this.context = context;\r\n        this.jobList = jobList;\r\n    }\r\n\r\n    @NonNull\r\n    @Override\r\n    public JobViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {\r\n        View view = LayoutInflater.from(context).inflate(R.layout.item_job, parent, false);\r\n        return new JobViewHolder(view);\r\n    }\r\n\r\n    @Override\r\n    public void onBindViewHolder(@NonNull JobViewHolder holder, int position) {\r\n        Job job = jobList.get(position);\r\n\r\n        holder.tvCompanyName.setText(job.getCompanyName());\r\n        holder.tvLocation.setText(job.getLocation());\r\n        holder.tvJobTitle.setText(job.getJobTitle());\r\n        holder.tvPostedTime.setText(job.getPostedTime());\r\n        holder.tvApplicants.setText(job.getApplicants());\r\n        holder.tvTag1.setText(job.getTag1());\r\n        holder.tvTag2.setText(job.getTag2());\r\n        holder.tvTag3.setText(job.getTag3());\r\n\r\n        // Gambar perusahaan\r\n        holder.imgCompany.setImageResource(R.drawable.iconloker);\r\n\r\n        // \uD83D\uDD39 Tombol Simpan (klik ubah ikon)\r\n        holder.btnSave.setOnClickListener(v -> {\r\n            holder.btnSave.setImageResource(R.drawable.icsimpan);\r\n        });\r\n\r\n        // \uD83D\uDD39 TAMBAH INI: Click listener untuk item card\r\n        holder.itemView.setOnClickListener(v -> {\r\n            // Buka JobDetailActivity dan kirim data job\r\n            Intent intent = new Intent(context, JobDetailActivity.class);\r\n            intent.putExtra(\"JOB_DATA\", job); // Kirim seluruh object job\r\n            context.startActivity(intent);\r\n        });\r\n    }\r\n\r\n    @Override\r\n    public int getItemCount() {\r\n        return jobList.size();\r\n    }\r\n\r\n    // \uD83D\uDD39 Method untuk update data saat ganti tab\r\n    public void setData(List<Job> newList) {\r\n        this.jobList = newList;\r\n        notifyDataSetChanged();\r\n    }\r\n\r\n    // \uD83D\uDD39 ViewHolder\r\n    public static class JobViewHolder extends RecyclerView.ViewHolder {\r\n        ImageView imgCompany, btnSave;\r\n        TextView tvCompanyName, tvLocation, tvJobTitle, tvPostedTime, tvApplicants;\r\n        TextView tvTag1, tvTag2, tvTag3;\r\n\r\n        public JobViewHolder(@NonNull View itemView) {\r\n            super(itemView);\r\n\r\n            imgCompany = itemView.findViewById(R.id.imgCompany);\r\n            btnSave = itemView.findViewById(R.id.btnSave);\r\n            tvCompanyName = itemView.findViewById(R.id.tvCompanyName);\r\n            tvLocation = itemView.findViewById(R.id.tvLocation);\r\n            tvJobTitle = itemView.findViewById(R.id.tvJobTitle);\r\n            tvPostedTime = itemView.findViewById(R.id.tvPostedTime);\r\n            tvApplicants = itemView.findViewById(R.id.tvApplicants);\r\n\r\n            // Tag kategori\r\n            tvTag1 = itemView.findViewById(R.id.tvTag1);\r\n            tvTag2 = itemView.findViewById(R.id.tvTag2);\r\n            tvTag3 = itemView.findViewById(R.id.tvTag3);\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/tem2/karirku/JobAdapter.java b/app/src/main/java/com/tem2/karirku/JobAdapter.java
+--- a/app/src/main/java/com/tem2/karirku/JobAdapter.java	(revision 960fdca1d6025d0dee0e7ee4a2ab454bf0c01b16)
++++ b/app/src/main/java/com/tem2/karirku/JobAdapter.java	(date 1762928621104)
+@@ -1,7 +1,6 @@
+ package com.tem2.karirku;
+ 
+ import android.content.Context;
+-import android.content.Intent;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
+@@ -43,21 +42,13 @@
+         holder.tvTag2.setText(job.getTag2());
+         holder.tvTag3.setText(job.getTag3());
+ 
+-        // Gambar perusahaan
++        // Gambar perusahaan (kalau punya aset default)
+         holder.imgCompany.setImageResource(R.drawable.iconloker);
+ 
+-        // 🔹 Tombol Simpan (klik ubah ikon)
++        // ðŸ”¹ Tombol Simpan (klik ubah ikon)
+         holder.btnSave.setOnClickListener(v -> {
+             holder.btnSave.setImageResource(R.drawable.icsimpan);
+         });
+-
+-        // 🔹 TAMBAH INI: Click listener untuk item card
+-        holder.itemView.setOnClickListener(v -> {
+-            // Buka JobDetailActivity dan kirim data job
+-            Intent intent = new Intent(context, JobDetailActivity.class);
+-            intent.putExtra("JOB_DATA", job); // Kirim seluruh object job
+-            context.startActivity(intent);
+-        });
+     }
+ 
+     @Override
+@@ -65,13 +56,13 @@
+         return jobList.size();
+     }
+ 
+-    // 🔹 Method untuk update data saat ganti tab
++    // ðŸ”¹ Method untuk update data saat ganti tab
+     public void setData(List<Job> newList) {
+         this.jobList = newList;
+         notifyDataSetChanged();
+     }
+ 
+-    // 🔹 ViewHolder
++    // ðŸ”¹ ViewHolder
+     public static class JobViewHolder extends RecyclerView.ViewHolder {
+         ImageView imgCompany, btnSave;
+         TextView tvCompanyName, tvLocation, tvJobTitle, tvPostedTime, tvApplicants;
+Index: app/src/main/java/com/tem2/karirku/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.tem2.karirku;\r\n\r\nimport android.content.Intent;\r\nimport android.net.Uri;\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\nimport android.widget.EditText;\r\nimport android.widget.ImageView;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport com.android.volley.Request;\r\nimport com.android.volley.RequestQueue;\r\nimport com.android.volley.toolbox.JsonArrayRequest;\r\nimport com.android.volley.toolbox.Volley;\r\n\r\nimport org.json.JSONArray;\r\nimport org.json.JSONException;\r\nimport org.json.JSONObject;\r\n\r\nimport java.util.HashMap;\r\nimport java.util.Map;\r\n\r\npublic class MainActivity extends AppCompatActivity {\r\n\r\n    private EditText edtEmail, edtPassword;\r\n    private ImageView icGoogle;\r\n\r\n    // ✅ Ganti dengan project Supabase kamu\r\n    private final String SUPABASE_URL = \"https://tkjnbelcgfwpbhppsnrl.supabase.co\";\r\n    private final String SUPABASE_API_KEY = \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRram5iZWxjZ2Z3cGJocHBzbnJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE3NDA3NjIsImV4cCI6MjA3NzMxNjc2Mn0.wOjK4X2qJV6LzOG4yXxnfeTezDX5_3Sb3wezhCuQAko\";\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_login);\r\n\r\n        edtEmail = findViewById(R.id.edt_email);\r\n        edtPassword = findViewById(R.id.edt_Password);\r\n        icGoogle = findViewById(R.id.ic_google);\r\n\r\n        findViewById(R.id.btnLogin).setOnClickListener(v -> {\r\n            String email = edtEmail.getText().toString().trim();\r\n            String password = edtPassword.getText().toString().trim();\r\n\r\n            if (email.isEmpty() || password.isEmpty()) {\r\n                Toast.makeText(this, \"Isi semua field!\", Toast.LENGTH_SHORT).show();\r\n            } else {\r\n                loginManual(email, password);\r\n            }\r\n        });\r\n\r\n        icGoogle.setOnClickListener(v -> loginWithGoogle());\r\n    }\r\n\r\n    // \uD83D\uDD39 LOGIN MANUAL VIA REST API\r\n    // Di method loginManual, tambahkan pengecekan email verified\r\n    private void loginManual(String email, String password) {\r\n        String url = SUPABASE_URL + \"/rest/v1/pengguna?email=eq.\" + email + \"&select=*\";\r\n\r\n        Log.d(\"LOGIN_DEBUG\", \"Request URL: \" + url);\r\n\r\n        RequestQueue queue = Volley.newRequestQueue(this);\r\n\r\n        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,\r\n                response -> {\r\n                    Log.d(\"LOGIN_DEBUG\", \"Response: \" + response.toString());\r\n\r\n                    if (response.length() > 0) {\r\n                        try {\r\n                            JSONObject user = response.getJSONObject(0);\r\n                            String pass = user.optString(\"password_hash\", \"\");\r\n                            boolean emailVerified = user.optBoolean(\"email_verified\", false);\r\n\r\n                            if (pass.equals(password)) {\r\n                                if (emailVerified) {\r\n                                    Toast.makeText(this, \"Login berhasil!\", Toast.LENGTH_SHORT).show();\r\n                                    startActivity(new Intent(this, beranda.class));\r\n                                    finish();\r\n                                } else {\r\n                                    Toast.makeText(this,\r\n                                            \"Email belum diverifikasi! Silakan cek email Anda.\",\r\n                                            Toast.LENGTH_LONG).show();\r\n                                }\r\n                            } else {\r\n                                Toast.makeText(this, \"Password salah\", Toast.LENGTH_SHORT).show();\r\n                            }\r\n                        } catch (JSONException e) {\r\n                            Toast.makeText(this, \"Parsing error: \" + e.getMessage(), Toast.LENGTH_SHORT).show();\r\n                            Log.e(\"LOGIN_ERROR\", \"JSON error: \", e);\r\n                        }\r\n                    } else {\r\n                        Toast.makeText(this, \"Email tidak ditemukan\", Toast.LENGTH_SHORT).show();\r\n                    }\r\n                },\r\n                error -> {\r\n                    Log.e(\"LOGIN_ERROR\", \"Volley error: \" + error.toString());\r\n                    Toast.makeText(this, \"Gagal koneksi ke server: \" + error.toString(), Toast.LENGTH_LONG).show();\r\n                }\r\n        ) {\r\n            @Override\r\n            public Map<String, String> getHeaders() {\r\n                Map<String, String> headers = new HashMap<>();\r\n                headers.put(\"apikey\", SUPABASE_API_KEY);\r\n                headers.put(\"Authorization\", \"Bearer \" + SUPABASE_API_KEY);\r\n                headers.put(\"Accept\", \"application/json\");\r\n                return headers;\r\n            }\r\n        };\r\n\r\n        queue.add(request);\r\n    }\r\n\r\n    // \uD83D\uDD39 LOGIN VIA GOOGLE SUPABASE\r\n    private void loginWithGoogle() {\r\n        String redirectUrl = SUPABASE_URL + \"/auth/v1/authorize?provider=google\"\r\n                + \"&redirect_to=\" + Uri.encode(\"karirku://auth-callback\"); // callback custom scheme\r\n\r\n        Log.d(\"LOGIN_GOOGLE\", \"Redirect ke: \" + redirectUrl);\r\n\r\n        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(redirectUrl));\r\n        startActivity(browserIntent);\r\n    }\r\n\r\n    // \uD83D\uDD39 Tangkap callback dari Supabase (Google OAuth)\r\n    @Override\r\n    protected void onNewIntent(Intent intent) {\r\n        super.onNewIntent(intent);\r\n        Uri data = intent.getData();\r\n        if (data != null) {\r\n            String fullUri = data.toString();\r\n            Log.d(\"SUPABASE_CALLBACK\", \"Data: \" + fullUri);\r\n\r\n            if (fullUri.contains(\"access_token\")) {\r\n                String token = fullUri.substring(fullUri.indexOf(\"access_token=\") + 13);\r\n                if (token.contains(\"&\")) token = token.substring(0, token.indexOf(\"&\"));\r\n                Toast.makeText(this, \"Login Google sukses!\", Toast.LENGTH_SHORT).show();\r\n                Log.d(\"SUPABASE_TOKEN\", token);\r\n                startActivity(new Intent(this, beranda.class));\r\n                finish();\r\n            } else {\r\n                Toast.makeText(this, \"Gagal ambil token Google!\", Toast.LENGTH_SHORT).show();\r\n            }\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/tem2/karirku/MainActivity.java b/app/src/main/java/com/tem2/karirku/MainActivity.java
+--- a/app/src/main/java/com/tem2/karirku/MainActivity.java	(revision 960fdca1d6025d0dee0e7ee4a2ab454bf0c01b16)
++++ b/app/src/main/java/com/tem2/karirku/MainActivity.java	(date 1762957930696)
+@@ -55,7 +55,6 @@
+     }
+ 
+     // 🔹 LOGIN MANUAL VIA REST API
+-    // Di method loginManual, tambahkan pengecekan email verified
+     private void loginManual(String email, String password) {
+         String url = SUPABASE_URL + "/rest/v1/pengguna?email=eq." + email + "&select=*";
+ 
+@@ -70,23 +69,16 @@
+                     if (response.length() > 0) {
+                         try {
+                             JSONObject user = response.getJSONObject(0);
+-                            String pass = user.optString("password_hash", "");
+-                            boolean emailVerified = user.optBoolean("email_verified", false);
++                            String pass = user.optString("password", "");
+ 
+                             if (pass.equals(password)) {
+-                                if (emailVerified) {
+-                                    Toast.makeText(this, "Login berhasil!", Toast.LENGTH_SHORT).show();
+-                                    startActivity(new Intent(this, beranda.class));
+-                                    finish();
+-                                } else {
+-                                    Toast.makeText(this,
+-                                            "Email belum diverifikasi! Silakan cek email Anda.",
+-                                            Toast.LENGTH_LONG).show();
+-                                }
++                                Toast.makeText(this, "Login berhasil!", Toast.LENGTH_SHORT).show();
++                                startActivity(new Intent(this, beranda.class));
++                                finish();
+                             } else {
+                                 Toast.makeText(this, "Password salah", Toast.LENGTH_SHORT).show();
+                             }
+-                        } catch (JSONException e) {
++                        } catch (JSONException e)  {
+                             Toast.makeText(this, "Parsing error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                             Log.e("LOGIN_ERROR", "JSON error: ", e);
+                         }
+Index: app/src/main/java/com/tem2/karirku/Job.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.tem2.karirku;\r\n\r\nimport java.io.Serializable;\r\n\r\npublic class Job implements Serializable {\r\n    private String id; // TAMBAH INI\r\n    private String companyName;\r\n    private String location;\r\n    private String jobTitle;\r\n    private String postedTime;\r\n    private String applicants;\r\n    private String tag1;\r\n    private String tag2;\r\n    private String tag3;\r\n    private int idLowongan;\r\n\r\n    // Constructor TAMBAH PARAMETER id\r\n    public Job(String id, String companyName, String location, String jobTitle,\r\n               String postedTime, String applicants,\r\n               String tag1, String tag2, String tag3) {\r\n        this.id = id;\r\n        this.companyName = companyName;\r\n        this.location = location;\r\n        this.jobTitle = jobTitle;\r\n        this.postedTime = postedTime;\r\n        this.applicants = applicants;\r\n        this.tag1 = tag1;\r\n        this.tag2 = tag2;\r\n        this.tag3 = tag3;\r\n    }\r\n\r\n    // GETTER untuk id\r\n    public String getId() { return id; }\r\n    public String getCompanyName() { return companyName; }\r\n    public String getLocation() { return location; }\r\n    public String getJobTitle() { return jobTitle; }\r\n    public String getPostedTime() { return postedTime; }\r\n    public String getApplicants() { return applicants; }\r\n    public String getTag1() { return tag1; }\r\n    public String getTag2() { return tag2; }\r\n    public String getTag3() { return tag3; }\r\n\r\n    public int getIdLowongan() { return idLowongan; }\r\n    public void setIdLowongan(int idLowongan) { this.idLowongan = idLowongan; }\r\n\r\n    @Override\r\n    public String toString() {\r\n        return \"Job{\" +\r\n                \"companyName='\" + companyName + '\\'' +\r\n                \", location='\" + location + '\\'' +\r\n                \", jobTitle='\" + jobTitle + '\\'' +\r\n                \", postedTime='\" + postedTime + '\\'' +\r\n                \", applicants='\" + applicants + '\\'' +\r\n                \", tag1='\" + tag1 + '\\'' +\r\n                \", tag2='\" + tag2 + '\\'' +\r\n                \", tag3='\" + tag3 + '\\'' +\r\n                '}';\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/tem2/karirku/Job.java b/app/src/main/java/com/tem2/karirku/Job.java
+--- a/app/src/main/java/com/tem2/karirku/Job.java	(revision 960fdca1d6025d0dee0e7ee4a2ab454bf0c01b16)
++++ b/app/src/main/java/com/tem2/karirku/Job.java	(date 1762928603016)
+@@ -1,9 +1,6 @@
+ package com.tem2.karirku;
+ 
+-import java.io.Serializable;
+-
+-public class Job implements Serializable {
+-    private String id; // TAMBAH INI
++public class Job {
+     private String companyName;
+     private String location;
+     private String jobTitle;
+@@ -14,11 +11,9 @@
+     private String tag3;
+     private int idLowongan;
+ 
+-    // Constructor TAMBAH PARAMETER id
+-    public Job(String id, String companyName, String location, String jobTitle,
++    public Job(String companyName, String location, String jobTitle,
+                String postedTime, String applicants,
+                String tag1, String tag2, String tag3) {
+-        this.id = id;
+         this.companyName = companyName;
+         this.location = location;
+         this.jobTitle = jobTitle;
+@@ -29,8 +24,6 @@
+         this.tag3 = tag3;
+     }
+ 
+-    // GETTER untuk id
+-    public String getId() { return id; }
+     public String getCompanyName() { return companyName; }
+     public String getLocation() { return location; }
+     public String getJobTitle() { return jobTitle; }
+Index: app/src/main/java/com/tem2/karirku/HomeFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.tem2.karirku;\r\n\r\nimport android.os.Bundle;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.TextView;\r\n\r\nimport androidx.fragment.app.Fragment;\r\nimport androidx.recyclerview.widget.LinearLayoutManager;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.Collections;\r\nimport java.util.List;\r\n\r\npublic class HomeFragment extends Fragment {\r\n\r\n    private RecyclerView recyclerJobs;\r\n    private JobAdapter jobAdapter;\r\n    private List<Job> jobList;\r\n\r\n    private TextView tabSemua, tabTerbaru, tabTerlama;\r\n\r\n    @Override\r\n    public View onCreateView(LayoutInflater inflater, ViewGroup container,\r\n                             Bundle savedInstanceState) {\r\n        View view = inflater.inflate(R.layout.fragment_home, container, false);\r\n\r\n        // \uD83D\uDD39 Inisialisasi RecyclerView\r\n        recyclerJobs = view.findViewById(R.id.recyclerJobs);\r\n        recyclerJobs.setLayoutManager(new LinearLayoutManager(getContext()));\r\n\r\n        // \uD83D\uDD39 Inisialisasi tab\r\n        tabSemua = view.findViewById(R.id.tab_semua);\r\n        tabTerbaru = view.findViewById(R.id.tab_terbaru);\r\n        tabTerlama = view.findViewById(R.id.tab_terlama);\r\n\r\n        // \uD83D\uDD39 Data dummy job\r\n        jobList = new ArrayList<>();\r\n        jobList.add(new Job(\"1\", \"Mekar\", \"Bendebesah City\", \"Nagih hutang ke nasabah\",\r\n                \"2 Hari lalu\", \"130 Pendaftar\", \"Bengalan\", \"Fulltime\", \"Santai\"));\r\n        jobList.add(new Job(\"2\", \"PT. Sejahtera Abadi\", \"Jember\", \"Customer Service Perbankan\",\r\n                \"1 Hari lalu\", \"245 Pendaftar\", \"Perbankan\", \"Kontrak\", \"Remote\"));\r\n        jobList.add(new Job(\"3\", \"CV. Maju Bersama\", \"Surabaya\", \"Admin Data Keuangan\",\r\n                \"5 Hari lalu\", \"80 Pendaftar\", \"Keuangan\", \"Part-time\", \"On-site\"));\r\n        jobList.add(new Job(\"4\", \"PT. Mitra Digital\", \"Malang\", \"Frontend Developer\",\r\n                \"3 Hari lalu\", \"56 Pendaftar\", \"Teknologi\", \"Fulltime\", \"Hybrid\"));\r\n        jobList.add(new Job(\"5\", \"PT. Cahaya Abadi\", \"Sidoarjo\", \"Quality Control Pabrik\",\r\n                \"1 Minggu lalu\", \"110 Pendaftar\", \"Produksi\", \"Kontrak\", \"Shift\"));\r\n\r\n        // \uD83D\uDD39 Set adapter\r\n        jobAdapter = new JobAdapter(getContext(), jobList);\r\n        recyclerJobs.setAdapter(jobAdapter);\r\n\r\n        // \uD83D\uDD39 Logika klik tab\r\n        View.OnClickListener tabClickListener = v -> {\r\n            // Reset semua tab ke nonaktif\r\n            tabSemua.setBackgroundResource(R.drawable.shape_stroke);\r\n            tabSemua.setTextColor(getResources().getColor(R.color.gray));\r\n            tabTerbaru.setBackgroundResource(R.drawable.shape_stroke);\r\n            tabTerbaru.setTextColor(getResources().getColor(R.color.gray));\r\n            tabTerlama.setBackgroundResource(R.drawable.shape_stroke);\r\n            tabTerlama.setTextColor(getResources().getColor(R.color.gray));\r\n\r\n            // Tab yang diklik jadi aktif (biru)\r\n            ((TextView) v).setBackgroundResource(R.drawable.selected);\r\n            ((TextView) v).setTextColor(getResources().getColor(android.R.color.white));\r\n\r\n            // \uD83D\uDD39 Filter/sort data sesuai tab\r\n            if (v.getId() == R.id.tab_semua) {\r\n                jobAdapter.setData(jobList);\r\n            } else if (v.getId() == R.id.tab_terbaru) {\r\n                List<Job> terbaru = new ArrayList<>(jobList);\r\n                Collections.reverse(terbaru); // urutan dibalik biar terbaru dulu\r\n                jobAdapter.setData(terbaru);\r\n            } else if (v.getId() == R.id.tab_terlama) {\r\n                jobAdapter.setData(jobList); // urutan lama\r\n            }\r\n        };\r\n\r\n        // \uD83D\uDD39 Pasang listener ke semua tab\r\n        tabSemua.setOnClickListener(tabClickListener);\r\n        tabTerbaru.setOnClickListener(tabClickListener);\r\n        tabTerlama.setOnClickListener(tabClickListener);\r\n\r\n        return view;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/tem2/karirku/HomeFragment.java b/app/src/main/java/com/tem2/karirku/HomeFragment.java
+--- a/app/src/main/java/com/tem2/karirku/HomeFragment.java	(revision 960fdca1d6025d0dee0e7ee4a2ab454bf0c01b16)
++++ b/app/src/main/java/com/tem2/karirku/HomeFragment.java	(date 1762995999752)
+@@ -1,89 +1,329 @@
+ package com.tem2.karirku;
+ 
+ import android.os.Bundle;
++import android.text.Editable;
++import android.text.TextWatcher;
++import android.util.Log;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
++import android.widget.EditText;
+ import android.widget.TextView;
++import android.widget.Toast;
+ 
+ import androidx.fragment.app.Fragment;
+ import androidx.recyclerview.widget.LinearLayoutManager;
+ import androidx.recyclerview.widget.RecyclerView;
+ 
++import com.android.volley.Request;
++import com.android.volley.RequestQueue;
++import com.android.volley.toolbox.JsonArrayRequest;
++import com.android.volley.toolbox.Volley;
++
++import org.json.JSONArray;
++import org.json.JSONException;
++import org.json.JSONObject;
++
+ import java.util.ArrayList;
+ import java.util.Collections;
++import java.util.HashMap;
+ import java.util.List;
++import java.util.Locale;
++import java.util.Map;
+ 
+ public class HomeFragment extends Fragment {
+ 
+     private RecyclerView recyclerJobs;
+     private JobAdapter jobAdapter;
+-    private List<Job> jobList;
++    private List<Job> jobList = new ArrayList<>();
++    private List<Job> filteredJobList = new ArrayList<>();
++    private EditText searchEditText;
+ 
+     private TextView tabSemua, tabTerbaru, tabTerlama;
++    private String currentSearchQuery = "";
++
++    private static final String SUPABASE_URL = "https://tkjnbelcgfwpbhppsnrl.supabase.co/rest/v1/lowongan?select=*";
++    private static final String SUPABASE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRram5iZWxjZ2Z3cGJocHBzbnJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE3NDA3NjIsImV4cCI6MjA3NzMxNjc2Mn0.wOjK4X2qJV6LzOG4yXxnfeTezDX5_3Sb3wezhCuQAko";
+ 
+     @Override
+     public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
+         View view = inflater.inflate(R.layout.fragment_home, container, false);
+ 
+-        // 🔹 Inisialisasi RecyclerView
+         recyclerJobs = view.findViewById(R.id.recyclerJobs);
+         recyclerJobs.setLayoutManager(new LinearLayoutManager(getContext()));
+ 
+-        // 🔹 Inisialisasi tab
++        searchEditText = view.findViewById(R.id.searchEditText);
+         tabSemua = view.findViewById(R.id.tab_semua);
+         tabTerbaru = view.findViewById(R.id.tab_terbaru);
+         tabTerlama = view.findViewById(R.id.tab_terlama);
+ 
+-        // 🔹 Data dummy job
+-        jobList = new ArrayList<>();
+-        jobList.add(new Job("1", "Mekar", "Bendebesah City", "Nagih hutang ke nasabah",
+-                "2 Hari lalu", "130 Pendaftar", "Bengalan", "Fulltime", "Santai"));
+-        jobList.add(new Job("2", "PT. Sejahtera Abadi", "Jember", "Customer Service Perbankan",
+-                "1 Hari lalu", "245 Pendaftar", "Perbankan", "Kontrak", "Remote"));
+-        jobList.add(new Job("3", "CV. Maju Bersama", "Surabaya", "Admin Data Keuangan",
+-                "5 Hari lalu", "80 Pendaftar", "Keuangan", "Part-time", "On-site"));
+-        jobList.add(new Job("4", "PT. Mitra Digital", "Malang", "Frontend Developer",
+-                "3 Hari lalu", "56 Pendaftar", "Teknologi", "Fulltime", "Hybrid"));
+-        jobList.add(new Job("5", "PT. Cahaya Abadi", "Sidoarjo", "Quality Control Pabrik",
+-                "1 Minggu lalu", "110 Pendaftar", "Produksi", "Kontrak", "Shift"));
+-
+-        // 🔹 Set adapter
+-        jobAdapter = new JobAdapter(getContext(), jobList);
++        jobAdapter = new JobAdapter(getContext(), filteredJobList);
+         recyclerJobs.setAdapter(jobAdapter);
+ 
+-        // 🔹 Logika klik tab
++        loadLowonganFromAPI();
++        setupSearchListener();
++
+         View.OnClickListener tabClickListener = v -> {
+-            // Reset semua tab ke nonaktif
+-            tabSemua.setBackgroundResource(R.drawable.shape_stroke);
+-            tabSemua.setTextColor(getResources().getColor(R.color.gray));
+-            tabTerbaru.setBackgroundResource(R.drawable.shape_stroke);
+-            tabTerbaru.setTextColor(getResources().getColor(R.color.gray));
+-            tabTerlama.setBackgroundResource(R.drawable.shape_stroke);
+-            tabTerlama.setTextColor(getResources().getColor(R.color.gray));
+-
+-            // Tab yang diklik jadi aktif (biru)
++            resetTabs();
+             ((TextView) v).setBackgroundResource(R.drawable.selected);
+             ((TextView) v).setTextColor(getResources().getColor(android.R.color.white));
+ 
+-            // 🔹 Filter/sort data sesuai tab
++            List<Job> dataToShow = getCurrentFilteredList();
++
+             if (v.getId() == R.id.tab_semua) {
+-                jobAdapter.setData(jobList);
++                jobAdapter.setData(dataToShow);
+             } else if (v.getId() == R.id.tab_terbaru) {
+-                List<Job> terbaru = new ArrayList<>(jobList);
+-                Collections.reverse(terbaru); // urutan dibalik biar terbaru dulu
++                List<Job> terbaru = new ArrayList<>(dataToShow);
++                Collections.reverse(terbaru);
+                 jobAdapter.setData(terbaru);
+             } else if (v.getId() == R.id.tab_terlama) {
+-                jobAdapter.setData(jobList); // urutan lama
++                jobAdapter.setData(dataToShow);
+             }
+         };
+ 
+-        // 🔹 Pasang listener ke semua tab
+         tabSemua.setOnClickListener(tabClickListener);
+         tabTerbaru.setOnClickListener(tabClickListener);
+         tabTerlama.setOnClickListener(tabClickListener);
+ 
+         return view;
+     }
+-}
++
++    // 🔍 Setup Real-time Search
++    private void setupSearchListener() {
++        searchEditText.addTextChangedListener(new TextWatcher() {
++            @Override
++            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
++                // Not needed
++            }
++
++            @Override
++            public void onTextChanged(CharSequence s, int start, int before, int count) {
++                currentSearchQuery = s.toString().trim();
++                performSearch(currentSearchQuery);
++            }
++
++            @Override
++            public void afterTextChanged(Editable s) {
++                // Not needed
++            }
++        });
++    }
++
++    // 🔍 Perform Search dengan keyword
++    private void performSearch(String query) {
++        filteredJobList.clear();
++
++        if (query.isEmpty()) {
++            // Jika search kosong, gunakan filter CV atau tampilkan semua
++            filterJobsByKeywords();
++            return;
++        }
++
++        Log.d("SEARCH_DEBUG", "🔍 Searching for: " + query);
++
++        String queryLower = query.toLowerCase(Locale.ROOT);
++
++        for (Job job : jobList) {
++            // Cek di judul, kategori, perusahaan, dan lokasi
++            boolean matchJudul = job.getJobTitle().toLowerCase(Locale.ROOT).contains(queryLower);
++            boolean matchKategori = job.getTag1().toLowerCase(Locale.ROOT).contains(queryLower);
++            boolean matchPerusahaan = job.getCompanyName().toLowerCase(Locale.ROOT).contains(queryLower);
++            boolean matchLokasi = job.getLocation().toLowerCase(Locale.ROOT).contains(queryLower);
++
++            // Smart match via KeywordMapper
++            boolean smartMatchKategori = KeywordMapper.isRelated(query, job.getTag1());
++            boolean smartMatchJudul = KeywordMapper.isRelated(query, job.getJobTitle());
++
++            if (matchJudul || matchKategori || matchPerusahaan || matchLokasi ||
++                    smartMatchKategori || smartMatchJudul) {
++                filteredJobList.add(job);
++
++                Log .d("SEARCH_DEBUG", "✅ Found: " + job.getJobTitle() +
++                        " (" + job.getTag1() + ")");
++            }
++        }
++
++        Log.d("SEARCH_DEBUG", "📊 Found " + filteredJobList.size() + " results for '" + query + "'");
++
++        if (filteredJobList.isEmpty()) {
++            Toast.makeText(getContext(), "Tidak ada hasil untuk \"" + query + "\"", Toast.LENGTH_SHORT).show();
++        }
++
++        jobAdapter.setData(filteredJobList);
++    }
++
++    private void resetTabs() {
++        tabSemua.setBackgroundResource(R.drawable.shape_stroke);
++        tabSemua.setTextColor(getResources().getColor(R.color.gray));
++        tabTerbaru.setBackgroundResource(R.drawable.shape_stroke);
++        tabTerbaru.setTextColor(getResources().getColor(R.color.gray));
++        tabTerlama.setBackgroundResource(R.drawable.shape_stroke);
++        tabTerlama.setTextColor(getResources().getColor(R.color.gray));
++    }
++
++    private void loadLowonganFromAPI() {
++        RequestQueue queue = Volley.newRequestQueue(getContext());
++
++        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, SUPABASE_URL, null,
++                response -> {
++                    jobList.clear();
++                    parseResponse(response);
++
++                    // 🔍 Cek apakah ada keyword dari CV scan ATAU search query
++                    if (currentSearchQuery.isEmpty()) {
++                        filterJobsByKeywords();
++                    } else {
++                        performSearch(currentSearchQuery);
++                    }
++                },
++                error -> {
++                    Log.e("API_ERROR", "Volley error: " + error.toString());
++                    Toast.makeText(getContext(), "Gagal memuat data: " + error.toString(), Toast.LENGTH_LONG).show();
++                }
++        ) {
++            @Override
++            public Map<String, String> getHeaders() {
++                Map<String, String> headers = new HashMap<>();
++                headers.put("apikey", SUPABASE_API_KEY);
++                headers.put("Authorization", "Bearer " + SUPABASE_API_KEY);
++                headers.put("Accept", "application/json");
++                return headers;
++            }
++        };
++
++        queue.add(request);
++    }
++
++    private void parseResponse(JSONArray response) {
++        Log.d("SUPABASE_DATA", "📦 Total data dari Supabase: " + response.length());
++
++        for (int i = 0; i < response.length(); i++) {
++            try {
++                JSONObject obj = response.getJSONObject(i);
++
++                String judul = obj.optString("judul", "-");
++                String lokasi = obj.optString("lokasi", "-");
++                String kategori = obj.optString("kategori", "-");
++                String tipe = obj.optString("tipe_pekerjaan", "-");
++                String gaji = obj.optString("gaji_range", "-");
++                String deskripsi = obj.optString("deskripsi", "-");
++                String requirements = obj.optString("requirements", "-");
++
++                Job job = new Job(
++                        obj.optString("nama_perusahaan", "Perusahaan"),
++                        lokasi,
++                        judul,
++                        "Baru saja",
++                        gaji + " Pendaftar",
++                        kategori,
++                        tipe,
++                        "On-site"
++                );
++
++                jobList.add(job);
++
++                // 📝 LOG untuk debug - lihat data yang masuk
++                Log.d("JOB_DATA", "Job #" + (i+1) +
++                        "\n  Judul: " + judul +
++                        "\n  Kategori: " + kategori +
++                        "\n  Tipe: " + tipe +
++                        "\n  Perusahaan: " + job.getCompanyName());
++
++            } catch (JSONException e) {
++                Log.e("JSON_ERROR", "Parsing gagal: " + e.getMessage());
++            }
++        }
++
++        Log.d("SUPABASE_DATA", "✅ Berhasil parsing " + jobList.size() + " lowongan");
++    }
++
++    // 🔍 Filter lowongan berdasarkan keyword dari CV (digunakan saat search kosong)
++    private void filterJobsByKeywords() {
++        CVKeywordManager keywordManager = CVKeywordManager.getInstance();
++
++        if (keywordManager.hasScannedCV() && !keywordManager.getKeywords().isEmpty()) {
++            List<String> keywords = keywordManager.getKeywords();
++            filteredJobList.clear();
++
++            Log.d("FILTER_DEBUG", "Keywords dari CV: " + keywords.toString());
++
++            for (Job job : jobList) {
++                boolean isMatch = false;
++
++                for (String keyword : keywords) {
++                    // 🎯 Cek di JUDUL, KATEGORI, TAG1, TAG2, TAG3
++                    if (matchesKeyword(job, keyword)) {
++                        isMatch = true;
++                        Log.d("FILTER_DEBUG", "✅ Match: " + job.getJobTitle() + " dengan keyword: " + keyword);
++                        break;
++                    }
++                }
++
++                if (isMatch) {
++                    filteredJobList.add(job);
++                }
++            }
++
++            // 📊 Hasil filtering
++            Log.d("FILTER_DEBUG", "Total lowongan: " + jobList.size() + ", Filtered: " + filteredJobList.size());
++
++            if (filteredJobList.isEmpty()) {
++                Toast.makeText(getContext(), "❌ Tidak ada lowongan yang cocok dengan keyword CV.\nMenampilkan semua lowongan.", Toast.LENGTH_LONG).show();
++                filteredJobList.addAll(jobList); // Tampilkan semua jika tidak ada yang cocok
++            } else {
++                String matchInfo = "✅ Ditemukan " + filteredJobList.size() + " lowongan cocok dari " + jobList.size() + " total";
++                Toast.makeText(getContext(), matchInfo, Toast.LENGTH_SHORT).show();
++                Log.d("FILTER_DEBUG", matchInfo);
++            }
++        } else {
++            // Jika belum scan CV, tampilkan semua
++            Log.d("FILTER_DEBUG", "Tidak ada keyword CV, tampilkan semua lowongan");
++            filteredJobList.addAll(jobList);
++        }
++
++        jobAdapter.setData(filteredJobList);
++    }
++
++    // 🔍 Cek apakah job cocok dengan keyword (untuk CV filter)
++    private boolean matchesKeyword(Job job, String keyword) {
++        String keywordLower = keyword.toLowerCase(Locale.ROOT).trim();
++
++        // 🎯 Yang paling penting: Tag1 adalah KATEGORI dari Supabase
++        // Tag2 = tipe_pekerjaan, Tag3 = mode kerja
++        String kategoriLower = job.getTag1().toLowerCase(Locale.ROOT).trim();
++        String judulLower = job.getJobTitle().toLowerCase(Locale.ROOT).trim();
++
++        // 1. Exact match di judul atau kategori
++        boolean exactMatchJudul = judulLower.contains(keywordLower);
++        boolean exactMatchKategori = kategoriLower.contains(keywordLower);
++
++        // 2. Smart match via KeywordMapper - CEK KATEGORI (Tag1) dulu!
++        boolean smartMatchKategori = KeywordMapper.isRelated(keyword, job.getTag1());
++        boolean smartMatchJudul = KeywordMapper.isRelated(keyword, job.getJobTitle());
++
++        boolean anyMatch = exactMatchJudul || exactMatchKategori || smartMatchKategori || smartMatchJudul;
++
++        // 📝 LOG untuk debug per job yang dicek
++        Log.d("MATCH_CHECK", "Checking Job: " + job.getJobTitle() +
++                " | Kategori: " + job.getTag1() +
++                " | Keyword: " + keyword +
++                " | Match: " + anyMatch);
++
++        if (anyMatch) {
++            Log.d("MATCH_DETAIL", "✅ MATCH FOUND!" +
++                    "\n  Job: " + job.getJobTitle() +
++                    "\n  Kategori: " + job.getTag1() +
++                    "\n  Keyword CV: " + keyword +
++                    "\n  Exact - Judul:" + exactMatchJudul + ", Kategori:" + exactMatchKategori +
++                    "\n  Smart - Judul:" + smartMatchJudul + ", Kategori:" + smartMatchKategori);
++        }
++
++        return anyMatch;
++    }
++
++    // 🔄 Ambil list yang sudah difilter untuk sorting tab
++    private List<Job> getCurrentFilteredList() {
++        return new ArrayList<>(filteredJobList);
++    }
++}
+\ No newline at end of file

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#F9FAFC">
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- BIODATA -->
+        <LinearLayout
+            android:id="@+id/cardBiodata"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/shape_card"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Biodata"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/summaryBiodata"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Belum diisi"
+                android:textColor="#777777"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <!-- PENDIDIKAN -->
+        <LinearLayout
+            android:id="@+id/cardPendidikan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/shape_card"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pendidikan"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/summaryPendidikan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Belum diisi"
+                android:textColor="#777777"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <!-- SKILL -->
+        <LinearLayout
+            android:id="@+id/cardSkill"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/shape_card"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Skill"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/summarySkill"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Belum diisi"
+                android:textColor="#777777"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <!-- TENTANG SAYA -->
+        <LinearLayout
+            android:id="@+id/cardTentangSaya"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/shape_card"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tentang Saya"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/summaryTentangSaya"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Belum diisi"
+                android:textColor="#777777"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <!-- PENGHARGAAN -->
+        <LinearLayout
+            android:id="@+id/cardPenghargaan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/shape_card"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Penghargaan"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/summaryPenghargaan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Belum diisi"
+                android:textColor="#777777"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <!-- SERTIFIKAT -->
+        <LinearLayout
+            android:id="@+id/cardSertifikat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/shape_card"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sertifikat"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/summarySertifikat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Belum diisi"
+                android:textColor="#777777"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <!-- PORTOFOLIO -->
+        <LinearLayout
+            android:id="@+id/cardPortofolio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/shape_card"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Link Portofolio"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/summaryPortofolio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Belum diisi"
+                android:textColor="#777777"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

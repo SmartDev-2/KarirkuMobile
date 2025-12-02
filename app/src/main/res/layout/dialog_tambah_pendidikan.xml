@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@drawable/shape_card"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/inputJenjang"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Jenjang (SMA / D3 / S1)"
+        android:layout_marginBottom="12dp"/>
+
+    <EditText
+        android:id="@+id/inputSekolah"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nama Sekolah / Universitas"
+        android:layout_marginBottom="12dp"/>
+
+    <EditText
+        android:id="@+id/inputTahun"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tahun (2018 - 2022)"
+        android:layout_marginBottom="18dp"/>
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Simpan"
+        android:backgroundTint="#0CADF1"
+        android:textColor="#FFFFFF"/>
+</LinearLayout>

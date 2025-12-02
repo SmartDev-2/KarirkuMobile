@@ -1,0 +1,487 @@
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\">\r\n\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:dataExtractionRules=\"@xml/data_extraction_rules\"\r\n        android:fullBackupContent=\"@xml/backup_rules\"\r\n        android:icon=\"@mipmap/ic_launcher\"\r\n        android:label=\"@string/app_name\"\r\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\r\n        android:supportsRtl=\"true\"\r\n        android:theme=\"@style/Theme.KARIRKU\">\r\n        <activity android:name=\".ChatDetailActivity\" />\r\n        <activity\r\n            android:name=\".beranda\"\r\n            android:exported=\"true\">\r\n<!--        <activity-->\r\n<!--            android:name=\".register\"-->\r\n<!--            android:exported=\"false\" />-->\r\n<!--        <activity-->\r\n<!--            android:name=\".MainActivity\"-->\r\n<!--            android:exported=\"true\">-->\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n        </activity>\r\n    </application>\r\n\r\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	(revision a8c8ec786a71a3279fe2dfe8744cf4515d5991e0)
++++ b/app/src/main/AndroidManifest.xml	(date 1762414229360)
+@@ -2,6 +2,23 @@
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:tools="http://schemas.android.com/tools">
+ 
++    <!-- 🔹 IZIN AKSES INTERNET & STORAGE -->
++    <uses-permission android:name="android.permission.INTERNET" />
++
++    <!-- 🔹 Akses baca file dari penyimpanan (untuk upload PDF) -->
++    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
++
++    <!-- 🔹 (Opsional) Android 13 ke atas: izin khusus untuk dokumen -->
++    <uses-permission android:name="android.permission.READ_MEDIA_DOCUMENTS" />
++    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
++    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
++
++    <!-- ✅ IZIN KAMERA untuk Scan CV -->
++    <uses-permission android:name="android.permission.CAMERA" />
++    <uses-feature
++        android:name="android.hardware.camera"
++        android:required="false" />
++
+     <application
+         android:allowBackup="true"
+         android:dataExtractionRules="@xml/data_extraction_rules"
+@@ -10,23 +27,54 @@
+         android:label="@string/app_name"
+         android:roundIcon="@mipmap/ic_launcher_round"
+         android:supportsRtl="true"
+-        android:theme="@style/Theme.KARIRKU">
+-        <activity android:name=".ChatDetailActivity" />
++        android:theme="@style/Theme.KARIRKU"
++        android:networkSecurityConfig="@xml/network_security_config">
++
++        <!-- 🔹 Activity untuk chat detail -->
+         <activity
+-            android:name=".beranda"
+-            android:exported="true">
+-<!--        <activity-->
+-<!--            android:name=".register"-->
+-<!--            android:exported="false" />-->
+-<!--        <activity-->
+-<!--            android:name=".MainActivity"-->
+-<!--            android:exported="true">-->
++            android:name=".ChatDetailActivity"
++            android:exported="false" />
++
++        <!-- 🔹 Activity register -->
++        <activity
++            android:name=".register"
++            android:exported="false" />
++
++        <!-- 🔹 Activity utama (login) -->
++        <activity
++            android:name=".MainActivity"
++            android:exported="true"
++            android:launchMode="singleTask">
++
++            <!-- Intent Filter agar bisa jadi launcher utama -->
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+-
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
++
++            <!-- 🔹 Callback URL untuk login via Supabase (Google OAuth) -->
++            <intent-filter>
++                <action android:name="android.intent.action.VIEW" />
++                <category android:name="android.intent.category.DEFAULT" />
++                <category android:name="android.intent.category.BROWSABLE" />
++
++                <!-- Supabase redirect callback -->
++                <data
++                    android:scheme="karirku"
++                    android:host="auth-callback" />
++            </intent-filter>
+         </activity>
++
++        <!-- 🔹 Activity beranda (tujuan setelah login sukses) -->
++        <activity
++            android:name=".beranda"
++            android:exported="false" />
++
++        <!-- ✅ ML Kit Text Recognition (auto-downloaded saat runtime) -->
++        <meta-data
++            android:name="com.google.mlkit.vision.DEPENDENCIES"
++            android:value="ocr" />
++
+     </application>
+ 
+ </manifest>
+\ No newline at end of file
+Index: app/src/main/java/com/tem2/karirku/HomeFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.tem2.karirku;\r\n\r\nimport android.os.Bundle;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.TextView;\r\n\r\nimport androidx.fragment.app.Fragment;\r\nimport androidx.recyclerview.widget.LinearLayoutManager;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.Collections;\r\nimport java.util.List;\r\n\r\npublic class HomeFragment extends Fragment {\r\n\r\n    private RecyclerView recyclerJobs;\r\n    private JobAdapter jobAdapter;\r\n    private List<Job> jobList;\r\n\r\n    private TextView tabSemua, tabTerbaru, tabTerlama;\r\n\r\n    @Override\r\n    public View onCreateView(LayoutInflater inflater, ViewGroup container,\r\n                             Bundle savedInstanceState) {\r\n        View view = inflater.inflate(R.layout.fragment_home, container, false);\r\n\r\n        // \uD83D\uDD39 Inisialisasi RecyclerView\r\n        recyclerJobs = view.findViewById(R.id.recyclerJobs);\r\n        recyclerJobs.setLayoutManager(new LinearLayoutManager(getContext()));\r\n\r\n        // \uD83D\uDD39 Inisialisasi tab\r\n        tabSemua = view.findViewById(R.id.tab_semua);\r\n        tabTerbaru = view.findViewById(R.id.tab_terbaru);\r\n        tabTerlama = view.findViewById(R.id.tab_terlama);\r\n\r\n        // \uD83D\uDD39 Data dummy job\r\n        jobList = new ArrayList<>();\r\n        jobList.add(new Job(\"Mekar\", \"Bendebesah City\", \"Nagih hutang ke nasabah\",\r\n                \"2 Hari lalu\", \"130 Pendaftar\", \"Bengalan\", \"Fulltime\", \"Santai\"));\r\n        jobList.add(new Job(\"PT. Sejahtera Abadi\", \"Jember\", \"Customer Service Perbankan\",\r\n                \"1 Hari lalu\", \"245 Pendaftar\", \"Perbankan\", \"Kontrak\", \"Remote\"));\r\n        jobList.add(new Job(\"CV. Maju Bersama\", \"Surabaya\", \"Admin Data Keuangan\",\r\n                \"5 Hari lalu\", \"80 Pendaftar\", \"Keuangan\", \"Part-time\", \"On-site\"));\r\n        jobList.add(new Job(\"PT. Mitra Digital\", \"Malang\", \"Frontend Developer\",\r\n                \"3 Hari lalu\", \"56 Pendaftar\", \"Teknologi\", \"Fulltime\", \"Hybrid\"));\r\n        jobList.add(new Job(\"PT. Cahaya Abadi\", \"Sidoarjo\", \"Quality Control Pabrik\",\r\n                \"1 Minggu lalu\", \"110 Pendaftar\", \"Produksi\", \"Kontrak\", \"Shift\"));\r\n        jobList.add(new Job(\"PT. Arta Mandiri\", \"Jakarta\", \"UI/UX Designer\",\r\n                \"1 Hari lalu\", \"95 Pendaftar\", \"Desain\", \"Fulltime\", \"Remote\"));\r\n        jobList.add(new Job(\"CV. Data Insight\", \"Bandung\", \"Data Analyst\",\r\n                \"2 Hari lalu\", \"120 Pendaftar\", \"Teknologi\", \"Fulltime\", \"Hybrid\"));\r\n        jobList.add(new Job(\"PT. Hijau Lestari\", \"Yogyakarta\", \"Ahli Agronomi\",\r\n                \"3 Hari lalu\", \"64 Pendaftar\", \"Pertanian\", \"Kontrak\", \"Lapangan\"));\r\n        jobList.add(new Job(\"CV. Sumber Energi\", \"Semarang\", \"Teknisi Panel Surya\",\r\n                \"5 Hari lalu\", \"45 Pendaftar\", \"Teknik\", \"Fulltime\", \"On-site\"));\r\n        jobList.add(new Job(\"PT. Global Edukasi\", \"Surakarta\", \"Instruktur Komputer\",\r\n                \"6 Hari lalu\", \"72 Pendaftar\", \"Pendidikan\", \"Part-time\", \"On-site\"));\r\n\r\n        // \uD83D\uDD39 Set adapter\r\n        jobAdapter = new JobAdapter(getContext(), jobList);\r\n        recyclerJobs.setAdapter(jobAdapter);\r\n\r\n        // \uD83D\uDD39 Logika klik tab\r\n        View.OnClickListener tabClickListener = v -> {\r\n            // Reset semua tab ke nonaktif\r\n            tabSemua.setBackgroundResource(R.drawable.shape_stroke);\r\n            tabSemua.setTextColor(getResources().getColor(R.color.gray));\r\n            tabTerbaru.setBackgroundResource(R.drawable.shape_stroke);\r\n            tabTerbaru.setTextColor(getResources().getColor(R.color.gray));\r\n            tabTerlama.setBackgroundResource(R.drawable.shape_stroke);\r\n            tabTerlama.setTextColor(getResources().getColor(R.color.gray));\r\n\r\n            // Tab yang diklik jadi aktif (biru)\r\n            ((TextView) v).setBackgroundResource(R.drawable.selected);\r\n            ((TextView) v).setTextColor(getResources().getColor(android.R.color.white));\r\n\r\n            // \uD83D\uDD39 Filter/sort data sesuai tab\r\n            if (v.getId() == R.id.tab_semua) {\r\n                jobAdapter.setData(jobList);\r\n            } else if (v.getId() == R.id.tab_terbaru) {\r\n                List<Job> terbaru = new ArrayList<>(jobList);\r\n                Collections.reverse(terbaru); // urutan dibalik biar terbaru dulu\r\n                jobAdapter.setData(terbaru);\r\n            } else if (v.getId() == R.id.tab_terlama) {\r\n                jobAdapter.setData(jobList); // urutan lama\r\n            }\r\n        };\r\n\r\n        // \uD83D\uDD39 Pasang listener ke semua tab\r\n        tabSemua.setOnClickListener(tabClickListener);\r\n        tabTerbaru.setOnClickListener(tabClickListener);\r\n        tabTerlama.setOnClickListener(tabClickListener);\r\n\r\n        return view;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/tem2/karirku/HomeFragment.java b/app/src/main/java/com/tem2/karirku/HomeFragment.java
+--- a/app/src/main/java/com/tem2/karirku/HomeFragment.java	(revision a8c8ec786a71a3279fe2dfe8744cf4515d5991e0)
++++ b/app/src/main/java/com/tem2/karirku/HomeFragment.java	(date 1762401983077)
+@@ -1,99 +1,329 @@
+ package com.tem2.karirku;
+ 
+ import android.os.Bundle;
++import android.text.Editable;
++import android.text.TextWatcher;
++import android.util.Log;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
++import android.widget.EditText;
+ import android.widget.TextView;
++import android.widget.Toast;
+ 
+ import androidx.fragment.app.Fragment;
+ import androidx.recyclerview.widget.LinearLayoutManager;
+ import androidx.recyclerview.widget.RecyclerView;
+ 
++import com.android.volley.Request;
++import com.android.volley.RequestQueue;
++import com.android.volley.toolbox.JsonArrayRequest;
++import com.android.volley.toolbox.Volley;
++
++import org.json.JSONArray;
++import org.json.JSONException;
++import org.json.JSONObject;
++
+ import java.util.ArrayList;
+ import java.util.Collections;
++import java.util.HashMap;
+ import java.util.List;
++import java.util.Locale;
++import java.util.Map;
+ 
+ public class HomeFragment extends Fragment {
+ 
+     private RecyclerView recyclerJobs;
+     private JobAdapter jobAdapter;
+-    private List<Job> jobList;
++    private List<Job> jobList = new ArrayList<>();
++    private List<Job> filteredJobList = new ArrayList<>();
++    private EditText searchEditText;
+ 
+     private TextView tabSemua, tabTerbaru, tabTerlama;
++    private String currentSearchQuery = "";
++
++    private static final String SUPABASE_URL = "https://tkjnbelcgfwpbhppsnrl.supabase.co/rest/v1/lowongan?select=*";
++    private static final String SUPABASE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRram5iZWxjZ2Z3cGJocHBzbnJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE3NDA3NjIsImV4cCI6MjA3NzMxNjc2Mn0.wOjK4X2qJV6LzOG4yXxnfeTezDX5_3Sb3wezhCuQAko";
+ 
+     @Override
+     public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
+         View view = inflater.inflate(R.layout.fragment_home, container, false);
+ 
+-        // 🔹 Inisialisasi RecyclerView
+         recyclerJobs = view.findViewById(R.id.recyclerJobs);
+         recyclerJobs.setLayoutManager(new LinearLayoutManager(getContext()));
+ 
+-        // 🔹 Inisialisasi tab
++        searchEditText = view.findViewById(R.id.searchEditText);
+         tabSemua = view.findViewById(R.id.tab_semua);
+         tabTerbaru = view.findViewById(R.id.tab_terbaru);
+         tabTerlama = view.findViewById(R.id.tab_terlama);
+ 
+-        // 🔹 Data dummy job
+-        jobList = new ArrayList<>();
+-        jobList.add(new Job("Mekar", "Bendebesah City", "Nagih hutang ke nasabah",
+-                "2 Hari lalu", "130 Pendaftar", "Bengalan", "Fulltime", "Santai"));
+-        jobList.add(new Job("PT. Sejahtera Abadi", "Jember", "Customer Service Perbankan",
+-                "1 Hari lalu", "245 Pendaftar", "Perbankan", "Kontrak", "Remote"));
+-        jobList.add(new Job("CV. Maju Bersama", "Surabaya", "Admin Data Keuangan",
+-                "5 Hari lalu", "80 Pendaftar", "Keuangan", "Part-time", "On-site"));
+-        jobList.add(new Job("PT. Mitra Digital", "Malang", "Frontend Developer",
+-                "3 Hari lalu", "56 Pendaftar", "Teknologi", "Fulltime", "Hybrid"));
+-        jobList.add(new Job("PT. Cahaya Abadi", "Sidoarjo", "Quality Control Pabrik",
+-                "1 Minggu lalu", "110 Pendaftar", "Produksi", "Kontrak", "Shift"));
+-        jobList.add(new Job("PT. Arta Mandiri", "Jakarta", "UI/UX Designer",
+-                "1 Hari lalu", "95 Pendaftar", "Desain", "Fulltime", "Remote"));
+-        jobList.add(new Job("CV. Data Insight", "Bandung", "Data Analyst",
+-                "2 Hari lalu", "120 Pendaftar", "Teknologi", "Fulltime", "Hybrid"));
+-        jobList.add(new Job("PT. Hijau Lestari", "Yogyakarta", "Ahli Agronomi",
+-                "3 Hari lalu", "64 Pendaftar", "Pertanian", "Kontrak", "Lapangan"));
+-        jobList.add(new Job("CV. Sumber Energi", "Semarang", "Teknisi Panel Surya",
+-                "5 Hari lalu", "45 Pendaftar", "Teknik", "Fulltime", "On-site"));
+-        jobList.add(new Job("PT. Global Edukasi", "Surakarta", "Instruktur Komputer",
+-                "6 Hari lalu", "72 Pendaftar", "Pendidikan", "Part-time", "On-site"));
+-
+-        // 🔹 Set adapter
+-        jobAdapter = new JobAdapter(getContext(), jobList);
++        jobAdapter = new JobAdapter(getContext(), filteredJobList);
+         recyclerJobs.setAdapter(jobAdapter);
+ 
+-        // 🔹 Logika klik tab
++        loadLowonganFromAPI();
++        setupSearchListener();
++
+         View.OnClickListener tabClickListener = v -> {
+-            // Reset semua tab ke nonaktif
+-            tabSemua.setBackgroundResource(R.drawable.shape_stroke);
+-            tabSemua.setTextColor(getResources().getColor(R.color.gray));
+-            tabTerbaru.setBackgroundResource(R.drawable.shape_stroke);
+-            tabTerbaru.setTextColor(getResources().getColor(R.color.gray));
+-            tabTerlama.setBackgroundResource(R.drawable.shape_stroke);
+-            tabTerlama.setTextColor(getResources().getColor(R.color.gray));
+-
+-            // Tab yang diklik jadi aktif (biru)
++            resetTabs();
+             ((TextView) v).setBackgroundResource(R.drawable.selected);
+             ((TextView) v).setTextColor(getResources().getColor(android.R.color.white));
+ 
+-            // 🔹 Filter/sort data sesuai tab
++            List<Job> dataToShow = getCurrentFilteredList();
++
+             if (v.getId() == R.id.tab_semua) {
+-                jobAdapter.setData(jobList);
++                jobAdapter.setData(dataToShow);
+             } else if (v.getId() == R.id.tab_terbaru) {
+-                List<Job> terbaru = new ArrayList<>(jobList);
+-                Collections.reverse(terbaru); // urutan dibalik biar terbaru dulu
++                List<Job> terbaru = new ArrayList<>(dataToShow);
++                Collections.reverse(terbaru);
+                 jobAdapter.setData(terbaru);
+             } else if (v.getId() == R.id.tab_terlama) {
+-                jobAdapter.setData(jobList); // urutan lama
++                jobAdapter.setData(dataToShow);
+             }
+         };
+ 
+-        // 🔹 Pasang listener ke semua tab
+         tabSemua.setOnClickListener(tabClickListener);
+         tabTerbaru.setOnClickListener(tabClickListener);
+         tabTerlama.setOnClickListener(tabClickListener);
+ 
+         return view;
+     }
+-}
++
++    // 🔍 Setup Real-time Search
++    private void setupSearchListener() {
++        searchEditText.addTextChangedListener(new TextWatcher() {
++            @Override
++            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
++                // Not needed
++            }
++
++            @Override
++            public void onTextChanged(CharSequence s, int start, int before, int count) {
++                currentSearchQuery = s.toString().trim();
++                performSearch(currentSearchQuery);
++            }
++
++            @Override
++            public void afterTextChanged(Editable s) {
++                // Not needed
++            }
++        });
++    }
++
++    // 🔍 Perform Search dengan keyword
++    private void performSearch(String query) {
++        filteredJobList.clear();
++
++        if (query.isEmpty()) {
++            // Jika search kosong, gunakan filter CV atau tampilkan semua
++            filterJobsByKeywords();
++            return;
++        }
++
++        Log.d("SEARCH_DEBUG", "🔍 Searching for: " + query);
++
++        String queryLower = query.toLowerCase(Locale.ROOT);
++
++        for (Job job : jobList) {
++            // Cek di judul, kategori, perusahaan, dan lokasi
++            boolean matchJudul = job.getJobTitle().toLowerCase(Locale.ROOT).contains(queryLower);
++            boolean matchKategori = job.getTag1().toLowerCase(Locale.ROOT).contains(queryLower);
++            boolean matchPerusahaan = job.getCompanyName().toLowerCase(Locale.ROOT).contains(queryLower);
++            boolean matchLokasi = job.getLocation().toLowerCase(Locale.ROOT).contains(queryLower);
++
++            // Smart match via KeywordMapper
++            boolean smartMatchKategori = KeywordMapper.isRelated(query, job.getTag1());
++            boolean smartMatchJudul = KeywordMapper.isRelated(query, job.getJobTitle());
++
++            if (matchJudul || matchKategori || matchPerusahaan || matchLokasi ||
++                    smartMatchKategori || smartMatchJudul) {
++                filteredJobList.add(job);
++
++                Log.d("SEARCH_DEBUG", "✅ Found: " + job.getJobTitle() +
++                        " (" + job.getTag1() + ")");
++            }
++        }
++
++        Log.d("SEARCH_DEBUG", "📊 Found " + filteredJobList.size() + " results for '" + query + "'");
++
++        if (filteredJobList.isEmpty()) {
++            Toast.makeText(getContext(), "Tidak ada hasil untuk \"" + query + "\"", Toast.LENGTH_SHORT).show();
++        }
++
++        jobAdapter.setData(filteredJobList);
++    }
++
++    private void resetTabs() {
++        tabSemua.setBackgroundResource(R.drawable.shape_stroke);
++        tabSemua.setTextColor(getResources().getColor(R.color.gray));
++        tabTerbaru.setBackgroundResource(R.drawable.shape_stroke);
++        tabTerbaru.setTextColor(getResources().getColor(R.color.gray));
++        tabTerlama.setBackgroundResource(R.drawable.shape_stroke);
++        tabTerlama.setTextColor(getResources().getColor(R.color.gray));
++    }
++
++    private void loadLowonganFromAPI() {
++        RequestQueue queue = Volley.newRequestQueue(getContext());
++
++        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, SUPABASE_URL, null,
++                response -> {
++                    jobList.clear();
++                    parseResponse(response);
++
++                    // 🔍 Cek apakah ada keyword dari CV scan ATAU search query
++                    if (currentSearchQuery.isEmpty()) {
++                        filterJobsByKeywords();
++                    } else {
++                        performSearch(currentSearchQuery);
++                    }
++                },
++                error -> {
++                    Log.e("API_ERROR", "Volley error: " + error.toString());
++                    Toast.makeText(getContext(), "Gagal memuat data: " + error.toString(), Toast.LENGTH_LONG).show();
++                }
++        ) {
++            @Override
++            public Map<String, String> getHeaders() {
++                Map<String, String> headers = new HashMap<>();
++                headers.put("apikey", SUPABASE_API_KEY);
++                headers.put("Authorization", "Bearer " + SUPABASE_API_KEY);
++                headers.put("Accept", "application/json");
++                return headers;
++            }
++        };
++
++        queue.add(request);
++    }
++
++    private void parseResponse(JSONArray response) {
++        Log.d("SUPABASE_DATA", "📦 Total data dari Supabase: " + response.length());
++
++        for (int i = 0; i < response.length(); i++) {
++            try {
++                JSONObject obj = response.getJSONObject(i);
++
++                String judul = obj.optString("judul", "-");
++                String lokasi = obj.optString("lokasi", "-");
++                String kategori = obj.optString("kategori", "-");
++                String tipe = obj.optString("tipe_pekerjaan", "-");
++                String gaji = obj.optString("gaji_range", "-");
++                String deskripsi = obj.optString("deskripsi", "-");
++                String requirements = obj.optString("requirements", "-");
++
++                Job job = new Job(
++                        obj.optString("nama_perusahaan", "Perusahaan"),
++                        lokasi,
++                        judul,
++                        "Baru saja",
++                        gaji + " Pendaftar",
++                        kategori,
++                        tipe,
++                        "On-site"
++                );
++
++                jobList.add(job);
++
++                // 📝 LOG untuk debug - lihat data yang masuk
++                Log.d("JOB_DATA", "Job #" + (i+1) +
++                        "\n  Judul: " + judul +
++                        "\n  Kategori: " + kategori +
++                        "\n  Tipe: " + tipe +
++                        "\n  Perusahaan: " + job.getCompanyName());
++
++            } catch (JSONException e) {
++                Log.e("JSON_ERROR", "Parsing gagal: " + e.getMessage());
++            }
++        }
++
++        Log.d("SUPABASE_DATA", "✅ Berhasil parsing " + jobList.size() + " lowongan");
++    }
++
++    // 🔍 Filter lowongan berdasarkan keyword dari CV (digunakan saat search kosong)
++    private void filterJobsByKeywords() {
++        CVKeywordManager keywordManager = CVKeywordManager.getInstance();
++
++        if (keywordManager.hasScannedCV() && !keywordManager.getKeywords().isEmpty()) {
++            List<String> keywords = keywordManager.getKeywords();
++            filteredJobList.clear();
++
++            Log.d("FILTER_DEBUG", "Keywords dari CV: " + keywords.toString());
++
++            for (Job job : jobList) {
++                boolean isMatch = false;
++
++                for (String keyword : keywords) {
++                    // 🎯 Cek di JUDUL, KATEGORI, TAG1, TAG2, TAG3
++                    if (matchesKeyword(job, keyword)) {
++                        isMatch = true;
++                        Log.d("FILTER_DEBUG", "✅ Match: " + job.getJobTitle() + " dengan keyword: " + keyword);
++                        break;
++                    }
++                }
++
++                if (isMatch) {
++                    filteredJobList.add(job);
++                }
++            }
++
++            // 📊 Hasil filtering
++            Log.d("FILTER_DEBUG", "Total lowongan: " + jobList.size() + ", Filtered: " + filteredJobList.size());
++
++            if (filteredJobList.isEmpty()) {
++                Toast.makeText(getContext(), "❌ Tidak ada lowongan yang cocok dengan keyword CV.\nMenampilkan semua lowongan.", Toast.LENGTH_LONG).show();
++                filteredJobList.addAll(jobList); // Tampilkan semua jika tidak ada yang cocok
++            } else {
++                String matchInfo = "✅ Ditemukan " + filteredJobList.size() + " lowongan cocok dari " + jobList.size() + " total";
++                Toast.makeText(getContext(), matchInfo, Toast.LENGTH_SHORT).show();
++                Log.d("FILTER_DEBUG", matchInfo);
++            }
++        } else {
++            // Jika belum scan CV, tampilkan semua
++            Log.d("FILTER_DEBUG", "Tidak ada keyword CV, tampilkan semua lowongan");
++            filteredJobList.addAll(jobList);
++        }
++
++        jobAdapter.setData(filteredJobList);
++    }
++
++    // 🔍 Cek apakah job cocok dengan keyword (untuk CV filter)
++    private boolean matchesKeyword(Job job, String keyword) {
++        String keywordLower = keyword.toLowerCase(Locale.ROOT).trim();
++
++        // 🎯 Yang paling penting: Tag1 adalah KATEGORI dari Supabase
++        // Tag2 = tipe_pekerjaan, Tag3 = mode kerja
++        String kategoriLower = job.getTag1().toLowerCase(Locale.ROOT).trim();
++        String judulLower = job.getJobTitle().toLowerCase(Locale.ROOT).trim();
++
++        // 1. Exact match di judul atau kategori
++        boolean exactMatchJudul = judulLower.contains(keywordLower);
++        boolean exactMatchKategori = kategoriLower.contains(keywordLower);
++
++        // 2. Smart match via KeywordMapper - CEK KATEGORI (Tag1) dulu!
++        boolean smartMatchKategori = KeywordMapper.isRelated(keyword, job.getTag1());
++        boolean smartMatchJudul = KeywordMapper.isRelated(keyword, job.getJobTitle());
++
++        boolean anyMatch = exactMatchJudul || exactMatchKategori || smartMatchKategori || smartMatchJudul;
++
++        // 📝 LOG untuk debug per job yang dicek
++        Log.d("MATCH_CHECK", "Checking Job: " + job.getJobTitle() +
++                " | Kategori: " + job.getTag1() +
++                " | Keyword: " + keyword +
++                " | Match: " + anyMatch);
++
++        if (anyMatch) {
++            Log.d("MATCH_DETAIL", "✅ MATCH FOUND!" +
++                    "\n  Job: " + job.getJobTitle() +
++                    "\n  Kategori: " + job.getTag1() +
++                    "\n  Keyword CV: " + keyword +
++                    "\n  Exact - Judul:" + exactMatchJudul + ", Kategori:" + exactMatchKategori +
++                    "\n  Smart - Judul:" + smartMatchJudul + ", Kategori:" + smartMatchKategori);
++        }
++
++        return anyMatch;
++    }
++
++    // 🔄 Ambil list yang sudah difilter untuk sorting tab
++    private List<Job> getCurrentFilteredList() {
++        return new ArrayList<>(filteredJobList);
++    }
++}
+\ No newline at end of file

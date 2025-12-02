@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#F9FAFC">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="4dp">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_back"
+                android:contentDescription="Back"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Edit Biodata"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <!-- Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/shape_card"
+            android:padding="16dp"
+            android:layout_marginTop="12dp">
+
+            <!-- Nama -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Nama Lengkap" />
+            <EditText
+                android:id="@+id/inputNama"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Masukkan nama lengkap"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/shape_input"
+                android:padding="12dp" />
+
+            <!-- Tanggal Lahir -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tanggal Lahir" android:layout_marginTop="12dp"/>
+            <TextView
+                android:id="@+id/inputTanggalLahir"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:background="@drawable/shape_input"
+                android:hint="Pilih tanggal lahir"
+                android:drawableRight="@drawable/ic_calendar"
+                android:layout_marginTop="6dp"/>
+
+            <!-- Jenis Kelamin -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Jenis Kelamin" android:layout_marginTop="12dp"/>
+            <Spinner
+                android:id="@+id/spinnerGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/shape_input" />
+
+            <!-- Domisili / Kota -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Domisili (Kota)" android:layout_marginTop="12dp"/>
+            <EditText
+                android:id="@+id/inputDomisili"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Contoh: Jember"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/shape_input"
+                android:padding="12dp" />
+
+        </LinearLayout>
+
+        <!-- BUTTONS -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="18dp"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="BATAL"
+                android:backgroundTint="#EEEEEE"
+                android:textColor="#333333"/>
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="SIMPAN"
+                android:layout_marginStart="12dp"
+                android:backgroundTint="#0CADF1"
+                android:textColor="#FFFFFF"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
