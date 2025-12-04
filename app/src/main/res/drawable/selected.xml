@@ -3,7 +3,7 @@
     android:shape="rectangle">
 
     <!-- isi transparan 30% -->
-    <solid android:color="#4D2196F3" />
+    <solid android:color="@color/blue" />
     <!-- #4D2196F3 = warna biru (#2196F3) dengan opacity 30% -->
 
     <!-- garis pinggir -->

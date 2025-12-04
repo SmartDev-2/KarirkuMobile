@@ -12,13 +12,66 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:id="@+id/cardLengkapiProfil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/roundedshape"
+            android:padding="16dp"
+            android:gravity="center">
+
+            <LinearLayout
+                android:id="@+id/iconBintangContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/iconBintang1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_bintang"
+                    android:paddingHorizontal="5dp"/>
+
+                <ImageView
+                    android:id="@+id/iconBintang2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_bintang"
+                    android:paddingHorizontal="5dp"/>
+
+                <ImageView
+                    android:id="@+id/iconBintang3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_bintang"
+                    android:paddingHorizontal="5dp"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvLengkapiProfil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lengkapi Profil Sekarang"
+                android:textSize="19sp"
+                android:fontFamily="@font/interdisplaybold"
+                android:paddingVertical="10dp"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/blue"/>
+
+        </LinearLayout>
+
         <!-- BIODATA -->
         <LinearLayout
             android:id="@+id/cardBiodata"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/shape_card"
+            android:background="@drawable/shape_card_sroke"
             android:padding="16dp"
             android:layout_marginBottom="12dp">
 
@@ -27,14 +80,15 @@
                 android:layout_height="wrap_content"
                 android:text="Biodata"
                 android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@color/blue" />
 
             <TextView
                 android:id="@+id/summaryBiodata"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Belum diisi"
-                android:textColor="#777777"
+                android:textColor="@color/black"
                 android:layout_marginTop="4dp" />
         </LinearLayout>
 
@@ -44,7 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/shape_card"
+            android:background="@drawable/shape_card_sroke"
             android:padding="16dp"
             android:layout_marginBottom="12dp">
 
@@ -53,14 +107,15 @@
                 android:layout_height="wrap_content"
                 android:text="Pendidikan"
                 android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@color/blue" />
 
             <TextView
                 android:id="@+id/summaryPendidikan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Belum diisi"
-                android:textColor="#777777"
+                android:textColor="@color/blue"
                 android:layout_marginTop="4dp" />
         </LinearLayout>
 
@@ -70,7 +125,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/shape_card"
+            android:background="@drawable/shape_card_sroke"
             android:padding="16dp"
             android:layout_marginBottom="12dp">
 
@@ -79,14 +134,15 @@
                 android:layout_height="wrap_content"
                 android:text="Skill"
                 android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@color/blue" />
 
             <TextView
                 android:id="@+id/summarySkill"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Belum diisi"
-                android:textColor="#777777"
+                android:textColor="@color/blue"
                 android:layout_marginTop="4dp" />
         </LinearLayout>
 
@@ -96,7 +152,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/shape_card"
+            android:background="@drawable/shape_card_sroke"
             android:padding="16dp"
             android:layout_marginBottom="12dp">
 
@@ -105,14 +161,15 @@
                 android:layout_height="wrap_content"
                 android:text="Tentang Saya"
                 android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@color/blue" />
 
             <TextView
                 android:id="@+id/summaryTentangSaya"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Belum diisi"
-                android:textColor="#777777"
+                android:textColor="@color/blue"
                 android:layout_marginTop="4dp" />
         </LinearLayout>
 
@@ -122,7 +179,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/shape_card"
+            android:background="@drawable/shape_card_sroke"
             android:padding="16dp"
             android:layout_marginBottom="12dp">
 
@@ -131,14 +188,15 @@
                 android:layout_height="wrap_content"
                 android:text="Penghargaan"
                 android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@color/blue" />
 
             <TextView
                 android:id="@+id/summaryPenghargaan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Belum diisi"
-                android:textColor="#777777"
+                android:textColor="@color/blue"
                 android:layout_marginTop="4dp" />
         </LinearLayout>
 
@@ -148,7 +206,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/shape_card"
+            android:background="@drawable/shape_card_sroke"
             android:padding="16dp"
             android:layout_marginBottom="12dp">
 
@@ -157,14 +215,15 @@
                 android:layout_height="wrap_content"
                 android:text="Sertifikat"
                 android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@color/blue" />
 
             <TextView
                 android:id="@+id/summarySertifikat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Belum diisi"
-                android:textColor="#777777"
+                android:textColor="@color/blue"
                 android:layout_marginTop="4dp" />
         </LinearLayout>
 
@@ -174,7 +233,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/shape_card"
+            android:background="@drawable/shape_card_sroke"
             android:padding="16dp"
             android:layout_marginBottom="12dp">
 
@@ -183,14 +242,15 @@
                 android:layout_height="wrap_content"
                 android:text="Link Portofolio"
                 android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@color/blue" />
 
             <TextView
                 android:id="@+id/summaryPortofolio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Belum diisi"
-                android:textColor="#777777"
+                android:textColor="@color/blue"
                 android:layout_marginTop="4dp" />
         </LinearLayout>
 

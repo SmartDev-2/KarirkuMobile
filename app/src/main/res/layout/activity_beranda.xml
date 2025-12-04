@@ -1,135 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/white">
 
-    <!-- FrameLayout untuk Fragment Container -->
+    <!-- ⭐ UPDATE: Ganti FrameLayout dengan RelativeLayout dan tambah layout_above -->
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="match_parent"
+        android:layout_above="@+id/customBottomNav" /> <!-- ⭐ UPDATE: Ini yang penting! -->
 
     <!-- Bottom Navigation -->
     <LinearLayout
         android:id="@+id/customBottomNav"
         android:layout_width="match_parent"
         android:layout_height="75dp"
+        android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:background="@color/white"
         android:gravity="center"
         android:elevation="8dp">
 
-        <LinearLayout
-            android:id="@+id/nav_home"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground">
+    <LinearLayout
+        android:id="@+id/nav_home"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground">
 
-            <ImageView
-                android:id="@+id/icon_home"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_home" />
+        <ImageView
+            android:id="@+id/icon_home"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_home" />
 
-            <TextView
-                android:id="@+id/text_home"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Home"
-                android:textSize="10sp"
-                android:layout_marginTop="4dp"
-                android:fontFamily="@font/interdisplaybold" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/text_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Home"
+            android:textSize="10sp"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/interdisplaybold" />
+    </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/nav_scan"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground">
+    <LinearLayout
+        android:id="@+id/nav_scan"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground">
 
-            <ImageView
-                android:id="@+id/icon_scan"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_scancv" />
+        <ImageView
+            android:id="@+id/icon_scan"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_scancv" />
 
-            <TextView
-                android:id="@+id/text_scan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Scan CV"
-                android:textSize="10sp"
-                android:layout_marginTop="4dp"
-                android:fontFamily="@font/interdisplaybold" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/text_scan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Scan CV"
+            android:textSize="10sp"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/interdisplaybold" />
+    </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/nav_chat"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground">
+    <LinearLayout
+        android:id="@+id/nav_chat"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground">
 
-            <ImageView
-                android:id="@+id/icon_chat"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_chat" />
+        <ImageView
+            android:id="@+id/icon_chat"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_chat" />
 
-            <TextView
-                android:id="@+id/text_chat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Chatbot"
-                android:textSize="10sp"
-                android:layout_marginTop="4dp"
-                android:fontFamily="@font/interdisplaybold" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/text_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chatbot"
+            android:textSize="10sp"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/interdisplaybold" />
+    </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/nav_profile"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground">
+    <LinearLayout
+        android:id="@+id/nav_profile"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground">
 
-            <ImageView
-                android:id="@+id/icon_profile"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_profil" />
+        <ImageView
+            android:id="@+id/icon_profile"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_profil" />
 
-            <TextView
-                android:id="@+id/text_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Profil"
-                android:textSize="10sp"
-                android:layout_marginTop="4dp"
-                android:fontFamily="@font/interdisplaybold" />
-        </LinearLayout>
-
+        <TextView
+            android:id="@+id/text_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Profil"
+            android:textSize="10sp"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/interdisplaybold" />
     </LinearLayout>
 
 </LinearLayout>
+
+    </RelativeLayout>

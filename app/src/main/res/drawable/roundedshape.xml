@@ -4,8 +4,8 @@
     <solid android:color="@android:color/transparent" />
 
     <stroke
-        android:width="2dp"
-        android:color="@color/nav_color_unselected" />
+        android:width="1dp"
+        android:color="@color/blue" />
 
     <!-- rounded corner -->
     <corners android:radius="25dp" />

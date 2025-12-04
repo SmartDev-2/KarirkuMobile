@@ -537,6 +537,15 @@ public class profilFragment extends Fragment {
                 }
             });
 
+            view.findViewById(R.id.itemProfilKarirku).setOnClickListener(v -> {
+                try {
+                    startActivity(new Intent(getActivity(), ProfilKarirkuActivity.class));
+                } catch (Exception e) {
+                    Log.e(TAG, "Error opening ProfilKarirkuActivity: " + e.getMessage());
+                    Toast.makeText(getContext(), "Tidak dapat membuka halaman", Toast.LENGTH_SHORT).show();
+                }
+            });
+
             view.findViewById(R.id.btnKeluar).setOnClickListener(v -> {
                 try {
                     if (sessionManager != null) {

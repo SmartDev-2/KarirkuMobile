@@ -4,11 +4,13 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -40,7 +42,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserDataActivity extends AppCompatActivity {
-
     private ImageView imgProfile, btnEditPhoto, btnBack;
     private EditText inputNama, inputEmail, inputNoHp, inputAlamat, inputPengalaman;
     private TextView inputTanggalLahir, btnEdit;
@@ -100,12 +101,36 @@ public class UserDataActivity extends AppCompatActivity {
     }
 
     private void initSpinner() {
-        String[] genderItems = {"Pilih Gender", "male", "female"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+        String[] genderItems = {"Pilih Gender", "Laki-laki", "Perempuan"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this,
-                android.R.layout.simple_spinner_dropdown_item,
+                android.R.layout.simple_spinner_item,
                 genderItems
-        );
+        ) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = (TextView) view;
+                textView.setTextColor(Color.BLACK);
+                return view;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView textView = (TextView) view;
+                textView.setTextColor(Color.BLACK);
+
+                // Warna hint untuk item pertama
+                if (position == 0) {
+                    textView.setTextColor(Color.GRAY);
+                }
+
+                return view;
+            }
+        };
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerGender.setAdapter(adapter);
     }
 

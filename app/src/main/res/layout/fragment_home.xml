@@ -67,7 +67,8 @@
             android:layout_height="20dp"
             android:layout_marginTop="5dp"
             android:layout_marginRight="12dp"
-            android:src="@drawable/ic_search" />
+            android:src="@drawable/ic_search"
+            android:tint="@color/blue"/>
 
         <EditText
             android:id="@+id/searchEditText"
@@ -83,12 +84,12 @@
             android:imeOptions="actionSearch"
             android:inputType="text" />
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="5dp"
-            android:src="@drawable/ic_filter" />
+<!--        <ImageView-->
+<!--            android:layout_width="20dp"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:layout_marginLeft="12dp"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:src="@drawable/ic_filter" />-->
     </LinearLayout>
 
     <!-- RIWAYAT PENCARIAN -->
@@ -157,11 +158,11 @@
             android:id="@+id/tab_terbaru"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_stroke"
+            android:background="@drawable/shape_stroke_blue"
             android:paddingVertical="8dp"
             android:paddingHorizontal="20dp"
             android:text="Terbaru"
-            android:textColor="@color/gray"
+            android:textColor="@color/blue"
             android:textSize="14sp"
             android:layout_marginLeft="8dp"
             android:fontFamily="@font/interdisplaybold" />
@@ -170,11 +171,11 @@
             android:id="@+id/tab_terlama"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_stroke"
+            android:background="@drawable/shape_stroke_blue"
             android:paddingVertical="8dp"
             android:paddingHorizontal="20dp"
             android:text="Terlama"
-            android:textColor="@color/gray"
+            android:textColor="@color/blue"
             android:textSize="14sp"
             android:layout_marginLeft="8dp"
             android:fontFamily="@font/interdisplaybold" />

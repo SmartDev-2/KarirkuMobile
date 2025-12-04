@@ -392,12 +392,12 @@ public class HomeFragment extends Fragment {
     }
 
     private void resetTabs() {
-        tabSemua.setBackgroundResource(R.drawable.shape_stroke);
-        tabSemua.setTextColor(getResources().getColor(R.color.gray));
-        tabTerbaru.setBackgroundResource(R.drawable.shape_stroke);
-        tabTerbaru.setTextColor(getResources().getColor(R.color.gray));
-        tabTerlama.setBackgroundResource(R.drawable.shape_stroke);
-        tabTerlama.setTextColor(getResources().getColor(R.color.gray));
+        tabSemua.setBackgroundResource(R.drawable.shape_stroke_blue);
+        tabSemua.setTextColor(getResources().getColor(R.color.blue)); // Ubah ke blue
+        tabTerbaru.setBackgroundResource(R.drawable.shape_stroke_blue);
+        tabTerbaru.setTextColor(getResources().getColor(R.color.blue)); // Ubah ke blue
+        tabTerlama.setBackgroundResource(R.drawable.shape_stroke_blue);
+        tabTerlama.setTextColor(getResources().getColor(R.color.blue)); // Ubah ke blue
     }
 
     private void openNotificationFragment() {
