@@ -1,0 +1,269 @@
+Index: app/src/main/java/com/tem2/karirku/UserDataActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.tem2.karirku;\r\n\r\nimport android.app.DatePickerDialog;\r\nimport android.app.ProgressDialog;\r\nimport android.content.Intent;\r\nimport android.graphics.Bitmap;\r\nimport android.net.Uri;\r\nimport android.os.Bundle;\r\nimport android.provider.MediaStore;\r\nimport android.util.Log;\r\nimport android.view.View;\r\nimport android.widget.ArrayAdapter;\r\nimport android.widget.Button;\r\nimport android.widget.DatePicker;\r\nimport android.widget.EditText;\r\nimport android.widget.ImageView;\r\nimport android.widget.Spinner;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.activity.result.ActivityResultLauncher;\r\nimport androidx.activity.result.contract.ActivityResultContracts;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport com.android.volley.NetworkResponse;\r\nimport com.android.volley.Request;\r\nimport com.android.volley.RequestQueue;\r\nimport com.android.volley.Response;\r\nimport com.android.volley.VolleyError;\r\nimport com.android.volley.toolbox.JsonArrayRequest;\r\nimport com.android.volley.toolbox.StringRequest;\r\nimport com.android.volley.toolbox.Volley;\r\nimport com.bumptech.glide.Glide;\r\n\r\nimport org.json.JSONArray;\r\nimport org.json.JSONException;\r\nimport org.json.JSONObject;\r\n\r\nimport java.io.ByteArrayOutputStream;\r\nimport java.io.IOException;\r\nimport java.util.Calendar;\r\nimport java.util.HashMap;\r\nimport java.util.Map;\r\n\r\npublic class UserDataActivity extends AppCompatActivity {\r\n\r\n    private ImageView imgProfile, btnEditPhoto, btnBack;\r\n    private EditText inputNama, inputEmail, inputNoHp, inputAlamat, inputPengalaman;\r\n    private TextView inputTanggalLahir, btnEdit;\r\n    private Spinner spinnerGender;\r\n    private Button btnSave;\r\n\r\n    private Uri photoUri;\r\n    private Bitmap photoBitmap;\r\n    private ActivityResultLauncher<Intent> pickImageLauncher;\r\n\r\n    private SessionManager sessionManager;\r\n    private RequestQueue requestQueue;\r\n    private ProgressDialog progressDialog;\r\n\r\n    private int idPencaker = 0;\r\n    private int idPengguna = 0;\r\n    private boolean isEditMode = false;\r\n\r\n    private static final String SUPABASE_URL = \"https://tkjnbelcgfwpbhppsnrl.supabase.co\";\r\n    private static final String SUPABASE_API_KEY = \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRram5iZWxjZ2Z3cGJocHBzbnJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE3NDA3NjIsImV4cCI6MjA3NzMxNjc2Mn0.wOjK4X2qJV6LzOG4yXxnfeTezDX5_3Sb3wezhCuQAko\";\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_preferensi_kerja);\r\n\r\n        sessionManager = new SessionManager(this);\r\n        requestQueue = Volley.newRequestQueue(this);\r\n        idPengguna = sessionManager.getUserId();\r\n\r\n        progressDialog = new ProgressDialog(this);\r\n        progressDialog.setMessage(\"Loading...\");\r\n        progressDialog.setCancelable(false);\r\n\r\n        initViews();\r\n        initSpinner();\r\n        initGalleryPicker();\r\n        initListeners();\r\n        loadUserData();\r\n    }\r\n\r\n    private void initViews() {\r\n        imgProfile = findViewById(R.id.imgProfile);\r\n        btnEditPhoto = findViewById(R.id.btnEditPhoto);\r\n        inputNama = findViewById(R.id.inputNama);\r\n        inputEmail = findViewById(R.id.inputEmail);\r\n        inputNoHp = findViewById(R.id.inputNoHp);\r\n        inputAlamat = findViewById(R.id.inputAlamat);\r\n        inputPengalaman = findViewById(R.id.inputPengalaman);\r\n        inputTanggalLahir = findViewById(R.id.inputTanggalLahir);\r\n        spinnerGender = findViewById(R.id.spinnerGender);\r\n        btnSave = findViewById(R.id.btnSave);\r\n        btnBack = findViewById(R.id.btnBack);\r\n        btnEdit = findViewById(R.id.btnEdit);\r\n\r\n        setEditMode(false);\r\n    }\r\n\r\n    private void initSpinner() {\r\n        String[] genderItems = {\"Pilih Gender\", \"male\", \"female\"};\r\n        ArrayAdapter<String> adapter = new ArrayAdapter<>(\r\n                this,\r\n                android.R.layout.simple_spinner_dropdown_item,\r\n                genderItems\r\n        );\r\n        spinnerGender.setAdapter(adapter);\r\n    }\r\n\r\n    private void initGalleryPicker() {\r\n        pickImageLauncher = registerForActivityResult(\r\n                new ActivityResultContracts.StartActivityForResult(),\r\n                result -> {\r\n                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {\r\n                        photoUri = result.getData().getData();\r\n                        try {\r\n                            photoBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoUri);\r\n                            imgProfile.setImageBitmap(photoBitmap);\r\n                        } catch (IOException e) {\r\n                            Log.e(\"USER_DATA\", \"Error loading image: \" + e.getMessage());\r\n                        }\r\n                    }\r\n                }\r\n        );\r\n    }\r\n\r\n    private void initListeners() {\r\n        btnEditPhoto.setOnClickListener(v -> {\r\n            if (isEditMode) {\r\n                openGallery();\r\n            } else {\r\n                Toast.makeText(this, \"Klik Edit untuk mengubah foto\", Toast.LENGTH_SHORT).show();\r\n            }\r\n        });\r\n\r\n        inputTanggalLahir.setOnClickListener(v -> {\r\n            if (isEditMode) {\r\n                showDatePicker();\r\n            }\r\n        });\r\n\r\n        btnSave.setOnClickListener(v -> saveUserData());\r\n        btnBack.setOnClickListener(v -> finish());\r\n\r\n        btnEdit.setOnClickListener(v -> {\r\n            isEditMode = !isEditMode;\r\n            setEditMode(isEditMode);\r\n            btnEdit.setText(isEditMode ? \"Batal\" : \"Edit\");\r\n        });\r\n    }\r\n\r\n    private void setEditMode(boolean enabled) {\r\n        inputNama.setEnabled(enabled);\r\n        inputEmail.setEnabled(enabled);\r\n        inputNoHp.setEnabled(enabled);\r\n        inputAlamat.setEnabled(enabled);\r\n        inputPengalaman.setEnabled(enabled);\r\n        inputTanggalLahir.setEnabled(enabled);\r\n        spinnerGender.setEnabled(enabled);\r\n        btnSave.setEnabled(enabled);\r\n        btnEditPhoto.setEnabled(enabled);\r\n\r\n        // Update button visibility\r\n        btnSave.setVisibility(enabled ? View.VISIBLE : View.GONE);\r\n    }\r\n\r\n    private void openGallery() {\r\n        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);\r\n        pickImageLauncher.launch(intent);\r\n    }\r\n\r\n    private void showDatePicker() {\r\n        final Calendar calendar = Calendar.getInstance();\r\n        DatePickerDialog dialog = new DatePickerDialog(\r\n                this,\r\n                (DatePicker view, int year, int month, int dayOfMonth) -> {\r\n                    String date = year + \"-\" + String.format(\"%02d\", (month + 1)) + \"-\" + String.format(\"%02d\", dayOfMonth);\r\n                    inputTanggalLahir.setText(date);\r\n                },\r\n                calendar.get(Calendar.YEAR),\r\n                calendar.get(Calendar.MONTH),\r\n                calendar.get(Calendar.DAY_OF_MONTH)\r\n        );\r\n        dialog.show();\r\n    }\r\n\r\n    private void loadUserData() {\r\n        progressDialog.show();\r\n\r\n        String url = SUPABASE_URL + \"/rest/v1/pencaker?id_pengguna=eq.\" + idPengguna + \"&select=*\";\r\n\r\n        Log.d(\"USER_DATA\", \"Loading data for user ID: \" + idPengguna);\r\n\r\n        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,\r\n                response -> {\r\n                    progressDialog.dismiss();\r\n                    Log.d(\"USER_DATA\", \"Load response length: \" + response.length());\r\n\r\n                    if (response.length() > 0) {\r\n                        try {\r\n                            JSONObject data = response.getJSONObject(0);\r\n                            populateFields(data);\r\n                            Log.d(\"USER_DATA\", \"✅ Data loaded - id_pencaker: \" + idPencaker);\r\n                        } catch (JSONException e) {\r\n                            Log.e(\"USER_DATA\", \"Error parsing data: \" + e.getMessage());\r\n                        }\r\n                    } else {\r\n                        Log.d(\"USER_DATA\", \"\uD83D\uDCED No existing data found - user can create new\");\r\n                        // Reset fields untuk new user\r\n                        resetFieldsForNewUser();\r\n                    }\r\n                },\r\n                error -> {\r\n                    progressDialog.dismiss();\r\n                    Log.e(\"USER_DATA\", \"Error loading data: \" + error.toString());\r\n                    Toast.makeText(this, \"Gagal memuat data\", Toast.LENGTH_SHORT).show();\r\n                }\r\n        ) {\r\n            @Override\r\n            public Map<String, String> getHeaders() {\r\n                Map<String, String> headers = new HashMap<>();\r\n                headers.put(\"apikey\", SUPABASE_API_KEY);\r\n                headers.put(\"Authorization\", \"Bearer \" + SUPABASE_API_KEY);\r\n                return headers;\r\n            }\r\n        };\r\n\r\n        requestQueue.add(request);\r\n    }\r\n\r\n    private void populateFields(JSONObject data) {\r\n        try {\r\n            idPencaker = data.optInt(\"id_pencaker\", 0);\r\n\r\n            inputNama.setText(data.optString(\"nama_lengkap\", \"\"));\r\n            inputEmail.setText(data.optString(\"email_pencaker\", \"\"));\r\n            inputNoHp.setText(data.optString(\"no_hp\", \"\"));\r\n            inputTanggalLahir.setText(data.optString(\"tanggal_lahir\", \"\"));\r\n            inputAlamat.setText(data.optString(\"alamat\", \"\"));\r\n            inputPengalaman.setText(data.optString(\"pengalaman_tahun\", \"\"));\r\n\r\n            String gender = data.optString(\"gender\", \"\");\r\n            if (gender.equals(\"male\")) {\r\n                spinnerGender.setSelection(1);\r\n            } else if (gender.equals(\"female\")) {\r\n                spinnerGender.setSelection(2);\r\n            }\r\n\r\n            String fotoUrl = data.optString(\"foto_profil_url\", \"\");\r\n            if (!fotoUrl.isEmpty()) {\r\n                Glide.with(this)\r\n                        .load(fotoUrl)\r\n                        .circleCrop()\r\n                        .into(imgProfile);\r\n            }\r\n\r\n            Log.d(\"USER_DATA\", \"Data loaded successfully. ID Pencaker: \" + idPencaker);\r\n        } catch (Exception e) {\r\n            Log.e(\"USER_DATA\", \"Error populating fields: \" + e.getMessage());\r\n        }\r\n    }\r\n\r\n    private void resetFieldsForNewUser() {\r\n        // Set default values untuk new user\r\n        idPencaker = 0;\r\n        inputNama.setText(\"\");\r\n        inputEmail.setText(sessionManager.getUserEmail()); // Default email dari session\r\n        inputNoHp.setText(sessionManager.getUserPhone()); // Default phone dari session\r\n        inputTanggalLahir.setText(\"\");\r\n        inputAlamat.setText(\"\");\r\n        inputPengalaman.setText(\"\");\r\n        spinnerGender.setSelection(0);\r\n        imgProfile.setImageResource(R.drawable.ic_profile_placeholder);\r\n\r\n        Log.d(\"USER_DATA\", \"Fields reset for new user creation\");\r\n    }\r\n\r\n    private void saveUserData() {\r\n        String nama = inputNama.getText().toString().trim();\r\n        String email = inputEmail.getText().toString().trim();\r\n        String noHp = inputNoHp.getText().toString().trim();\r\n        String tglLahir = inputTanggalLahir.getText().toString().trim();\r\n        String alamat = inputAlamat.getText().toString().trim();\r\n        String pengalaman = inputPengalaman.getText().toString().trim();\r\n        String gender = spinnerGender.getSelectedItem().toString();\r\n\r\n        // Validasi\r\n        if (nama.isEmpty() || email.isEmpty() || noHp.isEmpty() || tglLahir.isEmpty() ||\r\n                alamat.isEmpty() || gender.equals(\"Pilih Gender\")) {\r\n            Toast.makeText(this, \"Harap isi semua field yang wajib\", Toast.LENGTH_SHORT).show();\r\n            return;\r\n        }\r\n\r\n        progressDialog.setMessage(\"Menyimpan data...\");\r\n        progressDialog.show();\r\n\r\n        Log.d(\"USER_DATA\", \"Saving data - idPencaker: \" + idPencaker + \", idPengguna: \" + idPengguna);\r\n\r\n        // PERBAIKAN: Tentukan apakah INSERT atau UPDATE berdasarkan idPencaker\r\n        if (idPencaker == 0) {\r\n            // INSERT - User baru, belum punya data di tabel pencaker\r\n            Log.d(\"USER_DATA\", \"Performing INSERT for new user\");\r\n            if (photoBitmap != null) {\r\n                uploadPhotoThenInsertData(nama, email, noHp, tglLahir, gender, alamat, pengalaman);\r\n            } else {\r\n                insertData(nama, email, noHp, tglLahir, gender, alamat, pengalaman, null, null);\r\n            }\r\n        } else {\r\n            // UPDATE - User sudah punya data di tabel pencaker\r\n            Log.d(\"USER_DATA\", \"Performing UPDATE for existing user, idPencaker: \" + idPencaker);\r\n            if (photoBitmap != null) {\r\n                uploadPhotoThenUpdateData(nama, email, noHp, tglLahir, gender, alamat, pengalaman);\r\n            } else {\r\n                updateData(nama, email, noHp, tglLahir, gender, alamat, pengalaman, null, null);\r\n            }\r\n        }\r\n    }\r\n\r\n    private void uploadPhotoThenInsertData(String nama, String email, String noHp, String tglLahir,\r\n                                           String gender, String alamat, String pengalaman) {\r\n        long timestamp = System.currentTimeMillis();\r\n        String fileName = \"profile_\" + idPengguna + \"_\" + timestamp + \".jpg\";\r\n        String storagePath = idPengguna + \"/\" + fileName;\r\n        String uploadUrl = SUPABASE_URL + \"/storage/v1/object/profile-pictures/\" + storagePath;\r\n\r\n        Log.d(\"USER_DATA\", \"Uploading photo for INSERT: \" + uploadUrl);\r\n\r\n        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();\r\n        photoBitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);\r\n        byte[] imageBytes = byteArrayOutputStream.toByteArray();\r\n\r\n        // Gunakan StringRequest untuk upload karena VolleyMultipartRequest tidak ada\r\n        StringRequest uploadRequest = new StringRequest(Request.Method.POST, uploadUrl,\r\n                response -> {\r\n                    String fotoUrl = SUPABASE_URL + \"/storage/v1/object/public/profile-pictures/\" + storagePath;\r\n                    Log.d(\"USER_DATA\", \"✅ Photo uploaded: \" + fotoUrl);\r\n                    insertData(nama, email, noHp, tglLahir, gender, alamat, pengalaman, fotoUrl, storagePath);\r\n                },\r\n                error -> {\r\n                    progressDialog.dismiss();\r\n                    Log.e(\"USER_DATA\", \"❌ Upload failed: \" + error.toString());\r\n                    Toast.makeText(this, \"Gagal upload foto, menyimpan data tanpa foto\", Toast.LENGTH_SHORT).show();\r\n                    // Tetap simpan data tanpa foto\r\n                    insertData(nama, email, noHp, tglLahir, gender, alamat, pengalaman, null, null);\r\n                }\r\n        ) {\r\n            @Override\r\n            public Map<String, String> getHeaders() {\r\n                Map<String, String> headers = new HashMap<>();\r\n                headers.put(\"apikey\", SUPABASE_API_KEY);\r\n                headers.put(\"Authorization\", \"Bearer \" + SUPABASE_API_KEY);\r\n                headers.put(\"Content-Type\", \"image/jpeg\");\r\n                return headers;\r\n            }\r\n\r\n            @Override\r\n            public byte[] getBody() {\r\n                return imageBytes;\r\n            }\r\n        };\r\n\r\n        requestQueue.add(uploadRequest);\r\n    }\r\n\r\n    private void uploadPhotoThenUpdateData(String nama, String email, String noHp, String tglLahir,\r\n                                           String gender, String alamat, String pengalaman) {\r\n        long timestamp = System.currentTimeMillis();\r\n        String fileName = \"profile_\" + idPengguna + \"_\" + timestamp + \".jpg\";\r\n        String storagePath = idPengguna + \"/\" + fileName;\r\n        String uploadUrl = SUPABASE_URL + \"/storage/v1/object/profile-pictures/\" + storagePath;\r\n\r\n        Log.d(\"USER_DATA\", \"Uploading photo for UPDATE: \" + uploadUrl);\r\n\r\n        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();\r\n        photoBitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);\r\n        byte[] imageBytes = byteArrayOutputStream.toByteArray();\r\n\r\n        StringRequest uploadRequest = new StringRequest(Request.Method.POST, uploadUrl,\r\n                response -> {\r\n                    String fotoUrl = SUPABASE_URL + \"/storage/v1/object/public/profile-pictures/\" + storagePath;\r\n                    Log.d(\"USER_DATA\", \"✅ Photo uploaded: \" + fotoUrl);\r\n                    updateData(nama, email, noHp, tglLahir, gender, alamat, pengalaman, fotoUrl, storagePath);\r\n                },\r\n                error -> {\r\n                    progressDialog.dismiss();\r\n                    Log.e(\"USER_DATA\", \"❌ Upload failed: \" + error.toString());\r\n                    Toast.makeText(this, \"Gagal upload foto, menyimpan data tanpa foto\", Toast.LENGTH_SHORT).show();\r\n                    updateData(nama, email, noHp, tglLahir, gender, alamat, pengalaman, null, null);\r\n                }\r\n        ) {\r\n            @Override\r\n            public Map<String, String> getHeaders() {\r\n                Map<String, String> headers = new HashMap<>();\r\n                headers.put(\"apikey\", SUPABASE_API_KEY);\r\n                headers.put(\"Authorization\", \"Bearer \" + SUPABASE_API_KEY);\r\n                headers.put(\"Content-Type\", \"image/jpeg\");\r\n                return headers;\r\n            }\r\n\r\n            @Override\r\n            public byte[] getBody() {\r\n                return imageBytes;\r\n            }\r\n        };\r\n\r\n        requestQueue.add(uploadRequest);\r\n    }\r\n\r\n    private void insertData(String nama, String email, String noHp, String tglLahir,\r\n                            String gender, String alamat, String pengalaman,\r\n                            String fotoUrl, String fotoPath) {\r\n\r\n        // Ubah URL untuk UPSERT\r\n        String url = SUPABASE_URL + \"/rest/v1/pencaker?on_conflict=id_pengguna\";\r\n\r\n        JSONObject body = new JSONObject();\r\n        try {\r\n            // Data untuk INSERT atau UPDATE\r\n            body.put(\"id_pengguna\", idPengguna);\r\n            body.put(\"nama_lengkap\", nama);\r\n            body.put(\"email_pencaker\", email);\r\n            body.put(\"no_hp\", noHp);\r\n            body.put(\"alamat\", alamat);\r\n            body.put(\"tanggal_lahir\", tglLahir);\r\n            body.put(\"gender\", gender);\r\n            body.put(\"pengalaman_tahun\", pengalaman);\r\n            // Hapus dibuat_pada karena Supabase sudah ada default\r\n\r\n            if (fotoUrl != null) {\r\n                body.put(\"foto_profil_url\", fotoUrl);\r\n                body.put(\"foto_profil_path\", fotoPath);\r\n            }\r\n\r\n        } catch (JSONException e) {\r\n            Log.e(\"USER_DATA\", \"Error creating JSON: \" + e.getMessage());\r\n            progressDialog.dismiss();\r\n            return;\r\n        }\r\n\r\n        Log.d(\"USER_DATA\", \"UPSERT data for user - id_pengguna: \" + idPengguna);\r\n        Log.d(\"USER_DATA\", \"Request body: \" + body.toString());\r\n\r\n        StringRequest request = new StringRequest(Request.Method.POST, url,\r\n                response -> {\r\n                    progressDialog.dismiss();\r\n                    Log.d(\"USER_DATA\", \"✅ UPSERT successful! Response: \" + response);\r\n\r\n                    // Parse response untuk mendapatkan id_pencaker jika perlu\r\n                    if (response != null && !response.trim().isEmpty() && !response.equals(\"[]\")) {\r\n                        try {\r\n                            JSONArray jsonArray = new JSONArray(response);\r\n                            if (jsonArray.length() > 0) {\r\n                                JSONObject firstItem = jsonArray.getJSONObject(0);\r\n                                idPencaker = firstItem.getInt(\"id_pencaker\");\r\n                                Log.d(\"USER_DATA\", \"UPSERT id_pencaker: \" + idPencaker);\r\n                            }\r\n                        } catch (JSONException e) {\r\n                            Log.e(\"USER_DATA\", \"Error parsing UPSERT response: \" + e.getMessage());\r\n                        }\r\n                    }\r\n\r\n                    Toast.makeText(this, \"✅ Data berhasil disimpan!\", Toast.LENGTH_SHORT).show();\r\n                    sessionManager.updateUserProfile(nama, noHp);\r\n\r\n                    // Setelah berhasil, load data untuk refresh\r\n                    new android.os.Handler().postDelayed(() -> {\r\n                        loadUserData();\r\n                        setEditMode(false);\r\n                        isEditMode = false;\r\n                        btnEdit.setText(\"Edit\");\r\n                    }, 1000);\r\n                },\r\n                error -> {\r\n                    progressDialog.dismiss();\r\n                    Log.e(\"USER_DATA\", \"❌ UPSERT failed: \" + error.toString());\r\n\r\n                    if (error.networkResponse != null) {\r\n                        String errorResponse = new String(error.networkResponse.data);\r\n                        Log.e(\"USER_DATA\", \"Error status: \" + error.networkResponse.statusCode);\r\n                        Log.e(\"USER_DATA\", \"Error response: \" + errorResponse);\r\n                    }\r\n\r\n                    Toast.makeText(this, \"Gagal menyimpan data\", Toast.LENGTH_SHORT).show();\r\n                }\r\n        ) {\r\n            @Override\r\n            public Map<String, String> getHeaders() {\r\n                Map<String, String> headers = new HashMap<>();\r\n                headers.put(\"apikey\", SUPABASE_API_KEY);\r\n                headers.put(\"Authorization\", \"Bearer \" + SUPABASE_API_KEY);\r\n                headers.put(\"Content-Type\", \"application/json\");\r\n                // Ubah ke representation untuk mendapatkan response\r\n                headers.put(\"Prefer\", \"return=representation\");\r\n                return headers;\r\n            }\r\n\r\n            @Override\r\n            public byte[] getBody() {\r\n                try {\r\n                    return body.toString().getBytes(\"utf-8\");\r\n                } catch (Exception e) {\r\n                    return null;\r\n                }\r\n            }\r\n        };\r\n\r\n        requestQueue.add(request);\r\n    }\r\n\r\n    private void updateData(String nama, String email, String noHp, String tglLahir,\r\n                            String gender, String alamat, String pengalaman,\r\n                            String fotoUrl, String fotoPath) {\r\n\r\n        String url = SUPABASE_URL + \"/rest/v1/pencaker?id_pengguna=eq.\" + idPengguna;\r\n\r\n        JSONObject body = new JSONObject();\r\n        try {\r\n            // Data untuk UPDATE\r\n            body.put(\"nama_lengkap\", nama);\r\n            body.put(\"email_pencaker\", email);\r\n            body.put(\"no_hp\", noHp);\r\n            body.put(\"alamat\", alamat);\r\n            body.put(\"tanggal_lahir\", tglLahir);\r\n            body.put(\"gender\", gender);\r\n            body.put(\"pengalaman_tahun\", pengalaman);\r\n\r\n            if (fotoUrl != null) {\r\n                body.put(\"foto_profil_url\", fotoUrl);\r\n                body.put(\"foto_profil_path\", fotoPath);\r\n            }\r\n        } catch (JSONException e) {\r\n            Log.e(\"USER_DATA\", \"Error creating update JSON: \" + e.getMessage());\r\n            progressDialog.dismiss();\r\n            return;\r\n        }\r\n\r\n        Log.d(\"USER_DATA\", \"UPDATE data for existing user - id_pengguna: \" + idPengguna);\r\n        Log.d(\"USER_DATA\", \"Request body: \" + body.toString());\r\n\r\n        StringRequest updateRequest = new StringRequest(Request.Method.PATCH, url,\r\n                response -> {\r\n                    progressDialog.dismiss();\r\n                    Log.d(\"USER_DATA\", \"UPDATE successful! Response: \" + response);\r\n\r\n                    Toast.makeText(this, \"Data berhasil diperbarui!\", Toast.LENGTH_SHORT).show();\r\n                    sessionManager.updateUserProfile(nama, noHp);\r\n\r\n                    // Setelah UPDATE berhasil, refresh data\r\n                    new android.os.Handler().postDelayed(() -> {\r\n                        loadUserData();\r\n                        setEditMode(false);\r\n                        isEditMode = false;\r\n                        btnEdit.setText(\"Edit\");\r\n                    }, 1000);\r\n                },\r\n                error -> {\r\n                    progressDialog.dismiss();\r\n                    Log.e(\"USER_DATA\", \"❌ UPDATE failed: \" + error.toString());\r\n\r\n                    // Jika UPDATE gagal karena data tidak ditemukan (seharusnya tidak terjadi), coba INSERT\r\n                    if (error.networkResponse != null && error.networkResponse.statusCode == 404) {\r\n                        Log.d(\"USER_DATA\", \"Data not found for UPDATE, trying INSERT instead...\");\r\n                        insertData(nama, email, noHp, tglLahir, gender, alamat, pengalaman, fotoUrl, fotoPath);\r\n                        return;\r\n                    }\r\n\r\n                    Toast.makeText(this, \"Gagal memperbarui data\", Toast.LENGTH_SHORT).show();\r\n                }\r\n        ) {\r\n            @Override\r\n            public Map<String, String> getHeaders() {\r\n                Map<String, String> headers = new HashMap<>();\r\n                headers.put(\"apikey\", SUPABASE_API_KEY);\r\n                headers.put(\"Authorization\", \"Bearer \" + SUPABASE_API_KEY);\r\n                headers.put(\"Content-Type\", \"application/json\");\r\n                headers.put(\"Prefer\", \"return=minimal\");\r\n                return headers;\r\n            }\r\n\r\n            @Override\r\n            public byte[] getBody() {\r\n                try {\r\n                    return body.toString().getBytes(\"utf-8\");\r\n                } catch (Exception e) {\r\n                    return null;\r\n                }\r\n            }\r\n        };\r\n\r\n        requestQueue.add(updateRequest);\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/tem2/karirku/UserDataActivity.java b/app/src/main/java/com/tem2/karirku/UserDataActivity.java
+--- a/app/src/main/java/com/tem2/karirku/UserDataActivity.java	(revision 8e7d61d7e752f856bd4f7be16b6bdeb72dfc3b7d)
++++ b/app/src/main/java/com/tem2/karirku/UserDataActivity.java	(date 1764745084558)
+@@ -43,7 +43,6 @@
+ import java.util.Map;
+ 
+ public class UserDataActivity extends AppCompatActivity {
+-
+     private ImageView imgProfile, btnEditPhoto, btnBack;
+     private EditText inputNama, inputEmail, inputNoHp, inputAlamat, inputPengalaman;
+     private TextView inputTanggalLahir, btnEdit;
+Index: app/src/main/res/layout/activity_beranda.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    android:orientation=\"vertical\"\r\n    android:background=\"@color/white\">\r\n\r\n    <!-- FrameLayout untuk Fragment Container -->\r\n    <FrameLayout\r\n        android:id=\"@+id/frameLayout\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"0dp\"\r\n        android:layout_weight=\"1\" />\r\n\r\n    <!-- Bottom Navigation -->\r\n    <LinearLayout\r\n        android:id=\"@+id/customBottomNav\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"75dp\"\r\n        android:orientation=\"horizontal\"\r\n        android:background=\"@color/white\"\r\n        android:gravity=\"center\"\r\n        android:elevation=\"8dp\">\r\n\r\n        <LinearLayout\r\n            android:id=\"@+id/nav_home\"\r\n            android:layout_width=\"0dp\"\r\n            android:layout_height=\"match_parent\"\r\n            android:layout_weight=\"1\"\r\n            android:orientation=\"vertical\"\r\n            android:gravity=\"center\"\r\n            android:clickable=\"true\"\r\n            android:focusable=\"true\"\r\n            android:background=\"?attr/selectableItemBackground\">\r\n\r\n            <ImageView\r\n                android:id=\"@+id/icon_home\"\r\n                android:layout_width=\"24dp\"\r\n                android:layout_height=\"24dp\"\r\n                android:src=\"@drawable/ic_home\" />\r\n\r\n            <TextView\r\n                android:id=\"@+id/text_home\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:text=\"Home\"\r\n                android:textSize=\"10sp\"\r\n                android:layout_marginTop=\"4dp\"\r\n                android:fontFamily=\"@font/interdisplaybold\" />\r\n        </LinearLayout>\r\n\r\n        <LinearLayout\r\n            android:id=\"@+id/nav_scan\"\r\n            android:layout_width=\"0dp\"\r\n            android:layout_height=\"match_parent\"\r\n            android:layout_weight=\"1\"\r\n            android:orientation=\"vertical\"\r\n            android:gravity=\"center\"\r\n            android:clickable=\"true\"\r\n            android:focusable=\"true\"\r\n            android:background=\"?attr/selectableItemBackground\">\r\n\r\n            <ImageView\r\n                android:id=\"@+id/icon_scan\"\r\n                android:layout_width=\"24dp\"\r\n                android:layout_height=\"24dp\"\r\n                android:src=\"@drawable/ic_scancv\" />\r\n\r\n            <TextView\r\n                android:id=\"@+id/text_scan\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:text=\"Scan CV\"\r\n                android:textSize=\"10sp\"\r\n                android:layout_marginTop=\"4dp\"\r\n                android:fontFamily=\"@font/interdisplaybold\" />\r\n        </LinearLayout>\r\n\r\n        <LinearLayout\r\n            android:id=\"@+id/nav_chat\"\r\n            android:layout_width=\"0dp\"\r\n            android:layout_height=\"match_parent\"\r\n            android:layout_weight=\"1\"\r\n            android:orientation=\"vertical\"\r\n            android:gravity=\"center\"\r\n            android:clickable=\"true\"\r\n            android:focusable=\"true\"\r\n            android:background=\"?attr/selectableItemBackground\">\r\n\r\n            <ImageView\r\n                android:id=\"@+id/icon_chat\"\r\n                android:layout_width=\"24dp\"\r\n                android:layout_height=\"24dp\"\r\n                android:src=\"@drawable/ic_chat\" />\r\n\r\n            <TextView\r\n                android:id=\"@+id/text_chat\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:text=\"Chatbot\"\r\n                android:textSize=\"10sp\"\r\n                android:layout_marginTop=\"4dp\"\r\n                android:fontFamily=\"@font/interdisplaybold\" />\r\n        </LinearLayout>\r\n\r\n        <LinearLayout\r\n            android:id=\"@+id/nav_profile\"\r\n            android:layout_width=\"0dp\"\r\n            android:layout_height=\"match_parent\"\r\n            android:layout_weight=\"1\"\r\n            android:orientation=\"vertical\"\r\n            android:gravity=\"center\"\r\n            android:clickable=\"true\"\r\n            android:focusable=\"true\"\r\n            android:background=\"?attr/selectableItemBackground\">\r\n\r\n            <ImageView\r\n                android:id=\"@+id/icon_profile\"\r\n                android:layout_width=\"24dp\"\r\n                android:layout_height=\"24dp\"\r\n                android:src=\"@drawable/ic_profil\" />\r\n\r\n            <TextView\r\n                android:id=\"@+id/text_profile\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:text=\"Profil\"\r\n                android:textSize=\"10sp\"\r\n                android:layout_marginTop=\"4dp\"\r\n                android:fontFamily=\"@font/interdisplaybold\" />\r\n        </LinearLayout>\r\n\r\n    </LinearLayout>\r\n\r\n</LinearLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_beranda.xml b/app/src/main/res/layout/activity_beranda.xml
+--- a/app/src/main/res/layout/activity_beranda.xml	(revision 8e7d61d7e752f856bd4f7be16b6bdeb72dfc3b7d)
++++ b/app/src/main/res/layout/activity_beranda.xml	(date 1764747642106)
+@@ -1,135 +1,135 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+-    android:orientation="vertical"
+     android:background="@color/white">
+ 
+-    <!-- FrameLayout untuk Fragment Container -->
++    <!-- ⭐ UPDATE: Ganti FrameLayout dengan RelativeLayout dan tambah layout_above -->
+     <FrameLayout
+         android:id="@+id/frameLayout"
+         android:layout_width="match_parent"
+-        android:layout_height="0dp"
+-        android:layout_weight="1" />
++        android:layout_height="match_parent"
++        android:layout_above="@+id/customBottomNav" /> <!-- ⭐ UPDATE: Ini yang penting! -->
+ 
+     <!-- Bottom Navigation -->
+     <LinearLayout
+         android:id="@+id/customBottomNav"
+         android:layout_width="match_parent"
+         android:layout_height="75dp"
++        android:layout_alignParentBottom="true"
+         android:orientation="horizontal"
+         android:background="@color/white"
+         android:gravity="center"
+         android:elevation="8dp">
+ 
+-        <LinearLayout
+-            android:id="@+id/nav_home"
+-            android:layout_width="0dp"
+-            android:layout_height="match_parent"
+-            android:layout_weight="1"
+-            android:orientation="vertical"
+-            android:gravity="center"
+-            android:clickable="true"
+-            android:focusable="true"
+-            android:background="?attr/selectableItemBackground">
++    <LinearLayout
++        android:id="@+id/nav_home"
++        android:layout_width="0dp"
++        android:layout_height="match_parent"
++        android:layout_weight="1"
++        android:orientation="vertical"
++        android:gravity="center"
++        android:clickable="true"
++        android:focusable="true"
++        android:background="?attr/selectableItemBackground">
+ 
+-            <ImageView
+-                android:id="@+id/icon_home"
+-                android:layout_width="24dp"
+-                android:layout_height="24dp"
+-                android:src="@drawable/ic_home" />
++        <ImageView
++            android:id="@+id/icon_home"
++            android:layout_width="24dp"
++            android:layout_height="24dp"
++            android:src="@drawable/ic_home" />
+ 
+-            <TextView
+-                android:id="@+id/text_home"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:text="Home"
+-                android:textSize="10sp"
+-                android:layout_marginTop="4dp"
+-                android:fontFamily="@font/interdisplaybold" />
+-        </LinearLayout>
++        <TextView
++            android:id="@+id/text_home"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:text="Home"
++            android:textSize="10sp"
++            android:layout_marginTop="4dp"
++            android:fontFamily="@font/interdisplaybold" />
++    </LinearLayout>
+ 
+-        <LinearLayout
+-            android:id="@+id/nav_scan"
+-            android:layout_width="0dp"
+-            android:layout_height="match_parent"
+-            android:layout_weight="1"
+-            android:orientation="vertical"
+-            android:gravity="center"
+-            android:clickable="true"
+-            android:focusable="true"
+-            android:background="?attr/selectableItemBackground">
++    <LinearLayout
++        android:id="@+id/nav_scan"
++        android:layout_width="0dp"
++        android:layout_height="match_parent"
++        android:layout_weight="1"
++        android:orientation="vertical"
++        android:gravity="center"
++        android:clickable="true"
++        android:focusable="true"
++        android:background="?attr/selectableItemBackground">
+ 
+-            <ImageView
+-                android:id="@+id/icon_scan"
+-                android:layout_width="24dp"
+-                android:layout_height="24dp"
+-                android:src="@drawable/ic_scancv" />
++        <ImageView
++            android:id="@+id/icon_scan"
++            android:layout_width="24dp"
++            android:layout_height="24dp"
++            android:src="@drawable/ic_scancv" />
+ 
+-            <TextView
+-                android:id="@+id/text_scan"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:text="Scan CV"
+-                android:textSize="10sp"
+-                android:layout_marginTop="4dp"
+-                android:fontFamily="@font/interdisplaybold" />
+-        </LinearLayout>
++        <TextView
++            android:id="@+id/text_scan"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:text="Scan CV"
++            android:textSize="10sp"
++            android:layout_marginTop="4dp"
++            android:fontFamily="@font/interdisplaybold" />
++    </LinearLayout>
+ 
+-        <LinearLayout
+-            android:id="@+id/nav_chat"
+-            android:layout_width="0dp"
+-            android:layout_height="match_parent"
+-            android:layout_weight="1"
+-            android:orientation="vertical"
+-            android:gravity="center"
+-            android:clickable="true"
+-            android:focusable="true"
+-            android:background="?attr/selectableItemBackground">
++    <LinearLayout
++        android:id="@+id/nav_chat"
++        android:layout_width="0dp"
++        android:layout_height="match_parent"
++        android:layout_weight="1"
++        android:orientation="vertical"
++        android:gravity="center"
++        android:clickable="true"
++        android:focusable="true"
++        android:background="?attr/selectableItemBackground">
+ 
+-            <ImageView
+-                android:id="@+id/icon_chat"
+-                android:layout_width="24dp"
+-                android:layout_height="24dp"
+-                android:src="@drawable/ic_chat" />
++        <ImageView
++            android:id="@+id/icon_chat"
++            android:layout_width="24dp"
++            android:layout_height="24dp"
++            android:src="@drawable/ic_chat" />
+ 
+-            <TextView
+-                android:id="@+id/text_chat"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:text="Chatbot"
+-                android:textSize="10sp"
+-                android:layout_marginTop="4dp"
+-                android:fontFamily="@font/interdisplaybold" />
+-        </LinearLayout>
++        <TextView
++            android:id="@+id/text_chat"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:text="Chatbot"
++            android:textSize="10sp"
++            android:layout_marginTop="4dp"
++            android:fontFamily="@font/interdisplaybold" />
++    </LinearLayout>
+ 
+-        <LinearLayout
+-            android:id="@+id/nav_profile"
+-            android:layout_width="0dp"
+-            android:layout_height="match_parent"
+-            android:layout_weight="1"
+-            android:orientation="vertical"
+-            android:gravity="center"
+-            android:clickable="true"
+-            android:focusable="true"
+-            android:background="?attr/selectableItemBackground">
++    <LinearLayout
++        android:id="@+id/nav_profile"
++        android:layout_width="0dp"
++        android:layout_height="match_parent"
++        android:layout_weight="1"
++        android:orientation="vertical"
++        android:gravity="center"
++        android:clickable="true"
++        android:focusable="true"
++        android:background="?attr/selectableItemBackground">
+ 
+-            <ImageView
+-                android:id="@+id/icon_profile"
+-                android:layout_width="24dp"
+-                android:layout_height="24dp"
+-                android:src="@drawable/ic_profil" />
++        <ImageView
++            android:id="@+id/icon_profile"
++            android:layout_width="24dp"
++            android:layout_height="24dp"
++            android:src="@drawable/ic_profil" />
+ 
+-            <TextView
+-                android:id="@+id/text_profile"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:text="Profil"
+-                android:textSize="10sp"
+-                android:layout_marginTop="4dp"
+-                android:fontFamily="@font/interdisplaybold" />
+-        </LinearLayout>
++        <TextView
++            android:id="@+id/text_profile"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:text="Profil"
++            android:textSize="10sp"
++            android:layout_marginTop="4dp"
++            android:fontFamily="@font/interdisplaybold" />
++    </LinearLayout>
+ 
+-    </LinearLayout>
++</LinearLayout>
+ 
+-</LinearLayout>
+\ No newline at end of file
++    </RelativeLayout>
+\ No newline at end of file

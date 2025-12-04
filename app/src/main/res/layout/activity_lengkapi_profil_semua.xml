@@ -1,0 +1,825 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F9FAFC"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- =========== HEADER LENGKAPI PROFIL =========== -->
+        <LinearLayout
+            android:id="@+id/cardLengkapiProfil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:orientation="vertical"
+            android:background="@drawable/roundedshape"
+            android:padding="16dp"
+            android:gravity="center">
+
+            <LinearLayout
+                android:id="@+id/iconBintangContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/iconBintang1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_bintang"
+                    android:paddingHorizontal="5dp"/>
+
+                <ImageView
+                    android:id="@+id/iconBintang2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_bintang"
+                    android:paddingHorizontal="5dp"/>
+
+                <ImageView
+                    android:id="@+id/iconBintang3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_bintang"
+                    android:paddingHorizontal="5dp"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvLengkapiProfil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lengkapi Profil Sekarang"
+                android:textSize="19sp"
+                android:fontFamily="@font/interdisplaybold"
+                android:paddingVertical="10dp"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/blue"/>
+        </LinearLayout>
+
+        <!-- =========== PENDIDIKAN SECTION =========== -->
+        <LinearLayout
+            android:id="@+id/sectionPendidikan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/shape_card_sroke"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="12dp"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pendidikan"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/blue" />
+
+            <TextView
+                android:id="@+id/summaryPendidikan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Belum diisi"
+                android:textColor="@color/blue"
+                android:layout_marginTop="4dp" />
+
+            <!-- Pendidikan List -->
+            <ListView
+                android:id="@+id/listPendidikan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                android:dividerHeight="12dp" />
+
+            <!-- Pendidikan Form -->
+            <LinearLayout
+                android:id="@+id/editPendidikanForm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginTop="12dp">
+
+                <!-- Institusi -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nama Institusi"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="12dp"/>
+
+                <EditText
+                    android:id="@+id/inputInstitusi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Contoh: Universitas Brawijaya"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/shape_input"
+                    android:padding="12dp"
+                    android:textColor="@color/black"/>
+
+                <!-- Jurusan -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Jurusan"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="12dp"/>
+
+                <EditText
+                    android:id="@+id/inputJurusan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Contoh: Teknik Informatika"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/shape_input"
+                    android:padding="12dp"
+                    android:textColor="@color/black"/>
+
+                <!-- Tahun -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tahun Lulus"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="12dp"/>
+
+                <EditText
+                    android:id="@+id/inputTahun"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Contoh: 2023"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/shape_input"
+                    android:padding="12dp"
+                    android:textColor="@color/black"
+                    android:inputType="number"/>
+
+                <!-- Pendidikan Buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="18dp"
+                    android:weightSum="2">
+
+                    <Button
+                        android:id="@+id/btnCancelPendidikan"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:text="BATAL"
+                        android:backgroundTint="#EEEEEE"
+                        android:textColor="#333333"/>
+
+                    <Button
+                        android:id="@+id/btnSavePendidikan"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:text="SIMPAN"
+                        android:layout_marginStart="12dp"
+                        android:backgroundTint="@color/blue"
+                        android:textColor="#FFFFFF"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnTambahPendidikan"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Tambah Pendidikan"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/blue"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+
+        <!-- =========== SKILL SECTION =========== -->
+        <LinearLayout
+            android:id="@+id/sectionSkill"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/shape_card_sroke"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="12dp"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Skill"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/blue" />
+
+            <TextView
+                android:id="@+id/summarySkill"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Belum diisi"
+                android:textColor="@color/blue"
+                android:layout_marginTop="4dp" />
+
+            <!-- Skill Form -->
+            <LinearLayout
+                android:id="@+id/editSkillForm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginTop="12dp">
+
+                <!-- Input Skill -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp">
+
+                    <EditText
+                        android:id="@+id/inputSkill"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="48dp"
+                        android:background="@drawable/shape_input"
+                        android:hint="Tambah skill"
+                        android:padding="12dp"
+                        android:textColor="@color/black"/>
+
+                    <Button
+                        android:id="@+id/btnTambahSkill"
+                        android:layout_width="80dp"
+                        android:layout_height="48dp"
+                        android:text="Tambah"
+                        android:layout_marginStart="8dp"
+                        android:backgroundTint="@color/blue"
+                        android:textColor="#fff"/>
+                </LinearLayout>
+
+                <!-- CHIP GROUP -->
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/skillChipGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleLine="false"
+                    app:chipSpacing="8dp"
+                    android:layout_marginTop="16dp"/>
+
+                <!-- Skill Buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="18dp"
+                    android:weightSum="2">
+
+                    <Button
+                        android:id="@+id/btnCancelSkill"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:text="BATAL"
+                        android:backgroundTint="#EEEEEE"
+                        android:textColor="#333333"/>
+
+                    <Button
+                        android:id="@+id/btnSaveSkill"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:text="SIMPAN"
+                        android:layout_marginStart="12dp"
+                        android:backgroundTint="@color/blue"
+                        android:textColor="#FFFFFF"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnEditSkill"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Edit Skill"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/blue"
+                android:textColor="#FFFFFF"/>
+        </LinearLayout>
+
+        <!-- =========== TENTANG SAYA SECTION =========== -->
+        <LinearLayout
+            android:id="@+id/sectionTentangSaya"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/shape_card_sroke"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="12dp"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tentang Saya"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/blue" />
+
+            <TextView
+                android:id="@+id/summaryTentangSaya"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Belum diisi"
+                android:textColor="@color/blue"
+                android:layout_marginTop="4dp" />
+
+            <!-- Tentang Saya Form -->
+            <LinearLayout
+                android:id="@+id/editTentangSayaForm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:text="Deskripsi Diri"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"/>
+
+                <EditText
+                    android:id="@+id/inputTentang"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:gravity="top"
+                    android:background="@drawable/shape_input"
+                    android:hint="Tulis tentang diri kamu... (max 500 karakter)"
+                    android:padding="12dp"
+                    android:maxLength="500"
+                    android:inputType="textMultiLine"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="8dp"/>
+
+                <TextView
+                    android:id="@+id/txtCounter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0/500"
+                    android:textColor="@color/blue"
+                    android:gravity="end"
+                    android:layout_marginTop="4dp"/>
+
+                <!-- Tentang Saya Buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="18dp"
+                    android:weightSum="2">
+
+                    <Button
+                        android:id="@+id/btnCancelTentangSaya"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:text="BATAL"
+                        android:backgroundTint="#EEEEEE"
+                        android:textColor="#333333"/>
+
+                    <Button
+                        android:id="@+id/btnSaveTentangSaya"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:text="SIMPAN"
+                        android:layout_marginStart="12dp"
+                        android:backgroundTint="@color/blue"
+                        android:textColor="#FFFFFF"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnEditTentangSaya"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Edit Tentang Saya"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/blue"
+                android:textColor="#FFFFFF"/>
+        </LinearLayout>
+
+        <!-- =========== PENGHARGAAN SECTION =========== -->
+        <LinearLayout
+            android:id="@+id/sectionPenghargaan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/shape_card_sroke"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="12dp"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Penghargaan"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/blue" />
+
+            <TextView
+                android:id="@+id/summaryPenghargaan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Belum diisi"
+                android:textColor="@color/blue"
+                android:layout_marginTop="4dp" />
+
+            <!-- Penghargaan List -->
+            <ListView
+                android:id="@+id/listPenghargaan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                android:divider="@android:color/darker_gray"
+                android:dividerHeight="1dp"/>
+
+            <!-- Penghargaan Form -->
+            <LinearLayout
+                android:id="@+id/editPenghargaanForm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginTop="12dp">
+
+                <!-- Nama Penghargaan -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nama Penghargaan"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="12dp"/>
+
+                <EditText
+                    android:id="@+id/inputNamaPenghargaan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Contoh: Juara 1 Lomba Coding"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/shape_input"
+                    android:padding="12dp"
+                    android:textColor="@color/black"/>
+
+                <!-- Tahun Penghargaan -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tahun"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="12dp"/>
+
+                <EditText
+                    android:id="@+id/inputTahunPenghargaan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Contoh: 2023"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/shape_input"
+                    android:padding="12dp"
+                    android:textColor="@color/black"
+                    android:inputType="number"/>
+
+                <!-- Penyelenggara -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Penyelenggara (Opsional)"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="12dp"/>
+
+                <EditText
+                    android:id="@+id/inputPenyelenggara"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Contoh: Kementerian Pendidikan"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/shape_input"
+                    android:padding="12dp"
+                    android:textColor="@color/black"/>
+
+                <!-- Penghargaan Buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="18dp"
+                    android:weightSum="2">
+
+                    <Button
+                        android:id="@+id/btnCancelPenghargaan"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:text="BATAL"
+                        android:backgroundTint="#EEEEEE"
+                        android:textColor="#333333"/>
+
+                    <Button
+                        android:id="@+id/btnSavePenghargaan"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:text="SIMPAN"
+                        android:layout_marginStart="12dp"
+                        android:backgroundTint="@color/blue"
+                        android:textColor="#FFFFFF"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnTambahPenghargaan"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Tambah Penghargaan"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/blue"
+                android:textColor="#fff"/>
+        </LinearLayout>
+
+        <!-- =========== SERTIFIKAT SECTION =========== -->
+        <LinearLayout
+            android:id="@+id/sectionSertifikat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/shape_card_sroke"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="12dp"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sertifikat"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/blue" />
+
+            <TextView
+                android:id="@+id/summarySertifikat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Belum diisi"
+                android:textColor="@color/blue"
+                android:layout_marginTop="4dp" />
+
+            <!-- Sertifikat List -->
+            <ListView
+                android:id="@+id/listSertifikat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                android:divider="@android:color/darker_gray"
+                android:dividerHeight="1dp"/>
+
+            <!-- Sertifikat Form -->
+            <LinearLayout
+                android:id="@+id/editSertifikatForm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginTop="12dp">
+
+                <!-- Nama Sertifikat -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nama Sertifikat"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="12dp"/>
+
+                <EditText
+                    android:id="@+id/inputNamaSertifikat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Contoh: Sertifikat TOEFL"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/shape_input"
+                    android:padding="12dp"
+                    android:textColor="@color/black"/>
+
+                <!-- Penerbit Sertifikat -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Penerbit"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="12dp"/>
+
+                <EditText
+                    android:id="@+id/inputPenerbitSertifikat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Contoh: ETS Official"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/shape_input"
+                    android:padding="12dp"
+                    android:textColor="@color/black"/>
+
+                <!-- Tahun Sertifikat -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tahun (Opsional)"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="12dp"/>
+
+                <EditText
+                    android:id="@+id/inputTahunSertifikat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Contoh: 2023"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/shape_input"
+                    android:padding="12dp"
+                    android:textColor="@color/black"
+                    android:inputType="number"/>
+
+                <!-- Sertifikat Buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="18dp"
+                    android:weightSum="2">
+
+                    <Button
+                        android:id="@+id/btnCancelSertifikat"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:text="BATAL"
+                        android:backgroundTint="#EEEEEE"
+                        android:textColor="#333333"/>
+
+                    <Button
+                        android:id="@+id/btnSaveSertifikat"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:text="SIMPAN"
+                        android:layout_marginStart="12dp"
+                        android:backgroundTint="@color/blue"
+                        android:textColor="#FFFFFF"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnTambahSertifikat"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Tambah Sertifikat"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/blue"
+                android:textColor="#fff"/>
+        </LinearLayout>
+
+        <!-- =========== PORTOFOLIO SECTION =========== -->
+        <LinearLayout
+            android:id="@+id/sectionPortofolio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/shape_card_sroke"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="24dp"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Link Portofolio"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/blue" />
+
+            <TextView
+                android:id="@+id/summaryPortofolio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Belum diisi"
+                android:textColor="@color/blue"
+                android:layout_marginTop="4dp" />
+
+            <!-- Portofolio List -->
+            <ListView
+                android:id="@+id/listLink"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                android:divider="@android:color/darker_gray"
+                android:dividerHeight="1dp"/>
+
+            <!-- Portofolio Form -->
+            <LinearLayout
+                android:id="@+id/editPortofolioForm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginTop="12dp">
+
+                <!-- Nama Portofolio -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nama Portofolio"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="12dp"/>
+
+                <EditText
+                    android:id="@+id/inputNamaPortofolio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Contoh: Aplikasi E-Commerce"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/shape_input"
+                    android:padding="12dp"
+                    android:textColor="@color/black"/>
+
+                <!-- URL Portofolio -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="URL Portofolio"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="12dp"/>
+
+                <EditText
+                    android:id="@+id/inputUrlPortofolio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Contoh: https://github.com/username/project"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/shape_input"
+                    android:padding="12dp"
+                    android:textColor="@color/black"
+                    android:inputType="textUri"/>
+
+                <!-- Portofolio Buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="18dp"
+                    android:weightSum="2">
+
+                    <Button
+                        android:id="@+id/btnCancelPortofolio"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:text="BATAL"
+                        android:backgroundTint="#EEEEEE"
+                        android:textColor="#333333"/>
+
+                    <Button
+                        android:id="@+id/btnSavePortofolio"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:text="SIMPAN"
+                        android:layout_marginStart="12dp"
+                        android:backgroundTint="@color/blue"
+                        android:textColor="#FFFFFF"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnTambahPortofolio"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Tambah Link"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/blue"
+                android:textColor="#fff"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

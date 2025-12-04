@@ -25,7 +25,8 @@
             android:text="Pendidikan"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:gravity="center" />
+            android:gravity="center"
+            android:textColor="@color/black"/>
     </LinearLayout>
 
     <!-- LIST -->
@@ -42,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="Tambah Pendidikan"
-        android:backgroundTint="#0CADF1"
+        android:backgroundTint="@color/blue"
         android:textColor="#FFFFFF"
         android:layout_marginTop="12dp" />
 

@@ -29,7 +29,8 @@
                 android:text="Tentang Saya"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:textColor="@color/black"/>
         </LinearLayout>
 
         <!-- Card -->
@@ -45,7 +46,8 @@
                 android:text="Deskripsi Diri"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"/>
 
             <EditText
                 android:id="@+id/inputTentang"
@@ -77,6 +79,6 @@
             android:text="Simpan"
             android:layout_marginTop="18dp"
             android:textColor="#fff"
-            android:backgroundTint="#0CADF1"/>
+            android:backgroundTint="@color/blue"/>
     </LinearLayout>
 </ScrollView>

@@ -25,7 +25,8 @@
             android:text="Link Portofolio"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:textColor="@color/black"/>
     </LinearLayout>
 
     <!-- List -->
@@ -43,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:text="Tambah Link"
-        android:backgroundTint="#0CADF1"
+        android:backgroundTint="@color/blue"
         android:textColor="#fff"
         android:layout_marginTop="14dp"/>
 

@@ -530,9 +530,9 @@ public class profilFragment extends Fragment {
 
             view.findViewById(R.id.btnLengkapiProfil).setOnClickListener(v -> {
                 try {
-                    startActivity(new Intent(getActivity(), LengkapiProfilActivity.class));
+                    startActivity(new Intent(getActivity(), LengkapiProfilSemuaActivity.class));
                 } catch (Exception e) {
-                    Log.e(TAG, "Error opening LengkapiProfilActivity: " + e.getMessage());
+                    Log.e(TAG, "Error opening LengkapiProfilSemuaActivity: " + e.getMessage());
                     Toast.makeText(getContext(), "Tidak dapat membuka halaman", Toast.LENGTH_SHORT).show();
                 }
             });

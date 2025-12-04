@@ -90,6 +90,10 @@
             android:exported="false"
             android:theme="@style/Theme.KARIRKU" /> <!-- Disimpan Activity -->
         <activity
+            android:name=".LengkapiProfilSemuaActivity"
+            android:exported="false"
+            android:theme="@style/Theme.KARIRKU" />
+        <activity
             android:name=".DisimpanActivity"
             android:exported="false"
             android:theme="@style/Theme.KARIRKU" /> <!-- CV Activity -->
